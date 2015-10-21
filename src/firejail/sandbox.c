@@ -25,6 +25,7 @@
 #include <sys/prctl.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <exechelper/exechelper.h>
 
 #include <sched.h>
 #ifndef CLONE_NEWUSER
@@ -158,6 +159,7 @@ int sandbox(void* sandbox_arg) {
 	//****************************
 	// mount namespace
 	//****************************
+	//TODO ensure all the helper stuff is well carried over!
 	// mount events are not forwarded between the host the sandbox
 	if (mount(NULL, "/", NULL, MS_SLAVE | MS_REC, NULL) < 0) {
 		chk_chroot();
@@ -221,7 +223,7 @@ int sandbox(void* sandbox_arg) {
 	else
 		fs_basic_fs();
 	
-
+  
 	//****************************
 	// set hostname in /etc/hostname
 	//****************************
@@ -234,6 +236,13 @@ int sandbox(void* sandbox_arg) {
 	//****************************
 	if (cfg.profile)
 		fs_blacklist(cfg.homedir);
+	
+	//****************************
+	// generate files for the sandbox helper which will run in the sandbox
+	//****************************
+	if (cfg.helper) { // --helper
+		fs_helper_generate_files();
+	}
 	
 	//****************************
 	// private mode
@@ -252,6 +261,13 @@ int sandbox(void* sandbox_arg) {
 	if (arg_private_etc)
 		fs_private_etc_list();
 	
+	//****************************
+	// mount sandbox helper files now that /etc is stable
+	//****************************
+	if (cfg.helper) { // --helper
+    fs_helper_mount_self_dir();
+	}
+
 	//****************************
 	// install trace
 	//****************************
@@ -358,6 +374,23 @@ int sandbox(void* sandbox_arg) {
 		errExit("setenv");
 	if (cfg.shell && setenv("SHELL", cfg.shell, 1) < 0)
 		errExit("setenv");
+	if (cfg.helper)	{
+    char *existing = getenv("LD_PRELOAD");
+    char *preload = NULL;
+
+    if (existing) {
+      size_t len = strlen(EXECHELP_LD_PRELOAD_PATH) + 1 /* : */ + strlen(existing) + 1 /* \0 */;
+      preload = malloc(sizeof(char) * len);
+      snprintf(preload, len, "%s:%s", EXECHELP_LD_PRELOAD_PATH, existing);
+    } else {
+      preload = strdup(EXECHELP_LD_PRELOAD_PATH);
+    }
+
+	  if (setenv("LD_PRELOAD", preload, 1) < 0)
+		  errExit("setenv");
+	  free(preload);
+	}
+
 	// set prompt color to green
 	//export PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 	if (setenv("PROMPT_COMMAND", "export PS1=\"\\[\\e[1;32m\\][\\u@\\h \\W]\\$\\[\\e[0m\\] \"", 1) < 0)

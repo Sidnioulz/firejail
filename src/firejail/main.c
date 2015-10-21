@@ -79,6 +79,7 @@ int arg_netfilter;				// enable netfilter
 char *arg_netfilter_file = NULL;			// netfilter file
 int arg_doubledash = 0;			// double dash
 int arg_shell_none = 0;			// run the program directly without a shell
+int arg_reachability = ALWAYS_REACHABLE;	// whether the app matching a profile can be run in other sandboxes or unsandboxed
 int arg_private_dev = 0;			// private dev directory
 int arg_private_etc = 0;			// private etc directory
 int arg_scan = 0;				// arp-scan all interfaces
@@ -719,7 +720,15 @@ int main(int argc, char **argv) {
 			cfg.etc_private_keep = argv[i] + 14;
 			fs_check_etc_list();
 			arg_private_etc = 1;
+		}		
+		
+		//*************************************
+		// execution helper
+		//*************************************
+		else if (strcmp(argv[i], "--helper") == 0) {
+			cfg.helper = 1;
 		}
+		
 			
 
 
@@ -1036,7 +1045,7 @@ int main(int argc, char **argv) {
 	assert(cfg.command_name);
 	if (arg_debug)
 		printf("Command name #%s#\n", cfg.command_name);
-				
+
 	// load the profile
 	if (!arg_noprofile) {
 		if (!custom_profile) {
@@ -1053,6 +1062,11 @@ int main(int argc, char **argv) {
 			int rv = profile_find(cfg.command_name, "/etc/firejail");
 			custom_profile = rv;
 		}
+		if (custom_profile) {
+		  cfg.profile_name = strdup(cfg.command_name);
+		  if (!cfg.profile_name)
+		    errExit("strdup");
+    }
 	}
 
 	// use generic.profile as the default
@@ -1085,6 +1099,10 @@ int main(int argc, char **argv) {
 			
 			if (custom_profile)
 				printf("\n** Note: %s profile can be disabled by --noprofile option **\n\n", profile_name);
+
+		  cfg.profile_name = strdup(profile_name);
+		  if (!cfg.profile_name)
+		    errExit("strdup");
 		}
 	}
 

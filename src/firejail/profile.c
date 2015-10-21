@@ -23,12 +23,19 @@
 
 #define MAX_READ 8192				  // line buffer for profile files
 
+//TODO add a profile name
+//TODO add a default exec
+//TODO get a whitelist (stuff the profile always wants to execute)
+//TODO get a greylist (stuff the profile cant execute)
+
+//TODO write compiler that reads all reachability/whitelist/greylist arguments and puts them into managed*lists
+
 // find and read the profile specified by name from dir directory
 int profile_find(const char *name, const char *dir) {
 	assert(name);
 	assert(dir);
 	
-	int rv = 0;	
+	int rv = 0;
 	DIR *dp;
 	char *pname;
 	if (asprintf(&pname, "%s.profile", name) == -1)
@@ -103,7 +110,18 @@ int profile_check_line(char *ptr, int lineno) {
 	else if (strcmp(ptr, "shell none") == 0) {
 		arg_shell_none = 1;
 		return 0;
-	}	
+	}
+	else if (strncmp(ptr, "reachability ", 13) == 0) {
+	  char *start = ptr + 13;
+	  if (strcmp(start, "always-reachable") == 0)
+	    arg_reachability = ALWAYS_REACHABLE;
+    else if (strcmp(start, "not-with-foreign-apps") == 0)
+	    arg_reachability = NO_FOREIGN_SANDBOX;
+    else if (strcmp(start, "always-sandboxed") == 0)
+      arg_reachability = ALWAYS_SANDBOXED;
+	  
+		return 0;
+	}
 	else if (strcmp(ptr, "private") == 0) {
 		arg_private = 1;
 		return 0;

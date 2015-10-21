@@ -66,6 +66,7 @@ typedef struct config_t {
 	
 	// filesystem
 	ProfileEntry *profile;
+	char *profile_name;
 	char *chrootdir;	// chroot directory
 	char *home_private;	// private home directory
 	char *home_private_keep;	// keep list for private home directory
@@ -94,6 +95,9 @@ typedef struct config_t {
 	uint32_t cpus;
 	char *cgroup;
 	
+	// sandbox helper for cross-sandbox IPC
+	int helper;
+	
 
 	// command line
 	char *command_line;
@@ -111,6 +115,12 @@ static inline int any_bridge_configured(void) {
 	else
 		return 0;
 }
+
+typedef enum reachability_t {
+  ALWAYS_REACHABLE=0,    /* "always-reachable" */
+  NO_FOREIGN_SANDBOX=1,  /* "not-with-foreign-apps" */
+  ALWAYS_SANDBOXED=2     /* "always-sandboxed" */
+} Reachability;
 
 extern int arg_private;		// mount private /home and /tmp directory
 extern int arg_debug;		// print debug messages
@@ -143,6 +153,7 @@ extern int arg_netfilter;	// enable netfilter
 extern char *arg_netfilter_file;	// netfilter file
 extern int arg_doubledash;	// double dash
 extern int arg_shell_none;	// run the program directly without a shell
+extern int arg_reachability;	// whether the app matching a profile can be run in other sandboxes or unsandboxed
 extern int arg_private_dev;	// private dev directory
 extern int arg_private_etc;	// private etc directory
 extern int arg_scan;		// arp-scan all interfaces
@@ -185,6 +196,7 @@ int net_get_mac(const char *ifname, unsigned char mac[6]);
 void fs_build_firejail_dir(void);
 // build /tmp/firejail/mnt directory
 void fs_build_mnt_dir(void);
+void fs_build_mnt_etc_dir(void);
 // blacklist files or directoies by mounting empty files on top of them
 void fs_blacklist(const char *homedir);
 //void fs_blacklist(char **blacklist, const char *homedir);
@@ -356,6 +368,20 @@ void network_shm_set_file(pid_t pid);
 // fs_etc.c
 void fs_check_etc_list(void);
 void fs_private_etc_list(void);
+
+// fs_helper_etc.c
+void fs_helper_generate_files(void);
+void fs_helper_mount_self_dir(void);
+char *fs_helper_list_files(void);
+//TODO TODO TODO TODO TODO
+
+// protected_resources.c
+char *get_protected_processes_for_client(void);
+char *get_protected_files_for_client (void);
+
+// linked_resources.c
+char *get_linked_processes_for_client(void);
+int is_command_linked_for_client(const char *command);
 
 // no_sandbox.c
 int check_kernel_procs(void);

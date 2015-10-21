@@ -44,6 +44,8 @@ AS_IF([test "x$enable_fatal_warnings" = "xyes"], [
 # checking pthread library
 AC_CHECK_LIB([pthread], [main], [], AC_MSG_ERROR([*** POSIX thread support not installed ***]))
 AC_CHECK_HEADER(pthread.h,,AC_MSG_ERROR([*** POSIX thread support not installed ***]))
+AC_CHECK_LIB([ExecHelper], [main], [], AC_MSG_ERROR([*** Process execution helper (libExecHelper) not installed ***]))
+AC_CHECK_HEADER([exechelper/exechelper.h],, AC_MSG_ERROR([*** Process execution helper (libExecHelper) not installed ***]))
 AC_CHECK_HEADER([linux/seccomp.h], HAVE_SECCOMP_H="-DHAVE_SECCOMP_H", HAVE_SECCOMP_H="")
 AC_SUBST(HAVE_SECCOMP_H)
 

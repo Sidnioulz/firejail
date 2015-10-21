@@ -82,6 +82,24 @@ void fs_build_mnt_dir(void) {
 		tmpfs_mounted = 1;
 	}
 }
+void fs_build_mnt_etc_dir(void) {
+	struct stat s;
+	fs_build_mnt_dir();
+	
+	// create /tmp/firejail directory
+	if (stat(ETC_DIR, &s)) {
+		if (arg_debug)
+			printf("Creating %s directory\n", ETC_DIR);
+		/* coverity[toctou] */
+		int rv = mkdir(ETC_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1)
+			errExit("mkdir");
+		if (chown(ETC_DIR, 0, 0) < 0)
+			errExit("chown");
+		if (chmod(ETC_DIR, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+}
 
 //***********************************************
 // process profile file

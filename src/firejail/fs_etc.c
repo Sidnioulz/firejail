@@ -95,14 +95,15 @@ void fs_private_etc_list(void) {
 	}
 
 	// create /tmp/firejail/mnt/etc directory
-	fs_build_mnt_dir();
+	fs_build_mnt_etc_dir();
+/*	fs_build_mnt_dir();
 	int rv = mkdir(ETC_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
 	if (rv == -1)
 		errExit("mkdir");
 	if (chown(ETC_DIR, 0, 0) < 0)
 		errExit("chown");
 	if (chmod(ETC_DIR, 0755) < 0)
-		errExit("chmod");
+		errExit("chmod");*/
 	
 	// copy the list of files in the new etc directory
 	// using a new child process without root privileges

@@ -32,7 +32,9 @@
 #include <ctype.h>
 #include <assert.h>
 
-#define errExit(msg)    do { char msgout[500]; sprintf(msgout, "Error %s:%s(%d)", msg, __FUNCTION__, __LINE__); perror(msgout); exit(1);} while (0)
+#define errExit(msg)    do { char msgout[500]; snprintf(msgout, 500, "Error %s:%s(%d)", msg, __FUNCTION__, __LINE__); perror(msgout); exit(1);} while (0)
+
+#define errReturn(msg, v)    do { char msgout[500]; snprintf(msgout, 500, "Error %s:%s(%d)", msg, __FUNCTION__, __LINE__); perror(msgout); return (v);} while (0)
 
 // macro to print ip addresses in a printf statement
 #define PRINT_IP(A) \
