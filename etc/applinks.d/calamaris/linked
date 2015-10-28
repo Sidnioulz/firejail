@@ -1,0 +1,3 @@
+/etc/cron.daily/calamaris
+/usr/bin/calamaris
+/usr/lib/calamaris/calamaris-cron-script

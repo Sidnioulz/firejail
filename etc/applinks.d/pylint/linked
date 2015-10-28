@@ -1,0 +1,11 @@
+/usr/bin/epylint
+/usr/bin/pylint
+/usr/bin/pylint-gui
+/usr/bin/pyreverse
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/symilar
+/usr/lib/emacsen-common/packages/install/pylint
+/usr/lib/emacsen-common/packages/remove/pylint

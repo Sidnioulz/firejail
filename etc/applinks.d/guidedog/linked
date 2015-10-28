@@ -1,0 +1,6 @@
+/etc/init.d/guidedog
+/etc/network/if-down.d/51guidedog
+/etc/network/if-up.d/51guidedog
+/etc/network/ip-down.d/51guidedog
+/etc/network/ip-up.d/51guidedog
+/usr/bin/guidedog

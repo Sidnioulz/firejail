@@ -1,0 +1,4 @@
+/etc/init.d/btpd
+/usr/bin/btcli
+/usr/bin/btinfo
+/usr/bin/btpd

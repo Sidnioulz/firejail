@@ -1,0 +1,11 @@
+/usr/bin/whatweb
+/usr/share/whatweb/addons/country-scanner
+/usr/share/whatweb/addons/gggooglescan
+/usr/share/whatweb/addons/hunter
+/usr/share/whatweb/addons/verify-nikto
+/usr/share/whatweb/my-plugins
+/usr/share/whatweb/plugin-development/find-common-stuff
+/usr/share/whatweb/plugin-development/get-pattern
+/usr/share/whatweb/plugin-development/wget-alexa-top-1m
+/usr/share/whatweb/plugin-development/wget-ip-to-country
+/usr/share/whatweb/plugin-development/wget-list

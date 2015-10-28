@@ -1,0 +1,2 @@
+/etc/init.d/ltsp-cluster-pxeconfig
+/usr/sbin/ltsp-cluster-pxeconfig

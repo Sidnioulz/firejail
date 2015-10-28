@@ -1,0 +1,15 @@
+/usr/bin/sphinx3
+/usr/bin/sphinx3_align
+/usr/bin/sphinx3_astar
+/usr/bin/sphinx3_cfg2fsg
+/usr/bin/sphinx3_conf
+/usr/bin/sphinx3_continuous
+/usr/bin/sphinx3_dag
+/usr/bin/sphinx3_decode
+/usr/bin/sphinx3_dp
+/usr/bin/sphinx3_ep
+/usr/bin/sphinx3_gausubvq
+/usr/bin/sphinx3_livedecode
+/usr/bin/sphinx3_livepretend
+/usr/bin/sphinx3_lm_convert
+/usr/bin/sphinx3-simple

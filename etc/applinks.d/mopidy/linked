@@ -1,0 +1,15 @@
+/etc/init.d/mopidy
+/usr/bin/mopidy
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/sbin/mopidy
+/usr/sbin/mopidyctl
+/usr/share/mopidy/mopidy-cmd
+/usr/share/python/runtime.d/mopidy-alsamixer.rtupdate
+/usr/share/python/runtime.d/mopidy-beets.rtupdate
+/usr/share/python/runtime.d/mopidy-dirble.rtupdate
+/usr/share/python/runtime.d/mopidy-mpris.rtupdate
+/usr/share/python/runtime.d/mopidy-scrobbler.rtupdate
+/usr/share/python/runtime.d/mopidy-soundcloud.rtupdate

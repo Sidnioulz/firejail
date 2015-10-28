@@ -1,0 +1,12 @@
+/etc/init.d/auditd
+/sbin/audispd
+/sbin/auditctl
+/sbin/auditd
+/sbin/augenrules
+/sbin/aureport
+/sbin/ausearch
+/sbin/autrace
+/usr/bin/aulast
+/usr/bin/aulastlog
+/usr/bin/ausyscall
+/usr/bin/auvirt

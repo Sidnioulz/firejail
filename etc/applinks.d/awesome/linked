@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/awesome
+/usr/bin/awesome-client
+/usr/bin/awsetbg
+/usr/share/awesome/lib/flaw/tests/start_in_xephyr.sh

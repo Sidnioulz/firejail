@@ -1,0 +1,4 @@
+/etc/init.d/cpufreqd
+/usr/bin/cpufreqd-get
+/usr/bin/cpufreqd-set
+/usr/sbin/cpufreqd

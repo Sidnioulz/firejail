@@ -1,0 +1,8 @@
+/etc/cron.daily/rsbackup
+/etc/cron.hourly/rsbackup
+/etc/cron.monthly/rsbackup
+/etc/cron.weekly/rsbackup
+/usr/bin/rsbackup
+/usr/bin/rsbackup.cron
+/usr/bin/rsbackup-mount
+/usr/bin/rsbackup-snapshot-hook

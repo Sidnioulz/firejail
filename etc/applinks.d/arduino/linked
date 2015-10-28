@@ -1,0 +1,13 @@
+/usr/bin/ard-reset-arduino
+/usr/bin/arduino
+/usr/bin/arduino-add-groups
+/usr/share/arduino/examples
+/usr/share/arduino/hardware/arduino/bootloaders/optiboot/makeall
+/usr/share/arduino/hardware/tools/avr/bin
+/usr/share/arduino/hardware/tools/avrdude
+/usr/share/arduino/hardware/tools/avrdude.conf
+/usr/share/arduino/hardware/tools/avr/lib
+/usr/share/arduino/hardware/tools/avr/share/doc
+/usr/share/arduino/lib/jna.jar
+/usr/share/arduino/lib/RXTXcomm.jar
+/usr/share/arduino/reference

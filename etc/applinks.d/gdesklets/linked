@@ -1,0 +1,17 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/gdesklets
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/gdesklets/ctrlinfo
+/usr/lib/gdesklets/data/gdesklets.png
+/usr/lib/gdesklets/gdesklets
+/usr/lib/gdesklets/gdesklets-daemon
+/usr/lib/gdesklets/gdesklets-logview
+/usr/lib/gdesklets/gdesklets-migration-tool
+/usr/lib/gdesklets/gdesklets-shell
+/usr/share/gdesklets/pack_sensor.py
+/usr/share/python/runtime.d/gdesklets.rtupdate

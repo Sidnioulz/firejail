@@ -1,0 +1,11 @@
+/usr/lib/fbb/script/maintenance/20_epurmess
+/usr/lib/fbb/script/maintenance/20_epurwp
+/usr/lib/fbb/server/reqdir
+/usr/lib/fbb/tool/clr_user
+/usr/lib/fbb/tool/epurmess
+/usr/lib/fbb/tool/epurwp
+/usr/lib/fbb/tool/maintinf
+/usr/sbin/fbb
+/usr/sbin/fbbgetconf
+/usr/sbin/xfbbC
+/usr/sbin/xfbbd

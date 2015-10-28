@@ -1,0 +1,13 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/bombono-dvd
+/usr/bin/mpeg2demux
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/bombono/resources/copy-n-paste/FreeSans.ttf
+/usr/share/bombono/resources/frames/make_menu.sh
+/usr/share/bombono/resources/scons_authoring/ADVD.py
+/usr/share/bombono/resources/scons_authoring/menu_SConscript

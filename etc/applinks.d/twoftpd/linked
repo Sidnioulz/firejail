@@ -1,0 +1,13 @@
+/etc/twoftpd-anon/log/run
+/etc/twoftpd-anon/run
+/etc/twoftpd/log/run
+/etc/twoftpd/run
+/usr/bin/twoftpd
+/usr/bin/twoftpd-anon
+/usr/bin/twoftpd-anon-conf
+/usr/bin/twoftpd-auth
+/usr/bin/twoftpd-bind-port
+/usr/bin/twoftpd-conf
+/usr/bin/twoftpd-drop
+/usr/bin/twoftpd-switch
+/usr/bin/twoftpd-xfer

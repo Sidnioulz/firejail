@@ -1,0 +1,8 @@
+/usr/bin/qbs
+/usr/bin/qbs-config
+/usr/bin/qbs-config-ui
+/usr/bin/qbs-qmltypes
+/usr/bin/qbs-setup-qt
+/usr/bin/qbs-setup-toolchains
+/usr/lib/x86_64-linux-gnu/libqbscore.so
+/usr/lib/x86_64-linux-gnu/libqbsqtprofilesetup.so

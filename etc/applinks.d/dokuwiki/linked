@@ -1,0 +1,16 @@
+/etc/cron.daily/dokuwiki
+/etc/dokuwiki/acl.auth.php
+/etc/dokuwiki/users.auth.php
+/usr/bin/dokuwiki
+/usr/bin/dokuwiki-addsite
+/usr/bin/dokuwiki-delsite
+/usr/share/dokuwiki/bin/dwpage.php
+/usr/share/dokuwiki/bin/gittool.php
+/usr/share/dokuwiki/bin/indexer.php
+/usr/share/dokuwiki/bin/render.php
+/usr/share/dokuwiki/bin/striplangs.php
+/usr/share/dokuwiki/bin/wantedpages.php
+/usr/share/dokuwiki/.htaccess
+/usr/share/dokuwiki/lib/plugins
+/usr/share/dokuwiki/lib/tpl
+/var/lib/dokuwiki/inc

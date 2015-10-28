@@ -1,0 +1,13 @@
+/usr/bin/liguidsoap
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/var/lib/liguidsoap/client.py
+/var/lib/liguidsoap/editable.py
+/var/lib/liguidsoap/liguidsoap.py
+/var/lib/liguidsoap/mix.py
+/var/lib/liguidsoap/output.py
+/var/lib/liguidsoap/playlist.py
+/var/lib/liguidsoap/queue.py
+/var/lib/liguidsoap/widgets.py

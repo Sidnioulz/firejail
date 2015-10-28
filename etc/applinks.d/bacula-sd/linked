@@ -1,0 +1,17 @@
+/etc/bacula/scripts/disk-changer
+/etc/bacula/scripts/dvd-handler
+/etc/bacula/scripts/mtx-changer
+/etc/init.d/bacula-sd
+/usr/bin/bcopy
+/usr/bin/bscan
+/usr/bin/darcs-sd
+/usr/bin/git-sd
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/sd
+/usr/sbin/bacula-sd
+/usr/sbin/bextract
+/usr/sbin/bls
+/usr/sbin/btape

@@ -1,0 +1,13 @@
+/etc/init.d/buildd
+/usr/bin/buildd
+/usr/bin/buildd-abort
+/usr/bin/buildd-mail
+/usr/bin/buildd-mail-wrapper
+/usr/bin/buildd-update-chroots
+/usr/bin/buildd-uploader
+/usr/bin/buildd-vlog
+/usr/bin/buildd-watcher
+/usr/share/man/man1/buildd-abort.1.gz
+/usr/share/man/man1/buildd-mail-wrapper.1.gz
+/usr/share/man/man1/buildd-update-chroots.1.gz
+/usr/share/man/man8/buildd-make-chroot.8.gz

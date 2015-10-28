@@ -1,0 +1,8 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/haxe
+/usr/bin/haxedoc
+/usr/bin/haxelib
+/usr/lib/emacsen-common/packages/install/haxe
+/usr/lib/emacsen-common/packages/remove/haxe

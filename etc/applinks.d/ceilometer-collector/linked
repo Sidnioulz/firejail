@@ -1,0 +1,2 @@
+/etc/init.d/ceilometer-collector
+/usr/bin/ceilometer-collector

@@ -1,0 +1,8 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/bfgminer
+/usr/lib/bfgminer/bfgminer
+/usr/lib/bfgminer/bfgminer-rpc
+/usr/lib/bfgminer/setup-vfio
+/usr/lib/bfgminer/start-bfgminer.sh

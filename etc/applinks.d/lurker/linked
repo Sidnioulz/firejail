@@ -1,0 +1,14 @@
+/usr/bin/lurker
+/usr/bin/lurker-index
+/usr/bin/lurker-index-lc
+/usr/bin/lurker-list
+/usr/bin/lurker-params
+/usr/bin/lurker-prune
+/usr/bin/lurker-regenerate
+/usr/bin/lurker-search
+/usr/bin/mailman2lurker
+/usr/lib/cgi-bin/lurker/bounce.cgi
+/usr/lib/cgi-bin/lurker/jump.cgi
+/usr/lib/cgi-bin/lurker/keyword.cgi
+/usr/lib/cgi-bin/lurker/lurker.cgi
+/usr/share/lurker/www/ui

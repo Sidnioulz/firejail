@@ -1,0 +1,8 @@
+/usr/bin/lldb-3.5
+/usr/bin/lldb-gdbserver-3.5
+/usr/bin/lldb-mi-3.5
+/usr/bin/lldb-platform-3.5
+/usr/lib/llvm-3.5/bin/lldb
+/usr/lib/llvm-3.5/bin/lldb-gdbserver
+/usr/lib/llvm-3.5/bin/lldb-mi
+/usr/lib/llvm-3.5/bin/lldb-platform

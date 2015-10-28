@@ -1,0 +1,7 @@
+/etc/cron.daily/dlocate
+/usr/bin/dlocate
+/usr/sbin/dpkg-hold
+/usr/sbin/dpkg-purge
+/usr/sbin/dpkg-remove
+/usr/sbin/dpkg-unhold
+/usr/sbin/update-dlocatedb

@@ -1,0 +1,17 @@
+/usr/bin/makepp
+/usr/bin/makepp_build_cache_control
+/usr/bin/makeppbuiltin
+/usr/bin/makeppclean
+/usr/bin/makeppgraph
+/usr/bin/makeppinfo
+/usr/bin/makepplog
+/usr/bin/makeppreplay
+/usr/bin/mpp
+/usr/bin/mppb
+/usr/bin/mppbcc
+/usr/bin/mppc
+/usr/bin/mppg
+/usr/bin/mppi
+/usr/bin/mppl
+/usr/bin/mppr
+/usr/share/makepp/recursive_makepp

@@ -1,0 +1,3 @@
+/usr/bin/torsocks
+/usr/lib/torsocks/libtorsocks.so
+/usr/lib/torsocks/libtorsocks.so.0

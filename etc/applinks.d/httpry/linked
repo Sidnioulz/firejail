@@ -1,0 +1,3 @@
+/etc/init.d/httpry
+/usr/sbin/httpry
+/usr/share/httpry/parse_log.pl

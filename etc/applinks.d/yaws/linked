@@ -1,0 +1,9 @@
+/etc/init.d/yaws
+/etc/yaws/yaws-cert.pem
+/etc/yaws/yaws-key.pem
+/usr/bin/yaws
+/usr/lib/yaws/chat/priv/docroot
+/usr/lib/yaws/mail/priv/docroot
+/usr/lib/yaws/wiki/priv/docroot
+/usr/lib/yaws/yapp/priv/docroot
+/usr/share/yaws-wiki

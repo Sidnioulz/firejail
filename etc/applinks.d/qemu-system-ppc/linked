@@ -1,0 +1,8 @@
+/usr/bin/qemu-system-ppc
+/usr/bin/qemu-system-ppc64
+/usr/bin/qemu-system-ppc64le
+/usr/bin/qemu-system-ppcemb
+/usr/share/qemu/openbios-ppc
+/usr/share/qemu/ppc_rom.bin
+/usr/share/qemu/slof.bin
+/usr/share/qemu/spapr-rtas.bin

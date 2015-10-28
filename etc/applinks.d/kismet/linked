@@ -1,0 +1,7 @@
+/usr/bin/kismet
+/usr/bin/kismet_capture
+/usr/bin/kismet_client
+/usr/bin/kismet_drone
+/usr/bin/kismet_server
+/usr/share/man/man1/kismet_client.1.gz
+/usr/share/man/man1/kismet_server.1.gz

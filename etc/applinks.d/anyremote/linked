@@ -1,0 +1,17 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/anyremote
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/anyremote/cfg-data/Utils/all-in-1.py
+/usr/share/anyremote/cfg-data/Utils/generate_cover.sh
+/usr/share/anyremote/cfg-data/Utils/generate_poster.sh
+/usr/share/anyremote/cfg-data/Utils/getPlayList.sh
+/usr/share/anyremote/cfg-data/Utils/message.sh
+/usr/share/anyremote/cfg-data/Utils/pulse-audio-ctl.sh
+/usr/share/anyremote/cfg-data/Utils/registry.sh
+/usr/share/anyremote/cfg-data/Utils/run-or-switch-to.sh
+/usr/share/anyremote/cfg-data/Utils/weather.sh

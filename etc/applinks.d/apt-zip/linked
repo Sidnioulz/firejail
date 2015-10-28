@@ -1,0 +1,16 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/apt-zip-list
+/usr/bin/zip
+/usr/bin/zipcloak
+/usr/bin/zipnote
+/usr/bin/zipsplit
+/usr/sbin/apt-zip
+/usr/sbin/apt-zip-inst
+/usr/share/apt-zip/methods/wget
+/usr/share/apt-zip/methods/wget-dos
+/usr/share/man/man8/apt-zip-inst.8
+/usr/share/man/man8/apt-zip-inst.8.gz
+/usr/share/man/man8/apt-zip-list.8
+/usr/share/man/man8/apt-zip-list.8.gz

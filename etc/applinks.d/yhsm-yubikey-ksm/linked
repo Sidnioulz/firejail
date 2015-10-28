@@ -1,0 +1,9 @@
+/etc/init.d/yhsm-yubikey-ksm
+/usr/bin/ykksm-checksum
+/usr/bin/ykksm-export
+/usr/bin/ykksm-gen-keys
+/usr/bin/ykksm-import
+/usr/sbin/yhsm-db-export
+/usr/sbin/yhsm-db-import
+/usr/sbin/yhsm-import-keys
+/usr/sbin/yhsm-yubikey-ksm

@@ -1,0 +1,16 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/wfrog
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/wfrog
+/usr/lib/wfrog/bin/wfrog
+/usr/lib/wfrog/init.d/wflogger
+/usr/lib/wfrog/init.d/wfrender
+/usr/lib/wfrog/wfcommon/gendoc/gendoc.sh
+/usr/lib/wfrog/wfdriver/wfdriver.py
+/usr/lib/wfrog/wflogger/wflogger.py
+/usr/lib/wfrog/wfrender/wfrender.py

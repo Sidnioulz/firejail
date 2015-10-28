@@ -1,0 +1,10 @@
+/etc/init.d/diod
+/sbin/mount.diod
+/usr/sbin/diod
+/usr/sbin/diodcat
+/usr/sbin/diodload
+/usr/sbin/diodls
+/usr/sbin/diodmount
+/usr/sbin/diodshowmount
+/usr/sbin/dtop
+/usr/share/man/man8/mount.diod.8.gz

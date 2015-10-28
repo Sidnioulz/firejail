@@ -1,0 +1,9 @@
+/etc/cron.weekly/slrn
+/etc/network/if-up.d/slrn
+/etc/ppp/ip-up.d/slrn
+/usr/bin/slrn
+/usr/sbin/slrn
+/usr/sbin/slrn_getdescs
+/usr/share/slrn/contrib/cleanscore
+/usr/share/slrn/contrib/slrnrc-conv
+/usr/share/slrn/newsgroups.dsc

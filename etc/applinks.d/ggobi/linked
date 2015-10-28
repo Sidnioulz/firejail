@@ -1,0 +1,16 @@
+/usr/bin/ggobi
+/usr/lib/ggobi/plugins/DataViewer/plugin.so
+/usr/lib/ggobi/plugins/DataViewer/plugin.so.0
+/usr/lib/ggobi/plugins/DescribeDisplay/plugin.so
+/usr/lib/ggobi/plugins/DescribeDisplay/plugin.so.0
+/usr/lib/ggobi/plugins/ggvis/plugin.so
+/usr/lib/ggobi/plugins/ggvis/plugin.so.0
+/usr/lib/ggobi/plugins/GraphAction/plugin.so
+/usr/lib/ggobi/plugins/GraphAction/plugin.so.0
+/usr/lib/ggobi/plugins/GraphLayout/plugin.so
+/usr/lib/ggobi/plugins/GraphLayout/plugin.so.0
+/usr/lib/ggobi/plugins/VarCloud/plugin.so
+/usr/lib/ggobi/plugins/VarCloud/plugin.so.0
+/usr/lib/libggobi.so
+/usr/lib/libggobi.so.0
+/usr/share/ggobi/plugins

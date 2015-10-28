@@ -1,0 +1,4 @@
+/usr/bin/qemu-system-mips
+/usr/bin/qemu-system-mips64
+/usr/bin/qemu-system-mips64el
+/usr/bin/qemu-system-mipsel

@@ -1,0 +1,17 @@
+/etc/apparmor/init/network-interface-security/usr.sbin.ntpd
+/etc/cron.daily/ntp
+/etc/init.d/ntp
+/usr/bin/ntpdc
+/usr/bin/ntpq
+/usr/bin/ntpsweep
+/usr/bin/ntptrace
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/sntp
+/usr/sbin/ntp
+/usr/sbin/ntpd
+/usr/sbin/ntp-keygen
+/usr/sbin/ntptime
+/usr/sbin/ntp-wait

@@ -1,0 +1,5 @@
+/etc/cron.daily/ddns3-client
+/etc/init.d/ddns3-client
+/usr/bin/ddns3
+/usr/bin/ddns3-client
+/usr/share/man/man1/ddns3-client.1.gz

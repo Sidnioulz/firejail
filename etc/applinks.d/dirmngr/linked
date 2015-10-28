@@ -1,0 +1,4 @@
+/etc/init.d/dirmngr
+/usr/bin/dirmngr
+/usr/bin/dirmngr-client
+/usr/lib/x86_64-linux-gnu/dirmngr_ldap

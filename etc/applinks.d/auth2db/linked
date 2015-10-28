@@ -1,0 +1,6 @@
+/etc/init.d/auth2db
+/usr/sbin/auth2db
+/usr/sbin/auth2db-alert
+/usr/sbin/auth2db-daemon
+/usr/share/auth2db-frontend/www/prototype.js
+/usr/share/auth2db-frontend/www/temp

@@ -1,0 +1,10 @@
+/etc/init.d/maradns
+/etc/init.d/maradns-zoneserver
+/usr/bin/askmara
+/usr/bin/askmara-tcp
+/usr/sbin/bind2csv2
+/usr/sbin/deadwood
+/usr/sbin/fetchzone
+/usr/sbin/getzone
+/usr/sbin/maradns
+/usr/sbin/zoneserver

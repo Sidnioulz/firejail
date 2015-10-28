@@ -1,0 +1,9 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/sbin/ksconfig
+/usr/sbin/system-config-kickstart
+/usr/share/man/ja/man8/ksconfig.8.gz
+/usr/share/man/man8/ksconfig.8.gz
+/usr/share/python/runtime.d/system-config-kickstart.rtupdate

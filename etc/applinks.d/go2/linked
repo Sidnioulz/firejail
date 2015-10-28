@@ -1,0 +1,13 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/go2
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/go2/go2.py
+/usr/lib/go2/go2.sh
+/usr/lib/go2/osfs.py
+/usr/lib/python2.7/dist-packages/go2-1.20121210.egg-info
+/usr/share/python/runtime.d/go2.rtupdate

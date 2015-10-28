@@ -1,0 +1,7 @@
+/etc/init.d/marionnet
+/usr/bin/marionnet
+/usr/sbin/marionnet
+/usr/sbin/marionnet-daemon
+/usr/share/marionnet/marionnet-download-testing-images
+/usr/share/marionnet/marionnet_from_scratch
+/usr/share/marionnet/marionnet-prestart-checks

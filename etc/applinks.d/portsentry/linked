@@ -1,0 +1,7 @@
+/etc/init.d/portsentry
+/etc/ppp/ip-down.d/portsentry
+/etc/ppp/ip-up.d/portsentry
+/usr/lib/portsentry/portsentry-add-ip
+/usr/lib/portsentry/portsentry-build-ignore-file
+/usr/lib/portsentry/portsentry-rm-ip
+/usr/sbin/portsentry

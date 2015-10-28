@@ -1,0 +1,7 @@
+/etc/shellex/10-autoexec
+/etc/shellex/40-escape
+/etc/shellex/40-setprompt
+/etc/shellex/40-sigint
+/etc/shellex/90-hist
+/etc/shellex/99-clear
+/usr/bin/shellex

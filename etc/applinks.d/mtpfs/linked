@@ -1,0 +1,3 @@
+/sbin/mount.mtpfs
+/usr/bin/mtpfs
+/usr/share/man/man1/mount.mtpfs.1.gz

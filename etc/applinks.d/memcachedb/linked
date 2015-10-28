@@ -1,0 +1,3 @@
+/etc/init.d/memcachedb
+/usr/bin/memcachedb
+/usr/share/memcachedb/start-memcachedb

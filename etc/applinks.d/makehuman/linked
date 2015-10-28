@@ -1,0 +1,14 @@
+/usr/bin/makehuman
+/usr/bin/makehuman.real
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/makehuman/apps/uvinterpolator.py
+/usr/share/makehuman/makehuman.real
+/usr/share/makehuman/plugins/0_modeling_asymm.py
+/usr/share/makehuman/plugins/3_libraries_hair_chooser.py
+/usr/share/makehuman/plugins/4_rendering_aqsis.py
+/usr/share/makehuman/plugins/pose.py
+/usr/share/man/man1/makehuman.real.1.gz
+/usr/share/python/runtime.d/makehuman.rtupdate

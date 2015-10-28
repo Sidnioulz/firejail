@@ -1,0 +1,5 @@
+/usr/bin/desproxy
+/usr/bin/desproxy-dns
+/usr/bin/desproxy-inetd
+/usr/bin/desproxy-socksserver
+/usr/bin/socket2socket

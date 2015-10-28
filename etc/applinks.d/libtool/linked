@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/libtool
+/usr/bin/libtoolize
+/usr/share/libtool/config/compile
+/usr/share/libtool/config/config.guess
+/usr/share/libtool/config/config.sub
+/usr/share/libtool/config/depcomp
+/usr/share/libtool/config/install-sh
+/usr/share/libtool/config/missing

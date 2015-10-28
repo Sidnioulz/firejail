@@ -1,0 +1,5 @@
+/usr/bin/ssh-import-id
+/usr/bin/ssh-import-id-gh
+/usr/bin/ssh-import-id-lp
+/usr/share/man/man1/ssh-import-id-gh.1.gz
+/usr/share/man/man1/ssh-import-id-lp.1.gz

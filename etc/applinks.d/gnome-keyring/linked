@@ -1,0 +1,4 @@
+/usr/bin/gnome-keyring
+/usr/bin/gnome-keyring-3
+/usr/bin/gnome-keyring-daemon
+/usr/lib/ubiquity/target-config/50gkd-caps

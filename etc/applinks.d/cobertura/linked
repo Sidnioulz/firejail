@@ -1,0 +1,5 @@
+/usr/bin/cobertura
+/usr/bin/cobertura-check
+/usr/bin/cobertura-instrument
+/usr/bin/cobertura-merge
+/usr/bin/cobertura-report

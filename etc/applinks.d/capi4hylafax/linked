@@ -1,0 +1,6 @@
+/etc/init.d/capi4hylafax
+/usr/bin/c2faxrecv
+/usr/bin/c2faxsend
+/usr/sbin/capi4hylafax
+/usr/sbin/capi4hylafaxconfig
+/usr/sbin/faxsend

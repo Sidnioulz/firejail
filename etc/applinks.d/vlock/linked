@@ -1,0 +1,3 @@
+/usr/bin/vlock
+/usr/lib/vlock/modules/all.so
+/usr/lib/vlock/modules/nosysrq.so

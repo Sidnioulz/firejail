@@ -1,0 +1,3 @@
+/etc/init.d/lxcfs
+/usr/bin/lxcfs
+/usr/share/lxcfs/lxc.mount.hook

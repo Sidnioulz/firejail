@@ -1,0 +1,4 @@
+/etc/init.d/minidlna
+/usr/sbin/minidlna
+/usr/sbin/minidlnad
+/usr/share/man/man1/minidlna.1.gz

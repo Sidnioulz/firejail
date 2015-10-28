@@ -1,0 +1,5 @@
+/usr/bin/curtin
+/usr/lib/curtin/helpers/common
+/usr/lib/curtin/helpers/install-grub
+/usr/lib/curtin/helpers/partition
+/usr/lib/curtin/helpers/shell-archive

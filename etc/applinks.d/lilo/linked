@@ -1,0 +1,13 @@
+/etc/initramfs/post-update.d/runlilo
+/etc/kernel/postinst.d/zz-runlilo
+/etc/kernel/postrm.d/zz-runlilo
+/sbin/lilo
+/usr/lib/lilo/hooks/kernel/postinst.d/chattr-lilo
+/usr/lib/lilo/hooks/kernel/preinst.d/chattr-lilo
+/usr/lib/lilo/hooks/kernel/prerm.d/chattr-lilo
+/usr/sbin/keytab-lilo
+/usr/sbin/lilo
+/usr/sbin/liloconfig
+/usr/sbin/lilo-uuid-diskid
+/usr/sbin/mkrescue
+/usr/sbin/update-lilo

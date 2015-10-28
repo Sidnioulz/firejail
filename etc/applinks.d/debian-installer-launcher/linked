@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/usr/sbin/debian-installer-launcher
+/usr/share/debian-installer-launcher/debconf_kernel.sh
+/usr/share/debian-installer-launcher/debconf_mode.sh
+/usr/share/debian-installer-launcher/debian-installer.sh

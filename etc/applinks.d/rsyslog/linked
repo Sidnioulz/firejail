@@ -1,0 +1,3 @@
+/etc/init.d/rsyslog
+/usr/sbin/rsyslog
+/usr/sbin/rsyslogd

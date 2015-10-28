@@ -1,0 +1,15 @@
+/etc/init.d/iceccd
+/etc/init.d/icecc-scheduler
+/usr/bin/icecc
+/usr/bin/icemon
+/usr/bin/icerun
+/usr/lib/icecc/bin/c++
+/usr/lib/icecc/bin/cc
+/usr/lib/icecc/bin/g++
+/usr/lib/icecc/bin/gcc
+/usr/lib/icecc/compilerwrapper
+/usr/lib/icecc/icecc-create-env
+/usr/sbin/icecc
+/usr/sbin/iceccd
+/usr/sbin/icecc-scheduler
+/usr/share/man/man1/icerun.1.gz

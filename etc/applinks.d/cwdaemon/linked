@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/cwdaemon
+/usr/sbin/cwdaemon
+/usr/share/cwdaemon/cwsetup.sh
+/usr/share/cwdaemon/cwtest.sh

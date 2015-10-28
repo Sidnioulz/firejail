@@ -1,0 +1,8 @@
+/usr/bin/glmark2
+/usr/bin/glmark2-drm
+/usr/bin/glmark2-es2
+/usr/bin/glmark2-es2-drm
+/usr/bin/glmark2-es2-mir
+/usr/bin/glmark2-es2-wayland
+/usr/bin/glmark2-mir
+/usr/bin/glmark2-wayland

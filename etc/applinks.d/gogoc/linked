@@ -1,0 +1,9 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/gogoc
+/etc/network/if-up.d/gogoc
+/etc/ppp/ip-down.d/gogoc
+/etc/ppp/ip-up.d/gogoc
+/usr/sbin/gogoc
+/usr/share/gogoc/template/linux.sh

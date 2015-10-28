@@ -1,0 +1,8 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/encfs
+/usr/bin/encfsctl
+/usr/bin/encfssh
+/usr/lib/libencfs.so
+/usr/lib/libencfs.so.6

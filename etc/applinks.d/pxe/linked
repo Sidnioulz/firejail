@@ -1,0 +1,3 @@
+/etc/init.d/pxe
+/usr/sbin/pxe
+/usr/sbin/pxe-kexec

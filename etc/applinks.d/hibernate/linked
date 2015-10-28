@@ -1,0 +1,9 @@
+
+/bin/bash
+/bin/sh
+/usr/sbin/hibernate
+/usr/sbin/hibernate-disk
+/usr/sbin/hibernate-ram
+/usr/share/bug/hibernate/script
+/usr/share/man/man8/hibernate-disk.8.gz
+/usr/share/man/man8/hibernate-ram.8.gz

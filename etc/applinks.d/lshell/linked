@@ -1,0 +1,10 @@
+/usr/bin/lshell
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/python2.7/dist-packages/lshell-0.9.16.egg-info
+/usr/lib/python2.7/dist-packages/lshell/checkconfig.py
+/usr/lib/python2.7/dist-packages/lshell/__init__.py
+/usr/lib/python2.7/dist-packages/lshell/shellcmd.py
+/usr/lib/python2.7/dist-packages/lshell/utils.py

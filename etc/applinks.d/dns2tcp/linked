@@ -1,0 +1,4 @@
+/etc/init.d/dns2tcp
+/usr/bin/dns2tcp
+/usr/bin/dns2tcpc
+/usr/bin/dns2tcpd

@@ -1,0 +1,5 @@
+/usr/bin/higan
+/usr/bin/higan-accuracy
+/usr/bin/higan-balanced
+/usr/bin/higan-performance
+/usr/lib/higan/libananke.so

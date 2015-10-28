@@ -1,0 +1,6 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/radsecproxy
+/usr/sbin/radsecproxy
+/usr/sbin/radsecproxy-hash

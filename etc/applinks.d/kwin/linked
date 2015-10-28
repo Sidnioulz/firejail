@@ -1,0 +1,11 @@
+/usr/bin/kwin
+/usr/bin/kwin_wayland
+/usr/bin/kwin_x11
+/usr/lib/x86_64-linux-gnu/kconf_update_bin/kwin5_update_default_rules
+/usr/lib/x86_64-linux-gnu/libexec/kwin_killer_helper
+/usr/lib/x86_64-linux-gnu/libexec/kwin_rules_dialog
+/usr/lib/x86_64-linux-gnu/libkwin4_effect_builtins.so
+/usr/lib/x86_64-linux-gnu/libkwineffects.so
+/usr/lib/x86_64-linux-gnu/libkwinglutils.so
+/usr/lib/x86_64-linux-gnu/libkwin.so.5
+/usr/lib/x86_64-linux-gnu/libkwinxrenderutils.so

@@ -1,0 +1,8 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/extract_usage_from_stx
+/usr/bin/gather_stx_titles
+/usr/bin/html2stx
+/usr/bin/strip_stx
+/usr/bin/stx2any

@@ -1,0 +1,6 @@
+
+/bin/bash
+/bin/sh
+/etc/debootstrap/chroot-script
+/usr/sbin/grml-debootstrap
+/usr/share/grml-debootstrap/bootgrub.mksh

@@ -1,0 +1,5 @@
+/etc/cron.daily/tripwire
+/usr/sbin/siggen
+/usr/sbin/tripwire
+/usr/sbin/twadmin
+/usr/sbin/twprint

@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/olsrd
+/usr/bin/olsrd-gui
+/usr/bin/olsr_switch
+/usr/lib/olsrd/libnmea.so
+/usr/lib/olsrd/libOlsrdPudWireFormat.so
+/usr/sbin/olsrd
+/usr/sbin/olsrd-adhoc-setup
+/usr/sbin/sgw_policy_routing_setup.sh

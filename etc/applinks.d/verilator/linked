@@ -1,0 +1,10 @@
+/usr/bin/verilator
+/usr/bin/verilator_bin
+/usr/bin/verilator_bin_dbg
+/usr/bin/verilator_coverage
+/usr/bin/verilator_coverage_bin_dbg
+/usr/bin/verilator_profcfunc
+/usr/share/man/man1/verilator_bin.1.gz
+/usr/share/man/man1/verilator_bin_dbg.1.gz
+/usr/share/man/man1/verilator_coverage_bin_dbg.1.gz
+/usr/share/verilator/bin/verilator_includer

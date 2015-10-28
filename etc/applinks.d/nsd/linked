@@ -1,0 +1,7 @@
+/etc/init.d/nsd
+/usr/sbin/nsd
+/usr/sbin/nsd-checkconf
+/usr/sbin/nsd-checkzone
+/usr/sbin/nsd-control
+/usr/sbin/nsd-control-setup
+/usr/share/man/man8/nsd-control-setup.8.gz

@@ -1,0 +1,8 @@
+/usr/bin/vfu
+/usr/lib/vfu/rx_auto
+/usr/lib/vfu/rx_deb
+/usr/lib/vfu/rx_ftp
+/usr/lib/vfu/rx_rar
+/usr/lib/vfu/rx_rpm
+/usr/lib/vfu/rx_tar
+/usr/lib/vfu/rx_zip

@@ -1,0 +1,12 @@
+/usr/bin/fsharp
+/usr/bin/fsharpc
+/usr/bin/fsharpi
+/usr/bin/fslex
+/usr/bin/fssrgen
+/usr/bin/fsyacc
+/usr/lib/cli/fsharp/fsc.exe
+/usr/lib/cli/fsharp/fsiAnyCpu.exe
+/usr/lib/cli/fsharp/fsi.exe
+/usr/lib/cli/fsharp/FsLex.exe
+/usr/lib/cli/fsharp/FsSrGen.exe
+/usr/lib/cli/fsharp/FsYacc.exe

@@ -1,0 +1,4 @@
+/etc/init.d/spacenavd
+/usr/bin/spnavd_ctl
+/usr/sbin/spacenavd
+/usr/share/man/man8/spnavd_ctl.8.gz

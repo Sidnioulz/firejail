@@ -1,0 +1,5 @@
+/usr/sbin/vzdqcheck
+/usr/sbin/vzdqdump
+/usr/sbin/vzdqload
+/usr/sbin/vzquota
+/usr/share/man/man8/vzdqload.8.gz

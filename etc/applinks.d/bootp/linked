@@ -1,0 +1,6 @@
+/usr/sbin/bootp
+/usr/sbin/bootpd
+/usr/sbin/bootpef
+/usr/sbin/bootpgw
+/usr/sbin/bootptest
+/usr/share/man/man8/bootpgw.8.gz

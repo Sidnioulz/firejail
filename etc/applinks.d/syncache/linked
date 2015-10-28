@@ -1,0 +1,3 @@
+/etc/init.d/syncache
+/usr/bin/syncache
+/usr/bin/syncache-drb

@@ -1,0 +1,11 @@
+/usr/bin/scim
+/usr/bin/scim-config-agent
+/usr/bin/scim-im-agent
+/usr/bin/scim-make-table
+/usr/bin/scim-setup
+/usr/lib/scim-unikey/scim-setup-unikey
+/usr/lib/x86_64-linux-gnu/scim-1.0/scim-helper-launcher
+/usr/lib/x86_64-linux-gnu/scim-1.0/scim-helper-manager
+/usr/lib/x86_64-linux-gnu/scim-1.0/scim-launcher
+/usr/lib/x86_64-linux-gnu/scim-1.0/scim-panel-gtk
+/usr/share/bug/scim/script

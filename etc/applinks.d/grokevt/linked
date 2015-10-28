@@ -1,0 +1,11 @@
+/usr/bin/grokevt
+/usr/bin/grokevt-addlog
+/usr/bin/grokevt-builddb
+/usr/bin/grokevt-dumpmsgs
+/usr/bin/grokevt-findlogs
+/usr/bin/grokevt-parselog
+/usr/bin/grokevt-ripdll
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m

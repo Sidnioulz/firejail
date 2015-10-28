@@ -1,0 +1,5 @@
+/etc/dhcp/dhclient-exit-hooks.d/ddclient
+/etc/init.d/ddclient
+/etc/NetworkManager/dispatcher.d/50-ddclient
+/etc/ppp/ip-up.d/ddclient
+/usr/sbin/ddclient

@@ -1,0 +1,5 @@
+/etc/init.d/latd
+/usr/bin/llogin
+/usr/sbin/latcp
+/usr/sbin/latd
+/usr/sbin/moprc

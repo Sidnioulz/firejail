@@ -1,0 +1,7 @@
+/usr/bin/dcm2nii
+/usr/bin/dcm2niigui
+/usr/bin/mricron
+/usr/bin/mricron-npm
+/usr/lib/mricron/mricron
+/usr/share/man/man1/dcm2niigui.1.gz
+/usr/share/man/man1/mricron-npm.1.gz

@@ -1,0 +1,5 @@
+/etc/init.d/iodined
+/usr/sbin/iodine
+/usr/sbin/iodine-client-start
+/usr/sbin/iodined
+/usr/share/man/man8/iodined.8.gz

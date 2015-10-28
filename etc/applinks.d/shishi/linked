@@ -1,0 +1,5 @@
+/etc/init.d/shishi-kdc
+/usr/bin/ccache2shishi
+/usr/bin/shishi
+/usr/sbin/keytab2shishi
+/usr/sbin/shishid

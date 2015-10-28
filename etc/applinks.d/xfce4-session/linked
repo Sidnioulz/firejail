@@ -1,0 +1,12 @@
+/etc/xdg/xfce4/xinitrc
+/usr/bin/startxfce4
+/usr/bin/xfce4-session
+/usr/bin/xfce4-session-logout
+/usr/bin/xfce4-session-settings
+/usr/bin/xflock4
+/usr/lib/x86_64-linux-gnu/libxfsm-4.6.so
+/usr/lib/x86_64-linux-gnu/libxfsm-4.6.so.0
+/usr/lib/x86_64-linux-gnu/xfce4/session/balou-export-theme
+/usr/lib/x86_64-linux-gnu/xfce4/session/balou-install-theme
+/usr/lib/x86_64-linux-gnu/xfce4/session/xfsm-shutdown-helper
+/usr/share/xfce4/applications/defaults.list

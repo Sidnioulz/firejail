@@ -1,0 +1,8 @@
+/etc/init.d/radosgw
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/radosgw
+/usr/bin/radosgw-admin
+/usr/bin/radosgw-agent

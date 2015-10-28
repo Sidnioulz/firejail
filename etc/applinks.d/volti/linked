@@ -1,0 +1,11 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/volti
+/usr/bin/volti-mixer
+/usr/bin/volti-remote
+/usr/lib/volti/volti-mixer
+/usr/lib/volti/volti-remote
+/usr/lib/volti/volti.run
+/usr/share/python/runtime.d/volti.rtupdate

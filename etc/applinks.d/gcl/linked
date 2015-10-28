@@ -1,0 +1,7 @@
+/usr/bin/gcl
+/usr/lib/emacsen-common/packages/install/gcl
+/usr/lib/emacsen-common/packages/remove/gcl
+/usr/lib/gcl-2.6.12-prof/unixport/saved_ansi_gcl
+/usr/lib/gcl-2.6.12-prof/unixport/saved_gcl
+/usr/lib/gcl-2.6.12/unixport/saved_ansi_gcl
+/usr/lib/gcl-2.6.12/unixport/saved_gcl

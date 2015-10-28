@@ -1,0 +1,9 @@
+/usr/bin/eztrace
+/usr/bin/eztrace_avail
+/usr/bin/eztrace_cc
+/usr/bin/eztrace_convert
+/usr/bin/eztrace_create_plugin
+/usr/bin/eztrace_loaded
+/usr/bin/eztrace_plugin_generator
+/usr/bin/eztrace.preload
+/usr/bin/eztrace_stats

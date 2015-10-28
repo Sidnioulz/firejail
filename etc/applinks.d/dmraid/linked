@@ -1,0 +1,5 @@
+/sbin/dmraid
+/sbin/dmraid-activate
+/usr/share/bug/dmraid/script
+/usr/share/initramfs-tools/hooks/dmraid
+/usr/share/initramfs-tools/scripts/local-top/dmraid

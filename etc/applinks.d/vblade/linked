@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/vblade
+/usr/sbin/vblade
+/usr/sbin/vbladed
+/usr/sbin/vblade-persist
+/usr/share/man/man8/vbladed.8.gz
+/usr/share/vblade-persist/vblade-finish
+/usr/share/vblade-persist/vblade-logrun
+/usr/share/vblade-persist/vblade-run

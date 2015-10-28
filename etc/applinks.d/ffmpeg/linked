@@ -1,0 +1,4 @@
+/usr/bin/ffmpeg
+/usr/bin/ffplay
+/usr/bin/ffprobe
+/usr/bin/ffserver

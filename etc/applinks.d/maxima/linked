@@ -1,0 +1,8 @@
+/usr/bin/maxima
+/usr/lib/emacsen-common/packages/install/maxima-emacs
+/usr/lib/emacsen-common/packages/remove/maxima-emacs
+/usr/lib/maxima/5.35.1/binary-gcl/maxima
+/usr/lib/maxima/5.35.1/mgnuplot
+/usr/share/maxima/5.35.1/doc
+/usr/share/maxima/5.35.1/emacs
+/usr/share/maxima/5.35.1/share/contrib/lurkmathml/mathmltest

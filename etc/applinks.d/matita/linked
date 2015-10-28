@@ -1,0 +1,10 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/matita
+/usr/bin/matitac
+/usr/bin/matitaclean
+/usr/bin/matitac.opt
+/usr/bin/matita.opt
+/usr/share/man/man1/matitac.opt.1.gz
+/usr/share/matita/help/C/scripts/fix-symbols.sh

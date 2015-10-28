@@ -1,0 +1,9 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/signond
+/usr/bin/signonpluginprocess
+/usr/lib/x86_64-linux-gnu/libsignon-extension.so
+/usr/lib/x86_64-linux-gnu/libsignon-plugins-common.so
+/usr/share/session-migration/scripts/03_migrate_signon

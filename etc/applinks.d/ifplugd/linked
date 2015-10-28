@@ -1,0 +1,11 @@
+/etc/apm/scripts.d/ifplugd
+/etc/ifplugd/action.d/ifupdown
+/etc/ifplugd/ifplugd.action
+/etc/init.d/ifplugd
+/etc/pm/sleep.d/74ifplugd
+/lib/udev/ifplugd.agent
+/usr/sbin/ifplugd
+/usr/sbin/ifplugstatus
+/usr/sbin/ifstatus
+/usr/share/bug/ifplugd/script
+/usr/share/man/man8/ifstatus.8.gz

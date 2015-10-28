@@ -1,0 +1,14 @@
+/usr/bin/pyroom
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/python2.7/dist-packages/PyRoom-0.4.1.egg-info
+/usr/lib/python2.7/dist-packages/PyRoom/autosave.py
+/usr/lib/python2.7/dist-packages/PyRoom/basic_edit.py
+/usr/lib/python2.7/dist-packages/PyRoom/cmdline.py
+/usr/lib/python2.7/dist-packages/PyRoom/gui.py
+/usr/lib/python2.7/dist-packages/PyRoom/__init__.py
+/usr/lib/python2.7/dist-packages/PyRoom/interface.glade
+/usr/lib/python2.7/dist-packages/PyRoom/preferences.py
+/usr/lib/python2.7/dist-packages/PyRoom/pyroom_error.py

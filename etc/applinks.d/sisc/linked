@@ -1,0 +1,10 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/sisc
+/usr/share/java/sisc-heap.jar
+/usr/share/java/sisc.jar
+/usr/share/java/sisc-lib.jar
+/usr/share/java/sisc-opt.jar
+/usr/share/sisc/build-heapjar.scm
+/usr/share/sisc/srfi-22.sh

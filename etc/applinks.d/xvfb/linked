@@ -1,0 +1,3 @@
+/usr/bin/xvfb
+/usr/bin/Xvfb
+/usr/bin/xvfb-run

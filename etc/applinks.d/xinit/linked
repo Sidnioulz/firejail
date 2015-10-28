@@ -1,0 +1,4 @@
+/etc/X11/xinit/xinitrc
+/etc/X11/xinit/xserverrc
+/usr/bin/startx
+/usr/bin/xinit

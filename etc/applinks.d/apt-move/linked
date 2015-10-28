@@ -1,0 +1,5 @@
+/usr/bin/apt-move
+/usr/lib/apt-move/fetch
+/usr/share/apt-move/del1
+/usr/share/apt-move/move3
+/usr/share/apt-move/pkg1

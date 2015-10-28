@@ -1,0 +1,13 @@
+/usr/bin/bluedevil
+/usr/bin/bluedevil-audio
+/usr/bin/bluedevil-helper
+/usr/bin/bluedevil-input
+/usr/bin/bluedevil-monolithic
+/usr/bin/bluedevil-network-dun
+/usr/bin/bluedevil-network-panu
+/usr/bin/bluedevil-sendfile
+/usr/bin/bluedevil-wizard
+/usr/lib/kde4/libexec/bluedevil-authorize
+/usr/lib/kde4/libexec/bluedevil-confirmmodechange
+/usr/lib/kde4/libexec/bluedevil-requestconfirmation
+/usr/lib/kde4/libexec/bluedevil-requestpin

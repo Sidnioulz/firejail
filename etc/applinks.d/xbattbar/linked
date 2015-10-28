@@ -1,0 +1,4 @@
+/usr/bin/xbattbar
+/usr/lib/xbattbar/xbattbar-check-acpi
+/usr/lib/xbattbar/xbattbar-check-apm
+/usr/lib/xbattbar/xbattbar-check-sys

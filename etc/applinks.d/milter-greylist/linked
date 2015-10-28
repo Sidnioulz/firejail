@@ -1,0 +1,2 @@
+/etc/init.d/milter-greylist
+/usr/sbin/milter-greylist

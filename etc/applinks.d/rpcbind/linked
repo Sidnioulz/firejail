@@ -1,0 +1,3 @@
+/etc/init.d/rpcbind
+/sbin/rpcbind
+/usr/sbin/rpcinfo

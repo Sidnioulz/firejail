@@ -1,0 +1,4 @@
+/usr/bin/debsigs
+/usr/bin/debsigs-autosign
+/usr/bin/debsigs-installer
+/usr/bin/debsigs-signchanges

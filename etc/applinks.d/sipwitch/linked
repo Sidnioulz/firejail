@@ -1,0 +1,8 @@
+/etc/cron.hourly/sipwitch
+/etc/init.d/sipwitch
+/usr/bin/sippasswd
+/usr/bin/sipquery
+/usr/bin/sipwitch
+/usr/bin/sipwitch-cgi
+/usr/lib/cgi-bin/sipwitch
+/usr/sbin/sipw

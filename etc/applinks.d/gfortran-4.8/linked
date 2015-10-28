@@ -1,0 +1,12 @@
+/usr/bin/aarch64-linux-gnu-gfortran-4.8
+/usr/bin/arm-linux-gnueabihf-gfortran-4.8
+/usr/bin/gfortran-4.8
+/usr/bin/powerpc64le-linux-gnu-gfortran-4.8
+/usr/bin/powerpc-linux-gnu-gfortran-4.8
+/usr/bin/x86_64-linux-gnu-gfortran-4.8
+/usr/lib/gcc-cross/aarch64-linux-gnu/4.8/f951
+/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/f951
+/usr/lib/gcc-cross/powerpc64le-linux-gnu/4.8/f951
+/usr/lib/gcc-cross/powerpc-linux-gnu/4.8/f951
+/usr/lib/gcc/x86_64-linux-gnu/4.8/f951
+/usr/share/man/man1/x86_64-linux-gnu-gfortran-4.8.1.gz

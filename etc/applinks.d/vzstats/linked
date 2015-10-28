@@ -1,0 +1,14 @@
+/usr/lib/vzstats/cpuinfo
+/usr/lib/vzstats/df
+/usr/lib/vzstats/fs
+/usr/lib/vzstats/lsbrelease
+/usr/lib/vzstats/meminfo
+/usr/lib/vzstats/osrelease
+/usr/lib/vzstats/ostemplates
+/usr/lib/vzstats/uname
+/usr/lib/vzstats/vzlist
+/usr/lib/vzstats/vzversion-arch
+/usr/lib/vzstats/vzversion-deb
+/usr/lib/vzstats/vzversion-gentoo
+/usr/lib/vzstats/vzversion-rpm
+/usr/sbin/vzstats

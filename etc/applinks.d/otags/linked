@@ -1,0 +1,3 @@
+/etc/cron.daily/otags
+/usr/bin/otags
+/usr/sbin/update-otags

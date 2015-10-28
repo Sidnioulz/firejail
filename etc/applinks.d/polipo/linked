@@ -1,0 +1,6 @@
+/etc/cron.daily/polipo
+/etc/cron.weekly/polipo
+/etc/init.d/polipo
+/usr/bin/polipo
+/usr/lib/polipo/polipo-control
+/usr/lib/polipo/polipo_trimcache

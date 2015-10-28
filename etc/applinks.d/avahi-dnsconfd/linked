@@ -1,0 +1,3 @@
+/etc/avahi/avahi-dnsconfd.action
+/etc/init.d/avahi-dnsconfd
+/usr/sbin/avahi-dnsconfd

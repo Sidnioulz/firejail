@@ -1,0 +1,9 @@
+/etc/fwanalog/fwanalog.opts
+/usr/bin/fwanalog
+/usr/lib/fwanalog/cron
+/usr/lib/fwanalog/mklangfile.de
+/usr/lib/fwanalog/mklangfile.fr
+/usr/lib/fwanalog/mklangfile.it
+/usr/lib/fwanalog/mklangfile.us
+/usr/lib/fwanalog/mkopts
+/usr/lib/fwanalog/mkservices.conf

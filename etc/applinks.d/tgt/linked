@@ -1,0 +1,7 @@
+/etc/init.d/tgt
+/usr/sbin/tgt
+/usr/sbin/tgtadm
+/usr/sbin/tgt-admin
+/usr/sbin/tgtd
+/usr/sbin/tgtimg
+/usr/sbin/tgt-setup-lun

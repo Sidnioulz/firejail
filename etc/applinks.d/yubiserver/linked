@@ -1,0 +1,3 @@
+/etc/init.d/yubiserver
+/usr/bin/yubiserver
+/usr/bin/yubiserver-admin

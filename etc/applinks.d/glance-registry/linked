@@ -1,0 +1,3 @@
+/etc/init.d/glance-registry
+/usr/bin/glance-registry
+/usr/bin/glance-replicator

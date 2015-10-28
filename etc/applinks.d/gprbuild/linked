@@ -1,0 +1,11 @@
+/usr/bin/gprbuild
+/usr/bin/gprclean
+/usr/bin/gprconfig
+/usr/bin/gprinstall
+/usr/bin/gprslave
+/usr/lib/gprbuild/gprbind
+/usr/lib/gprbuild/gprlib
+/usr/share/man/man1/gprclean.1.gz
+/usr/share/man/man1/gprconfig.1.gz
+/usr/share/man/man1/gprinstall.1.gz
+/usr/share/man/man1/gprslave.1.gz

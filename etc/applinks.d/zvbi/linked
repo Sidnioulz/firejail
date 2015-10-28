@@ -1,0 +1,6 @@
+/etc/init.d/zvbi
+/usr/bin/zvbi-atsc-cc
+/usr/bin/zvbi-chains
+/usr/bin/zvbi-ntsc-cc
+/usr/sbin/zvbi
+/usr/sbin/zvbid

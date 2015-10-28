@@ -1,0 +1,14 @@
+/sbin/discover
+/sbin/discover-modprobe
+/sbin/discover-pkginstall
+/usr/bin/discover
+/usr/bin/discover-config
+/usr/share/bug/discover-data
+/usr/share/discover/init-discover
+/usr/share/tools/discover-updater.pl
+/usr/share/tools/lst2xml
+/usr/share/tools/merge-lst-to-xml
+/usr/share/tools/mkshorthwlist
+/usr/share/tools/reduce-xml
+/usr/share/tools/trim26lst
+/usr/share/tools/xml2lst

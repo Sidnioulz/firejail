@@ -1,0 +1,17 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/seahorse
+/usr/bin/seahorse-daemon
+/usr/bin/seahorse-sharing
+/usr/bin/seahorse-tool
+/usr/games/seahorse-adventures
+/usr/lib/seahorse/seahorse-ssh-askpass
+/usr/lib/seahorse/xloadimage
+/usr/share/games/seahorse-adventures/data/fonts/04B_20__.TTF
+/usr/share/games/seahorse-adventures/data/themes/default/Vera.ttf
+/usr/share/games/seahorse-adventures/data/themes/gray/Vera.ttf
+/usr/share/games/seahorse-adventures/leveledit.py
+/usr/share/games/seahorse-adventures/tileedit.py
+/usr/share/python/runtime.d/seahorse-adventures.rtupdate

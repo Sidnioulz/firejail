@@ -1,0 +1,5 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/ircd-hybrid
+/usr/sbin/ircd-hybrid

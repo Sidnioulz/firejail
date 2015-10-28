@@ -1,0 +1,17 @@
+/usr/bin/empathy
+/usr/bin/empathy-accounts
+/usr/bin/empathy-debugger
+/usr/lib/empathy/empathy-auth-client
+/usr/lib/empathy/empathy-call
+/usr/lib/empathy/empathy-chat
+/usr/lib/empathy/libempathy-gtk.so
+/usr/lib/empathy/libempathy.so
+/usr/share/empathy/icons/hicolor/16x16/apps/im-skype-dbus.png
+/usr/share/empathy/icons/hicolor/16x16/apps/im-skypeout.png
+/usr/share/empathy/icons/hicolor/16x16/apps/im-skype-x11.png
+/usr/share/empathy/icons/hicolor/22x22/apps/im-skype-dbus.png
+/usr/share/empathy/icons/hicolor/22x22/apps/im-skypeout.png
+/usr/share/empathy/icons/hicolor/22x22/apps/im-skype-x11.png
+/usr/share/empathy/icons/hicolor/48x48/apps/im-skype-dbus.png
+/usr/share/empathy/icons/hicolor/48x48/apps/im-skypeout.png
+/usr/share/empathy/icons/hicolor/48x48/apps/im-skype-x11.png

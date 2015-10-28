@@ -1,0 +1,3 @@
+/etc/init.d/pound
+/usr/sbin/pound
+/usr/sbin/poundctl

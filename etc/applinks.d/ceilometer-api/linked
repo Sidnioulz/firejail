@@ -1,0 +1,2 @@
+/etc/init.d/ceilometer-api
+/usr/bin/ceilometer-api

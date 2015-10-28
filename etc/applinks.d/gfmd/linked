@@ -1,0 +1,5 @@
+/etc/init.d/gfmd
+/usr/bin/config-gfarm
+/usr/bin/config-gfarm-update
+/usr/bin/gfdump.postgresql
+/usr/sbin/gfmd

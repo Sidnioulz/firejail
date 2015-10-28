@@ -1,0 +1,8 @@
+/etc/init.d/uuidd
+/usr/bin/uuid
+/usr/bin/uuidgen
+/usr/lib/x86_64-linux-gnu/libuuid.so
+/usr/sbin/uuidd
+/usr/share/man/man3/uuid_generate_random.3.gz
+/usr/share/man/man3/uuid_generate_time.3.gz
+/usr/share/man/man3/uuid_generate_time_safe.3.gz

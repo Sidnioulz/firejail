@@ -1,0 +1,5 @@
+/usr/bin/dh_doxygen
+/usr/bin/doxygen
+/usr/bin/doxyindexer
+/usr/bin/doxysearch.cgi
+/usr/bin/doxywizard

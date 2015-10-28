@@ -1,0 +1,3 @@
+/usr/bin/dbf2mysql
+/usr/bin/mysql2dbf
+/usr/share/man/man1/mysql2dbf.1.gz

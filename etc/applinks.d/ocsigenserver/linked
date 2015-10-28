@@ -1,0 +1,4 @@
+/etc/init.d/ocsigenserver
+/usr/bin/ocsigenserver
+/usr/bin/ocsigenserver.opt
+/usr/share/man/man1/ocsigenserver.opt.1.gz

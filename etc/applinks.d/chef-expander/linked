@@ -1,0 +1,4 @@
+/etc/init.d/chef-expander
+/usr/bin/chef-expander
+/usr/bin/chef-expanderctl
+/usr/bin/chef-expander-vnode

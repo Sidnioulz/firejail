@@ -1,0 +1,3 @@
+/etc/init.d/pptpd
+/usr/sbin/pptpctrl
+/usr/sbin/pptpd

@@ -1,0 +1,9 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/eiskaltdcpp-qt
+/usr/bin/eiskaltdcpp-qt-mini
+/usr/share/eiskaltdcpp/qt/qtscripts/amarok_nowplay/amarok.sh
+/usr/share/eiskaltdcpp/qt/qtscripts/clementine_nowplay/clementine.sh
+/usr/share/eiskaltdcpp/qt/qtscripts/gnome/commands.ru_RU.UTF-8.php
+/usr/share/eiskaltdcpp/qt/qtscripts/qmmp_nowplaying/qmmp.sh

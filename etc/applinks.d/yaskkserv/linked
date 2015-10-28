@@ -1,0 +1,7 @@
+/etc/init.d/yaskkserv
+/usr/bin/yaskkserv_make_dictionary
+/usr/sbin/update-skkdic-yaskkserv
+/usr/sbin/yaskkserv
+/usr/sbin/yaskkserv_hairy
+/usr/sbin/yaskkserv_normal
+/usr/sbin/yaskkserv_simple

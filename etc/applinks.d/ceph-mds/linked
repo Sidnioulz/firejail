@@ -1,0 +1,3 @@
+/usr/bin/cephfs-journal-tool
+/usr/bin/cephfs-table-tool
+/usr/bin/ceph-mds

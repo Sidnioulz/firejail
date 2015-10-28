@@ -1,0 +1,4 @@
+/etc/init.d/memcached
+/usr/bin/memcached
+/usr/share/memcached/scripts/memcached-tool
+/usr/share/memcached/scripts/start-memcached

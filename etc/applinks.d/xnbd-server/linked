@@ -1,0 +1,4 @@
+/usr/sbin/xnbd-bgctl
+/usr/sbin/xnbd-server
+/usr/sbin/xnbd-wrapper
+/usr/sbin/xnbd-wrapper-ctl

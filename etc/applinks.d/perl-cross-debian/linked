@@ -1,0 +1,10 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/perl-cross-debian
+/usr/bin/perl-cross-staging
+/usr/share/perl-cross-debian/patches/5.16.2
+/usr/share/perl-cross-debian/patches/5.18/debian/rules
+/usr/share/perl-cross-debian/patches/debian/rules
+/usr/share/perl-cross-debian/patches/multiarch/rules
+/usr/share/perl-cross-debian/perl-cross-native.sh

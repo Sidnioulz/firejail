@@ -1,0 +1,4 @@
+/usr/bin/env.fakechroot
+/usr/bin/fakechroot
+/usr/bin/ldd.fakechroot
+/usr/sbin/chroot.fakechroot

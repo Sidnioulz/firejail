@@ -1,0 +1,12 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/ekeyd
+/etc/init.d/ekeyd-egd-linux
+/lib/udev/entropykey.sh
+/usr/sbin/ekeyd
+/usr/sbin/ekeydctl
+/usr/sbin/ekeyd-egd-linux
+/usr/sbin/ekey-rekey
+/usr/sbin/ekey-setkey
+/usr/share/munin/plugins/ekeyd_stat_

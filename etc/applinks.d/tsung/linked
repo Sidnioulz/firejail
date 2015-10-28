@@ -1,0 +1,12 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/tsplot
+/usr/bin/tsung
+/usr/bin/tsung-recorder
+/usr/lib/tsung/bin/log2tsung.pl
+/usr/lib/tsung/bin/tsung_percentile.pl
+/usr/lib/tsung/bin/tsung-rrd.pl
+/usr/lib/tsung/bin/tsung_stats.pl
+/usr/share/python/runtime.d/tsung.rtupdate

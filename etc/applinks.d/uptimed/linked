@@ -1,0 +1,3 @@
+/etc/init.d/uptimed
+/usr/bin/uprecords
+/usr/sbin/uptimed

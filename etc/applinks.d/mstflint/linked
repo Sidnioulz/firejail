@@ -1,0 +1,9 @@
+/usr/bin/hca_self_test.ofed
+/usr/bin/mstconfig
+/usr/bin/mstflint
+/usr/bin/mstmcra
+/usr/bin/mstmread
+/usr/bin/mstmtserver
+/usr/bin/mstmwrite
+/usr/bin/mstregdump
+/usr/bin/mstvpd

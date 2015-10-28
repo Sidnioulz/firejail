@@ -1,0 +1,9 @@
+/etc/init.d/collectl
+/usr/bin/collectl
+/usr/bin/colmux
+/usr/bin/colplot
+/usr/share/collectl/index.cgi
+/usr/share/collectl/index.conf
+/usr/share/collectl/UNINSTALL
+/usr/share/collectl/util/client.pl
+/usr/share/collectl/util/col2tlviz.pl

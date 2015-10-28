@@ -1,0 +1,14 @@
+/usr/bin/fastforward
+/usr/bin/newinclude
+/usr/bin/printforward
+/usr/bin/printmaillist
+/usr/bin/setforward
+/usr/bin/setmaillist
+/usr/sbin/qmail-newaliases
+/var/lib/qmail/bin/fastforward
+/var/lib/qmail/bin/newaliases
+/var/lib/qmail/bin/newinclude
+/var/lib/qmail/bin/printforward
+/var/lib/qmail/bin/printmaillist
+/var/lib/qmail/bin/setforward
+/var/lib/qmail/bin/setmaillist

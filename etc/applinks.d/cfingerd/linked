@@ -1,0 +1,3 @@
+/etc/cron.weekly/cfingerd
+/usr/sbin/cfingerd
+/usr/sbin/userlist

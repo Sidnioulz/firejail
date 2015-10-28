@@ -1,0 +1,5 @@
+/etc/initramfs/post-update.d/elilo
+/etc/kernel/postinst.d/zz-elilo
+/etc/kernel/postrm.d/zz-elilo
+/usr/sbin/elilo
+/usr/sbin/eliloalt

@@ -1,0 +1,6 @@
+
+/bin/bash
+/bin/sh
+/etc/lockout/lock.sh
+/etc/lockout/unlock.sh
+/usr/bin/lockout

@@ -1,0 +1,6 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/nuntium
+/usr/bin/nuntium-decode-cli
+/usr/bin/nuntium-inject-push

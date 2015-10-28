@@ -1,0 +1,9 @@
+/etc/cron.daily/fusioninventory-agent
+/etc/init.d/fusioninventory-agent
+/usr/bin/fusioninventory-agent
+/usr/bin/fusioninventory-esx
+/usr/bin/fusioninventory-injector
+/usr/bin/fusioninventory-inventory
+/usr/bin/fusioninventory-netdiscovery
+/usr/bin/fusioninventory-netinventory
+/usr/bin/fusioninventory-wakeonlan

@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/usr/lib/backupninja/easydialog
+/usr/lib/backupninja/tools
+/usr/sbin/backupninja
+/usr/sbin/ninjahelper

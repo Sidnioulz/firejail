@@ -1,0 +1,14 @@
+
+/bin/bash
+/bin/sh
+/etc/pekwm/start
+/usr/bin/pekwm
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/pekwm/contrib/lobo/pekwm_autoprop.pl
+/usr/share/pekwm/contrib/lobo/pekwm_menu_config.pl
+/usr/share/pekwm/scripts/pekwm_screenshot.sh
+/usr/share/pekwm/scripts/pekwm_themeset.sh
+/usr/share/pekwm/scripts/pekwm_ws_menu.sh

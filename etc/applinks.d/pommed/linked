@@ -1,0 +1,3 @@
+/etc/init.d/pommed
+/usr/sbin/pommed
+/usr/share/pommed/beep.wav

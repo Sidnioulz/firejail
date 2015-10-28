@@ -1,0 +1,4 @@
+/etc/init.d/gom
+/usr/bin/gom
+/usr/sbin/gom
+/usr/sbin/gomconfig

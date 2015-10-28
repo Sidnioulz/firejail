@@ -1,0 +1,10 @@
+/usr/sbin/geoip-database-contrib
+/usr/sbin/geoip-database-contrib_update
+/usr/sbin/update-geoip-database
+/usr/share/GeoIP/GeoIPASNum.dat
+/usr/share/GeoIP/GeoIPASNumv6.dat
+/usr/share/GeoIP/GeoIP.dat
+/usr/share/GeoIP/GeoIPv6.dat
+/usr/share/GeoIP/GeoLiteCity.dat
+/usr/share/GeoIP/GeoLiteCityv6.dat
+/usr/share/man/man8/geoip-database-contrib_update.8.gz

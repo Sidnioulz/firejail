@@ -1,0 +1,2 @@
+/etc/init.d/ironic-conductor
+/usr/bin/ironic-conductor

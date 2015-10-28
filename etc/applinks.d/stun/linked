@@ -1,0 +1,4 @@
+/etc/init.d/stun
+/usr/bin/stun
+/usr/sbin/stun
+/usr/sbin/stund

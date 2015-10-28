@@ -1,0 +1,17 @@
+/etc/init.d/ufw
+/lib/ufw/ufw-init
+/lib/ufw/ufw-init-functions
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/kde4/libexec/kcm_ufw_helper
+/usr/lib/kde4/libexec/kcm_ufw_helper.py
+/usr/sbin/ufw
+/usr/share/ufw/after6.rules
+/usr/share/ufw/after.rules
+/usr/share/ufw/before6.rules
+/usr/share/ufw/before.rules
+/usr/share/ufw/check-requirements
+/usr/share/ufw/user6.rules
+/usr/share/ufw/user.rules

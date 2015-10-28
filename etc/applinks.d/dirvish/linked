@@ -1,0 +1,8 @@
+
+/bin/bash
+/bin/sh
+/etc/dirvish/dirvish-cronjob
+/usr/bin/dirvish-locate
+/usr/sbin/dirvish
+/usr/sbin/dirvish-expire
+/usr/sbin/dirvish-runall

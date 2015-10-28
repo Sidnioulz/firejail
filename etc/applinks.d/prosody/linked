@@ -1,0 +1,7 @@
+/etc/init.d/prosody
+/etc/prosody/certs/localhost.cert
+/etc/prosody/certs/localhost.key
+/usr/bin/ejabberd2prosody
+/usr/bin/prosody
+/usr/bin/prosodyctl
+/usr/bin/prosody-migrator

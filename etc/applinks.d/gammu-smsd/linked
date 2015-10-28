@@ -1,0 +1,4 @@
+/etc/init.d/gammu-smsd
+/usr/bin/gammu-smsd
+/usr/bin/gammu-smsd-inject
+/usr/bin/gammu-smsd-monitor

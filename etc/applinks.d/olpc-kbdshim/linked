@@ -1,0 +1,6 @@
+/etc/init.d/olpc-kbdshim
+/usr/bin/olpc-brightness
+/usr/bin/olpc-rotate
+/usr/bin/olpc-volume
+/usr/sbin/olpc-kbdshim
+/usr/sbin/olpc-kbdshim-udev

@@ -1,0 +1,9 @@
+/etc/burp/notify_script
+/etc/burp/ssl_extra_checks_script
+/etc/burp/summary_script
+/etc/burp/timer_script
+/etc/init.d/burp
+/usr/sbin/bedup
+/usr/sbin/burp
+/usr/sbin/burp_ca
+/usr/sbin/vss_strip

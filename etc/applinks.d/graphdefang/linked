@@ -1,0 +1,4 @@
+/usr/bin/graphdefang
+/usr/bin/graphdefang.pl
+/usr/lib/cgi-bin/graphdefang.cgi
+/usr/share/graphdefang/reset-max-date.pl

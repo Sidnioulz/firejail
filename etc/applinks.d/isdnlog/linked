@@ -1,0 +1,7 @@
+/etc/isdn/stop
+/usr/bin/isdnbill
+/usr/bin/isdnconf
+/usr/bin/isdnrate
+/usr/bin/isdnrep
+/usr/sbin/isdnlog
+/usr/sbin/mkzonedb

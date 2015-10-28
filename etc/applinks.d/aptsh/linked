@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/aptsh
+/usr/lib/aptsh/aptsh_ls
+/usr/lib/aptsh/aptsh_printer
+/usr/lib/aptsh/aptsh_rls

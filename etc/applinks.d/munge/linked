@@ -1,0 +1,7 @@
+/etc/init.d/munge
+/usr/bin/munge
+/usr/bin/remunge
+/usr/bin/unmunge
+/usr/sbin/create-munge-key
+/usr/sbin/munge
+/usr/sbin/munged

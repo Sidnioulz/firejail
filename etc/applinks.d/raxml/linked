@@ -1,0 +1,8 @@
+/usr/bin/raxml
+/usr/bin/raxmlHPC
+/usr/bin/raxmlHPC-PTHREADS
+/usr/bin/raxmlHPC-PTHREADS-AVX
+/usr/bin/raxmlHPC-PTHREADS-SSE3
+/usr/share/man/man1/raxmlHPC-PTHREADS.1.gz
+/usr/share/man/man1/raxmlHPC-PTHREADS-AVX.1.gz
+/usr/share/man/man1/raxmlHPC-PTHREADS-SSE3.1.gz

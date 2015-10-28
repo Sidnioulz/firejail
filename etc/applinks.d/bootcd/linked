@@ -1,0 +1,13 @@
+/etc/init.d/bootcdflop
+/usr/bin/bootcd
+/usr/bin/bootcdwrite
+/usr/share/bootcd/bootcd2disk
+/usr/share/bootcd/bootcdbackup
+/usr/share/bootcd/bootcdflopcp
+/usr/share/bootcd/bootcdmk2diskconf
+/usr/share/bootcd/bootcdmodprobe
+/usr/share/bootcd/bootcdproberoot
+/usr/share/initramfs-tools/hooks/bootcdinitramfshook
+/usr/share/initramfs-tools/scripts/init-premount/runbootcdproberoot
+/usr/share/initramfs-tools/scripts/init-top/runbootcdmodprobe
+/usr/share/initramfs-tools/scripts/local-bottom/bootcdaufs

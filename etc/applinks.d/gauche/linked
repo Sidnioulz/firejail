@@ -1,0 +1,17 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/cwcompile
+/usr/bin/gauche
+/usr/bin/gauche-cesconv
+/usr/bin/gauche-config
+/usr/bin/gauche-install
+/usr/bin/gauche-package
+/usr/bin/gosh
+/usr/lib/gauche-0.9/0.9.4/x86_64-unknown-linux-gnu/gauche-cesconv
+/usr/lib/gauche-0.9/0.9.4/x86_64-unknown-linux-gnu/gauche-config
+/usr/lib/gauche-0.9/0.9.4/x86_64-unknown-linux-gnu/gauche-install
+/usr/lib/gauche-0.9/0.9.4/x86_64-unknown-linux-gnu/gauche-package
+/usr/lib/gauche-0.9/0.9.4/x86_64-unknown-linux-gnu/gosh
+/usr/lib/libgauche-0.9.so
+/usr/share/gauche-0.9/0.9.4/template.DIST

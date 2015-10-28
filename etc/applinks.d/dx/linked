@@ -1,0 +1,17 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/dx
+/usr/lib/dx/bin/dx
+/usr/lib/dx/bin_linux/builder
+/usr/lib/dx/bin_linux/dxexec
+/usr/lib/dx/bin_linux/dxui
+/usr/lib/dx/bin_linux/prompter
+/usr/lib/dx/bin_linux/startupui
+/usr/lib/dx/bin_linux/tutor
+/usr/lib/dx/bin/mdf2c
+/usr/lib/dx/bin/url_handler.sh
+/usr/share/dx/bin
+/usr/share/dx/bin_linux
+/usr/share/dx/help
+/usr/share/dx/html

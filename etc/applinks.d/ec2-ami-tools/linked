@@ -1,0 +1,10 @@
+/usr/bin/ec2-ami-tools
+/usr/bin/ec2-ami-tools-version
+/usr/bin/ec2-bundle-image
+/usr/bin/ec2-bundle-vol
+/usr/bin/ec2-delete-bundle
+/usr/bin/ec2-download-bundle
+/usr/bin/ec2-migrate-bundle
+/usr/bin/ec2-migrate-manifest
+/usr/bin/ec2-unbundle
+/usr/bin/ec2-upload-bundle

@@ -1,0 +1,8 @@
+/etc/init.d/lnpd
+/usr/bin/lnpdll
+/usr/bin/lnpdllx
+/usr/bin/lnptest
+/usr/bin/lnptest2
+/usr/lib/liblnp.so
+/usr/lib/liblnp.so.0
+/usr/sbin/lnpd

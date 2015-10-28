@@ -1,0 +1,9 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/youker-assistant
+/usr/bin/youker-assistant-backend.py
+/usr/bin/youker-assistant-session.py
+/usr/lib/python2.7/dist-packages/youker-assistant-daemon/src/start_sessiondbus.py
+/usr/lib/python2.7/dist-packages/youker-assistant-daemon/src/start_systemdbus.py

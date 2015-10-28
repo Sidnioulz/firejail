@@ -1,0 +1,2 @@
+/etc/init.d/syslog-nagios-bridge
+/usr/bin/syslog-nagios-bridge

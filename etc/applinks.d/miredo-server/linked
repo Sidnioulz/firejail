@@ -1,0 +1,3 @@
+/etc/init.d/miredo-server
+/etc/miredo/miredo-server.conf
+/usr/sbin/miredo-server

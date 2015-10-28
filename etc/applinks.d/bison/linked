@@ -1,0 +1,5 @@
+/usr/bin/bison
+/usr/bin/bison++
+/usr/bin/bisonc++
+/usr/bin/bison.yacc
+/usr/bin/bison++.yacc

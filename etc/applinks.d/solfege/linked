@@ -1,0 +1,10 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/solfege
+/usr/share/python/runtime.d/solfege.rtupdate
+/usr/share/solfege/exercises/standard/lesson-files/bin/csound-play-harmonic-interval.sh

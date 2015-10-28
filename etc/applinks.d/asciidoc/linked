@@ -1,0 +1,16 @@
+/etc/asciidoc/filters/code/code-filter.py
+/etc/asciidoc/filters/graphviz/graphviz2png.py
+/etc/asciidoc/filters/latex/latex2png.py
+/etc/asciidoc/filters/music/music2png.py
+/etc/asciidoc/images
+/etc/asciidoc/javascripts
+/usr/bin/a2x
+/usr/bin/asciidoc
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/testasciidoc
+/usr/share/asciidoc/images/icons
+/usr/share/asciidoc/stylesheets
+/usr/share/python/runtime.d/asciidoc.rtupdate

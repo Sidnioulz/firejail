@@ -1,0 +1,15 @@
+
+/bin/bash
+/bin/sh
+/etc/fizsh/brackets-highlighter.zsh
+/etc/fizsh/cursor-highlighter.zsh
+/etc/fizsh/fizsh-miscellaneous.zsh
+/etc/fizsh/fizsh-prompt.zsh
+/etc/fizsh/fizshrc.zsh
+/etc/fizsh/main-highlighter.zsh
+/etc/fizsh/modify-etc-shells.sh
+/etc/fizsh/pattern-highlighter.zsh
+/etc/fizsh/root-highlighter.zsh
+/etc/fizsh/zsh-history-substring-search.zsh
+/etc/fizsh/zsh-syntax-highlighting.zsh
+/usr/bin/fizsh

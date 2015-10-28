@@ -1,0 +1,5 @@
+/etc/menu-methods/pdmenu-vc
+/etc/menu-methods/pdmenu-x11
+/usr/bin/pdmenu
+/usr/share/pdmenu/editdir.pl
+/usr/share/pdmenu/showdir.pl

@@ -1,0 +1,5 @@
+
+/bin/bash
+/bin/sh
+/etc/lynis/plugins/custom_plugin.template
+/usr/sbin/lynis

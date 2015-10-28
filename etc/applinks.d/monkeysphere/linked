@@ -1,0 +1,16 @@
+/usr/bin/monkeysphere
+/usr/bin/openpgp2pem
+/usr/bin/openpgp2spki
+/usr/bin/openpgp2ssh
+/usr/bin/pem2openpgp
+/usr/sbin/monkeysphere
+/usr/sbin/monkeysphere-authentication
+/usr/sbin/monkeysphere-host
+/usr/share/man/man1/openpgp2pem.1.gz
+/usr/share/man/man1/openpgp2spki.1.gz
+/usr/share/monkeysphere/checkperms
+/usr/share/monkeysphere/common
+/usr/share/monkeysphere/keytrans
+/usr/share/monkeysphere/monkeysphere-authentication-keys-for-user
+/usr/share/monkeysphere/transitions/0.23
+/usr/share/monkeysphere/transitions/0.28

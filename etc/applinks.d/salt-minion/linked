@@ -1,0 +1,2 @@
+/etc/init.d/salt-minion
+/usr/bin/salt-minion

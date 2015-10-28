@@ -1,0 +1,14 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/ccmake
+/usr/bin/cmake
+/usr/bin/cmake-gui
+/usr/bin/cpack
+/usr/bin/ctest
+/usr/lib/emacsen-common/packages/install/cmake-data
+/usr/lib/emacsen-common/packages/remove/cmake-data
+/usr/share/cmake-3.0/Modules/CPack.STGZ_Header.sh.in
+/usr/share/cmake-3.0/Modules/Squish4RunTestCase.sh
+/usr/share/cmake-3.0/Modules/SquishRunTestCase.sh
+/usr/share/cmake-3.0/Templates/cygwin-package.sh.in

@@ -1,0 +1,8 @@
+/usr/bin/openguides
+/usr/bin/openguides-setup-db
+/usr/lib/cgi-bin/openguides/newpage.cgi
+/usr/lib/cgi-bin/openguides/preferences.cgi
+/usr/lib/cgi-bin/openguides/search.cgi
+/usr/lib/cgi-bin/openguides/wiki.cgi
+/usr/lib/cgi-bin/openguides/wiki.conf
+/usr/share/libwiki-toolkit-perl/upgrade-hooks/openguides

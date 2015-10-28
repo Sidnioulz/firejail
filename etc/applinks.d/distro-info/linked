@@ -1,0 +1,10 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/debian-distro-info
+/usr/bin/distro-info
+/usr/bin/info
+/usr/bin/infokey
+/usr/bin/ubuntu-distro-info
+/usr/share/distro-info/test-debian-distro-info
+/usr/share/distro-info/test-ubuntu-distro-info

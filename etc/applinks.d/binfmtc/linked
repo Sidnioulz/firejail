@@ -1,0 +1,10 @@
+/usr/bin/binfmtasm-interpreter
+/usr/bin/binfmtc
+/usr/bin/binfmtc-interpreter
+/usr/bin/binfmtcxx-interpreter
+/usr/bin/binfmtf95-interpreter
+/usr/bin/binfmtf-interpreter
+/usr/bin/binfmtgcj-interpreter
+/usr/bin/realcsh.c
+/usr/bin/realcxxsh.cc
+/usr/sbin/realksh.c

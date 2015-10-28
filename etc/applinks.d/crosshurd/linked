@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/usr/sbin/crosshurd
+/usr/share/crosshurd/dpkg-hurd
+/usr/share/crosshurd/makehurddir.sh
+/usr/share/crosshurd/native-install

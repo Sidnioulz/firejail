@@ -1,0 +1,17 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/laborejo
+/usr/bin/laborejo-qt
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/laborejo/convertoldfiles.py
+/usr/share/laborejo/laborejocore/locale/de/00-generate_first_time.po.sh
+/usr/share/laborejo/laborejocore/locale/de/01-update_po.sh
+/usr/share/laborejo/laborejocore/locale/de/02-make_mo.sh
+/usr/share/laborejo/laborejo-qt
+/usr/share/laborejo/laborejoqt/resources/euterpe.ttf
+/usr/share/laborejo/laborejoqt/resources/freesans.ttf
+/usr/share/python3/runtime.d/laborejo.rtupdate

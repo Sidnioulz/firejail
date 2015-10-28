@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/htpdate
+/etc/network/if-up.d/htpdate
+/usr/bin/htpdate
+/usr/share/htpdate/adjtimex_parameters.sh

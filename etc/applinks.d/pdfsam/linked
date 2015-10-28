@@ -1,0 +1,7 @@
+/usr/bin/pdfsam
+/usr/bin/pdfsam-console
+/usr/share/pdfsam/lib/dom4j.jar
+/usr/share/pdfsam/lib/itext.jar
+/usr/share/pdfsam/lib/jaxen.jar
+/usr/share/pdfsam/lib/log4j-1.2.jar
+/usr/share/pdfsam/lib/looks.jar

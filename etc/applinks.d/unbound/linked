@@ -1,0 +1,8 @@
+/etc/init.d/unbound
+/etc/resolvconf/update.d/unbound
+/usr/bin/unbound-host
+/usr/sbin/unbound
+/usr/sbin/unbound-anchor
+/usr/sbin/unbound-checkconf
+/usr/sbin/unbound-control
+/usr/sbin/unbound-control-setup

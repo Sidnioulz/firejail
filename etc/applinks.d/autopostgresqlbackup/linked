@@ -1,0 +1,2 @@
+/etc/cron.daily/autopostgresqlbackup
+/usr/sbin/autopostgresqlbackup

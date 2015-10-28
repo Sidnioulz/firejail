@@ -1,0 +1,13 @@
+/usr/bin/lyx
+/usr/bin/lyxclient
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/tex2lyx
+/usr/share/bash-completion/completions/lyx
+/usr/share/lyx/configure.py
+/usr/share/lyx/lyx2lyx/lyx2lyx
+/usr/share/lyx/scripts/listerrors
+/usr/share/lyx/thes
+/usr/share/python/runtime.d/lyx-common.rtupdate

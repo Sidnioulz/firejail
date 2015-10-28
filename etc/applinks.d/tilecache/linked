@@ -1,0 +1,16 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/cgi-bin/tilecache.cgi
+/usr/lib/cgi-bin/tilecache.fcgi
+/usr/sbin/tilecache
+/usr/sbin/tilecache_clean
+/usr/sbin/tilecache_http_server
+/usr/sbin/tilecache_seed
+/usr/share/man/man5/tilecache.cfg.5.gz
+/usr/share/man/man8/tilecache_clean.8.gz
+/usr/share/man/man8/tilecache_http_server.8.gz
+/usr/share/man/man8/tilecache_seed.8.gz
+/usr/share/pyshared/TileCache/Client.py
+/usr/share/pyshared/TileCache/Service.py

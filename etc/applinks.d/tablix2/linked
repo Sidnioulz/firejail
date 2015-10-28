@@ -1,0 +1,8 @@
+/usr/bin/tablix2
+/usr/bin/tablix2_benchmark
+/usr/bin/tablix2_kernel
+/usr/bin/tablix2_output
+/usr/bin/tablix2_plot
+/usr/bin/tablix2_test
+/usr/lib/pvm3/bin/LINUX64/tablix2_kernel
+/usr/share/man/man1/tablix2_kernel.1.gz

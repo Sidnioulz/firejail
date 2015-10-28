@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/dash
+/bin/sh
+/usr/lib/emacsen-common/packages/install/dash-el
+/usr/lib/emacsen-common/packages/remove/dash-el
+/usr/share/man/man1/sh.1.gz

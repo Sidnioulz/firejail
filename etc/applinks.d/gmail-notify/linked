@@ -1,0 +1,11 @@
+/usr/bin/gmail-notify
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/gmail-notify/gmailatom.py
+/usr/lib/gmail-notify/GmailConfig.py
+/usr/lib/gmail-notify/GmailPopupMenu.py
+/usr/lib/gmail-notify/notifier.py
+/usr/lib/gmail-notify/xmllangs.py
+/usr/share/python/runtime.d/gmail-notify.rtupdate

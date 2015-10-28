@@ -1,0 +1,13 @@
+/usr/bin/dh-exec
+/usr/lib/dh-exec/dh-exec-filter
+/usr/lib/dh-exec/dh-exec-illiterate
+/usr/lib/dh-exec/dh-exec-install
+/usr/lib/dh-exec/dh-exec-strip
+/usr/lib/dh-exec/dh-exec-subst
+/usr/share/dh-exec/dh-exec-filter-arch
+/usr/share/dh-exec/dh-exec-filter-comments
+/usr/share/dh-exec/dh-exec-illiterate-tangle
+/usr/share/dh-exec/dh-exec-install-rename
+/usr/share/dh-exec/dh-exec-strip-output
+/usr/share/dh-exec/dh-exec-subst-env
+/usr/share/dh-exec/dh-exec-subst-multiarch

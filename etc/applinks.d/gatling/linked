@@ -1,0 +1,7 @@
+/etc/init.d/gatling
+/usr/bin/gatling
+/usr/bin/gatling-bench
+/usr/bin/gatling-dl
+/usr/bin/ptlsgatling
+/usr/bin/tlsgatling
+/usr/bin/writelog

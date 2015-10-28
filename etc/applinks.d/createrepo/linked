@@ -1,0 +1,17 @@
+/usr/bin/createrepo
+/usr/bin/mergerepo
+/usr/bin/modifyrepo
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/bash-completion/completions/genpkgmetadata.py
+/usr/share/bash-completion/completions/mergerepo
+/usr/share/bash-completion/completions/mergerepo.py
+/usr/share/bash-completion/completions/modifyrepo
+/usr/share/bash-completion/completions/modifyrepo.py
+/usr/share/createrepo/genpkgmetadata.py
+/usr/share/createrepo/mergerepo.py
+/usr/share/createrepo/modifyrepo.py
+/usr/share/createrepo/worker.py
+/usr/share/python/runtime.d/createrepo.rtupdate

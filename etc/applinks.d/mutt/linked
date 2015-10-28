@@ -1,0 +1,12 @@
+/usr/bin/mutt
+/usr/bin/mutt_dotlock
+/usr/bin/mutt-org
+/usr/bin/mutt-patched
+/usr/bin/smime_keys
+/usr/lib/mutt/debian-ldap-query
+/usr/lib/mutt/mailspell
+/usr/lib/mutt/mailto-mutt
+/usr/lib/mutt/pgpewrap
+/usr/lib/mutt/pgpring
+/usr/lib/mutt/source-muttrc.d
+/usr/share/bug/mutt/script

@@ -1,0 +1,5 @@
+/usr/bin/rrdcgi
+/usr/bin/rrdcreate
+/usr/bin/rrdinfo
+/usr/bin/rrdtool
+/usr/bin/rrdupdate

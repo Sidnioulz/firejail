@@ -1,0 +1,12 @@
+/usr/bin/install-menu
+/usr/bin/mate-menu
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/su-to-root
+/usr/lib/mate-menu/mate-menu-config.py
+/usr/lib/mate-menu/mate-menu.py
+/usr/sbin/install-menu
+/usr/sbin/su-to-root
+/usr/share/python/runtime.d/mate-menu.rtupdate

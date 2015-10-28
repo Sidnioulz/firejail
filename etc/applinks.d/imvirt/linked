@@ -1,0 +1,7 @@
+/usr/bin/imvirt
+/usr/bin/imvirt-report
+/usr/lib/imvirt/hvm
+/usr/lib/imvirt/hyperv
+/usr/lib/imvirt/pillbox
+/usr/lib/imvirt/vmware
+/usr/lib/imvirt/xen

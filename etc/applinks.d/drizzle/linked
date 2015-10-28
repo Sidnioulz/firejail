@@ -1,0 +1,7 @@
+/etc/init.d/drizzle
+/usr/bin/drizzle
+/usr/bin/drizzledump
+/usr/bin/drizzleimport
+/usr/bin/drizzleslap
+/usr/sbin/drizzle
+/usr/sbin/drizzled

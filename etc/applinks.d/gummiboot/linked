@@ -1,0 +1,5 @@
+/etc/initramfs/post-update.d/zz-update-gummiboot
+/etc/kernel/postinst.d/zz-update-gummiboot
+/etc/kernel/postrm.d/zz-update-gummiboot
+/usr/bin/gummiboot
+/usr/sbin/update-gummiboot

@@ -1,0 +1,5 @@
+/etc/init.d/fso-gpsd
+/etc/init.d/gpsd
+/usr/sbin/fso-gpsd
+/usr/sbin/gpsd
+/usr/sbin/gpsdctl

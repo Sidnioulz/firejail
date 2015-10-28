@@ -1,0 +1,8 @@
+/etc/init.d/opendmarc
+/usr/sbin/opendmarc
+/usr/sbin/opendmarc-check
+/usr/sbin/opendmarc-expire
+/usr/sbin/opendmarc-import
+/usr/sbin/opendmarc-importstats
+/usr/sbin/opendmarc-params
+/usr/sbin/opendmarc-reports

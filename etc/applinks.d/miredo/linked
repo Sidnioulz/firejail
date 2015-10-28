@@ -1,0 +1,11 @@
+/etc/init.d/miredo
+/etc/init.d/miredo-server
+/etc/miredo/client-hook
+/etc/miredo/miredo.conf
+/etc/miredo/miredo-server.conf
+/etc/network/if-up.d/miredo
+/usr/bin/teredo-mire
+/usr/lib/x86_64-linux-gnu/miredo/miredo-privproc
+/usr/sbin/miredo
+/usr/sbin/miredo-checkconf
+/usr/sbin/miredo-server

@@ -1,0 +1,6 @@
+/usr/bin/mercurial-buildpackage
+/usr/bin/mercurial-importdsc
+/usr/bin/mercurial-importorig
+/usr/bin/mercurial-port
+/usr/bin/mercurial-pristinetar
+/usr/bin/mercurial-tagversion

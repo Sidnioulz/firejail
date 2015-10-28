@@ -1,0 +1,15 @@
+/usr/bin/btest
+/usr/bin/btest-ask-update
+/usr/bin/btest-bg-run
+/usr/bin/btest-bg-run-helper
+/usr/bin/btest-bg-wait
+/usr/bin/btest-diff
+/usr/bin/btest-diff-rst
+/usr/bin/btest-rst-cmd
+/usr/bin/btest-rst-include
+/usr/bin/btest-rst-pipe
+/usr/bin/btest-setsid
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m

@@ -1,0 +1,3 @@
+/etc/init.d/l2tpns
+/usr/sbin/l2tpns
+/usr/sbin/nsctl

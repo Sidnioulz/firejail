@@ -1,0 +1,4 @@
+/etc/init.d/esekeyd
+/usr/bin/keytest
+/usr/bin/learnkeys
+/usr/sbin/esekeyd

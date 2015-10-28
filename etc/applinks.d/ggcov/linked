@@ -1,0 +1,7 @@
+/usr/bin/ggcov
+/usr/bin/ggcov-run
+/usr/bin/ggcov-webdb
+/usr/bin/git-history-coverage
+/usr/bin/tggcov
+/usr/lib/x86_64-linux-gnu/ggcov/libggcov.so
+/usr/lib/x86_64-linux-gnu/ggcov/libggcov.so.0

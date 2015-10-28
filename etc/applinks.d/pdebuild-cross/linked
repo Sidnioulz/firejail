@@ -1,0 +1,7 @@
+/usr/bin/pdebuild-cross
+/usr/bin/svn-pdebuild-cross
+/usr/sbin/pdebuild-cross
+/usr/sbin/pdebuild-cross-create
+/usr/sbin/pdebuild-cross-update
+/usr/share/pdebuild-cross/hookdir/D10export-buildopts-hook
+/usr/share/pdebuild-cross/hookdir/E00-check-xapt

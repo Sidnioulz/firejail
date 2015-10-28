@@ -1,0 +1,11 @@
+/etc/init.d/opendkim
+/usr/bin/convert_keylist
+/usr/bin/miltertest
+/usr/bin/opendkim-atpszone
+/usr/bin/opendkim-genkey
+/usr/bin/opendkim-genzone
+/usr/bin/opendkim-spam
+/usr/bin/opendkim-stats
+/usr/bin/opendkim-testkey
+/usr/bin/opendkim-testmsg
+/usr/sbin/opendkim

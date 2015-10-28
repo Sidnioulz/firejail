@@ -1,0 +1,3 @@
+/etc/ha.d/resource.d/drbdlinks
+/etc/init.d/drbdlinksclean
+/usr/sbin/drbdlinks

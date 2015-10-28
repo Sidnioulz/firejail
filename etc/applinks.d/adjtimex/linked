@@ -1,0 +1,4 @@
+/etc/init.d/adjtimex
+/sbin/adjtimex
+/usr/sbin/adjtimex
+/usr/sbin/adjtimexconfig

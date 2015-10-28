@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/catfish
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/catfish/catfish.svg
+/usr/share/catfish/locale
+/usr/share/python3/runtime.d/catfish.rtupdate

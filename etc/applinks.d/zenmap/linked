@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/nmapfe
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/xnmap
+/usr/bin/zenmap
+/usr/share/zenmap/su-to-zenmap.sh

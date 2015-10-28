@@ -1,0 +1,6 @@
+/usr/bin/ofono-setup
+/usr/bin/telephony-service
+/usr/bin/telephony-service-approver
+/usr/bin/telephony-service-handler
+/usr/bin/telephony-service-indicator
+/usr/share/accountsservice/interfaces/com.canonical.TelephonyServiceApprover.xml

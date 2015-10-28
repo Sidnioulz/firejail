@@ -1,0 +1,7 @@
+/usr/bin/aggregartp
+/usr/bin/ingests
+/usr/bin/lasts
+/usr/bin/multicat
+/usr/bin/multicat_validate
+/usr/bin/offsets
+/usr/bin/reordertp

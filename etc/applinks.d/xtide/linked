@@ -1,0 +1,5 @@
+/etc/cron.weekly/xtide
+/etc/init.d/xttpd
+/usr/bin/tide
+/usr/bin/xtide
+/usr/sbin/xttpd

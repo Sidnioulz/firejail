@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/remmina
+/usr/share/remmina/external_tools/launcher.sh
+/usr/share/remmina/external_tools/pause.sh
+/usr/share/remmina/external_tools/remmina_filezilla_sftp_pki.sh
+/usr/share/remmina/external_tools/remmina_filezilla_sftp.sh
+/usr/share/remmina/external_tools/remmina_nslookup.sh
+/usr/share/remmina/external_tools/remmina_ping.sh
+/usr/share/remmina/external_tools/remmina_traceroute.sh

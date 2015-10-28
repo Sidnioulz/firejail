@@ -1,0 +1,12 @@
+/etc/init.d/connman
+/usr/bin/connman-ui-gtk
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/x86_64-linux-gnu/connman/scripts/openconnect-script
+/usr/lib/x86_64-linux-gnu/connman/scripts/openvpn-script
+/usr/sbin/connman
+/usr/sbin/connmanctl
+/usr/sbin/connmand
+/usr/sbin/connman-vpnd

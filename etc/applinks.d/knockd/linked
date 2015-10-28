@@ -1,0 +1,3 @@
+/etc/init.d/knockd
+/usr/bin/knock
+/usr/sbin/knockd

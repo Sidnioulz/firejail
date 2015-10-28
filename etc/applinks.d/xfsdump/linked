@@ -1,0 +1,5 @@
+/sbin/xfsdump
+/sbin/xfsrestore
+/usr/sbin/xfsdump
+/usr/sbin/xfsinvutil
+/usr/sbin/xfsrestore

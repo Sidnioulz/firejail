@@ -1,0 +1,14 @@
+/usr/bin/autogen
+/usr/bin/autoopts-config
+/usr/bin/columns
+/usr/bin/getdefs
+/usr/bin/xml2ag
+/usr/share/autogen/man2man
+/usr/share/autogen/man2mdoc
+/usr/share/autogen/man2texi
+/usr/share/autogen/mdoc2man
+/usr/share/autogen/mdoc2mdoc
+/usr/share/autogen/mdoc2texi
+/usr/share/autogen/texi2man
+/usr/share/autogen/texi2mdoc
+/usr/share/autogen/texi2texi

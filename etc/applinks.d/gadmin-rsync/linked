@@ -1,0 +1,3 @@
+/etc/init.d/rsync
+/usr/bin/rsync
+/usr/sbin/gadmin-rsync

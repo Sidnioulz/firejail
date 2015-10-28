@@ -1,0 +1,16 @@
+/etc/init.d/bcfg2-server
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/sbin/bcfg2-admin
+/usr/sbin/bcfg2-build-reports
+/usr/sbin/bcfg2-crypt
+/usr/sbin/bcfg2-info
+/usr/sbin/bcfg2-lint
+/usr/sbin/bcfg2-report-collector
+/usr/sbin/bcfg2-reports
+/usr/sbin/bcfg2-repo-validate
+/usr/sbin/bcfg2-server
+/usr/sbin/bcfg2-test
+/usr/sbin/bcfg2-yum-helper

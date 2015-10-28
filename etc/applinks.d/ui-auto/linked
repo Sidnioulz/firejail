@@ -1,0 +1,14 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/ui-auto
+/usr/bin/ui-auto-env
+/usr/bin/ui-auto-release
+/usr/bin/ui-auto-release-multi
+/usr/bin/ui-auto-rsign
+/usr/bin/ui-auto-shell
+/usr/bin/ui-auto-sp2ui
+/usr/bin/ui-auto-ubs
+/usr/bin/ui-auto-update
+/usr/bin/ui-auto-uvc
+/usr/bin/ui-auto-version

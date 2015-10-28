@@ -1,0 +1,5 @@
+/usr/bin/kid3
+/usr/bin/kid3-cli
+/usr/bin/kid3-qt
+/usr/lib/kid3/libkid3-core.so
+/usr/lib/kid3/libkid3-gui.so

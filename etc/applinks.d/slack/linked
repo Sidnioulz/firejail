@@ -1,0 +1,8 @@
+/usr/bin/slack-diff
+/usr/lib/slack/slack-getroles
+/usr/lib/slack/slack-installfiles
+/usr/lib/slack/slack-rolediff
+/usr/lib/slack/slack-runscript
+/usr/lib/slack/slack-stage
+/usr/lib/slack/slack-sync
+/usr/sbin/slack

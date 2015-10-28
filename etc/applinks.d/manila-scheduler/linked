@@ -1,0 +1,2 @@
+/etc/init.d/manila-scheduler
+/usr/bin/manila-scheduler

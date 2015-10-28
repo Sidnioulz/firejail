@@ -1,0 +1,3 @@
+/etc/init.d/trove-taskmanager
+/usr/bin/trove-mgmt-taskmanager
+/usr/bin/trove-taskmanager

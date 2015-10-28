@@ -1,0 +1,6 @@
+/usr/sbin/munin-libvirt-plugins
+/usr/sbin/munin-libvirt-plugins-detect
+/usr/share/munin/plugins/libvirt-blkstat
+/usr/share/munin/plugins/libvirt-cputime
+/usr/share/munin/plugins/libvirt-ifstat
+/usr/share/munin/plugins/libvirt-mem

@@ -1,0 +1,3 @@
+/etc/init.d/zemberek-server
+/usr/sbin/zemberek-server
+/usr/share/java/zemberek-server.jar

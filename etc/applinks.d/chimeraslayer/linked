@@ -1,0 +1,14 @@
+/usr/bin/chimeraslayer
+/usr/lib/ChimeraSlayer/ChimeraParentSelector/chimeraParentSelector.pl
+/usr/lib/ChimeraSlayer/ChimeraParentSelector/CM_plotter.pl
+/usr/lib/ChimeraSlayer/ChimeraParentSelector/CPC_to_CPS.pl
+/usr/lib/ChimeraSlayer/ChimeraParentSelector/CPS_to_RENAST.pl
+/usr/lib/ChimeraSlayer/ChimeraParentSelector/run_chimeraParentSelector.pl
+/usr/lib/ChimeraSlayer/ChimeraPhyloChecker/ChimeraPhyloChecker.pl
+/usr/lib/ChimeraSlayer/ChimeraPhyloChecker/CPS_to_CPC.pl
+/usr/lib/ChimeraSlayer/ChimeraSlayer.pl
+/usr/lib/ChimeraSlayer/util/breakpoint_to_profile.pl
+/usr/lib/ChimeraSlayer/util/CMCS_to_treeImg.pl
+/usr/lib/ChimeraSlayer/util/CS_add_taxonomy.pl
+/usr/lib/ChimeraSlayer/util/merge_CM_CS_outputs.pl
+/usr/lib/ChimeraSlayer/util/merge_CS_n_CM_breakpoints.pl

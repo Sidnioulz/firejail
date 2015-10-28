@@ -1,0 +1,12 @@
+/usr/bin/devdump
+/usr/bin/dirsplit
+/usr/bin/genisoimage
+/usr/bin/geteltorito
+/usr/bin/isodump
+/usr/bin/isoinfo
+/usr/bin/isovfy
+/usr/bin/mkisofs
+/usr/bin/mkzftree
+/usr/share/man/man1/devdump.1.gz
+/usr/share/man/man1/isodump.1.gz
+/usr/share/man/man1/isovfy.1.gz

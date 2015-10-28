@@ -1,0 +1,14 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/aps2file
+/usr/bin/apsfilter-bug
+/usr/bin/apspreview
+/usr/sbin/apsfilter
+/usr/sbin/apsfilterconfig
+/usr/share/apsfilter/bin/apsfilter
+/usr/share/apsfilter/bin/setup_dvips.sh
+/usr/share/apsfilter/perf.log
+/usr/share/apsfilter/SETUP
+/usr/share/apsfilter/SETUP.cfg
+/usr/share/man/man8/apsfilterconfig.8.gz

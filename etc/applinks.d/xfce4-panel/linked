@@ -1,0 +1,11 @@
+/usr/bin/xfce4-panel
+/usr/bin/xfce4-popup-applicationsmenu
+/usr/bin/xfce4-popup-directorymenu
+/usr/bin/xfce4-popup-windowmenu
+/usr/lib/x86_64-linux-gnu/libxfce4panel-1.0.so
+/usr/lib/x86_64-linux-gnu/libxfce4panel-1.0.so.4
+/usr/lib/x86_64-linux-gnu/libxfce4panel-2.0.so
+/usr/lib/x86_64-linux-gnu/libxfce4panel-2.0.so.4
+/usr/lib/x86_64-linux-gnu/xfce4/panel/migrate
+/usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-1.0
+/usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0

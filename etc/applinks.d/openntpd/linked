@@ -1,0 +1,5 @@
+/etc/init.d/openntpd
+/etc/network/if-up.d/openntpd
+/usr/sbin/ntpd
+/usr/sbin/openntpd
+/usr/share/man/man8/openntpd.8.gz

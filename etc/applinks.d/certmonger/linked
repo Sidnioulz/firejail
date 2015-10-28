@@ -1,0 +1,12 @@
+/etc/init.d/certmonger
+/usr/bin/certmaster-getcert
+/usr/bin/getcert
+/usr/bin/ipa-getcert
+/usr/bin/local-getcert
+/usr/bin/selfsign-getcert
+/usr/lib/x86_64-linux-gnu/certmonger/certmaster-submit
+/usr/lib/x86_64-linux-gnu/certmonger/certmonger-session
+/usr/lib/x86_64-linux-gnu/certmonger/dogtag-ipa-renew-agent-submit
+/usr/lib/x86_64-linux-gnu/certmonger/ipa-submit
+/usr/lib/x86_64-linux-gnu/certmonger/local-submit
+/usr/sbin/certmonger

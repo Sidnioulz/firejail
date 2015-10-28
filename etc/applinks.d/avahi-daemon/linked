@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/avahi-daemon
+/etc/network/if-post-down.d/avahi-daemon
+/etc/network/if-up.d/avahi-daemon
+/etc/resolvconf/update-libc.d/avahi-daemon
+/usr/bin/daemon
+/usr/lib/avahi/avahi-daemon-check-dns.sh
+/usr/sbin/avahi-daemon
+/usr/share/man/man5/daemon.conf.5.gz

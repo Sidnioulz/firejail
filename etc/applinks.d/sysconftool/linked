@@ -1,0 +1,6 @@
+/usr/bin/sysconftool
+/usr/bin/sysconftoolcheck
+/usr/bin/sysconftoolize
+/usr/share/sysconftool/sysconftool
+/usr/share/sysconftool/sysconftoolcheck
+/usr/share/sysconftool/sysconftoolize.pl

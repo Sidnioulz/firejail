@@ -1,0 +1,7 @@
+/usr/bin/clang-format-3.5
+/usr/bin/clang-format-diff-3.5
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/llvm-3.5/bin/clang-format

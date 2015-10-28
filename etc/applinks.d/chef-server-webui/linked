@@ -1,0 +1,3 @@
+/etc/init.d/chef-server-webui
+/usr/sbin/chef-server-webui
+/usr/share/chef-server-webui/public/javascripts/jquery-1.3.2.min.js

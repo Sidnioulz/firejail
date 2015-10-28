@@ -1,0 +1,4 @@
+/etc/init.d/switchconf
+/etc/switchconf/after.d/20pcmcia
+/etc/switchconf/before.d/20pcmcia
+/usr/sbin/switchconf

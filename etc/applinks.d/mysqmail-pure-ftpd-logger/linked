@@ -1,0 +1,14 @@
+/etc/init.d/mysqmail-pure-ftpd-logger
+/etc/init.d/pure-ftpd
+/usr/bin/pure-pw
+/usr/bin/pure-pwconvert
+/usr/bin/pure-statsdecode
+/usr/sbin/mysqmail-pure-ftpd-logger
+/usr/sbin/pure-authd
+/usr/sbin/pure-ftpd
+/usr/sbin/pure-ftpd-virtualchroot
+/usr/sbin/pure-ftpwho
+/usr/sbin/pure-mrtginfo
+/usr/sbin/pure-quotacheck
+/usr/sbin/pure-uploadscript
+/usr/share/man/man8/pure-ftpd-virtualchroot.8.gz

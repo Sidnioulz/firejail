@@ -1,0 +1,5 @@
+/usr/sbin/logtail
+/usr/sbin/logtail2
+/usr/share/logtail/detectrotate/10-savelog.dtr
+/usr/share/logtail/detectrotate/20-logrotate.dtr
+/usr/share/logtail/detectrotate/30-logrotate-dateext.dtr

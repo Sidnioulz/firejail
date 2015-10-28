@@ -1,0 +1,17 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/cd-tkdesk
+/usr/bin/ed-tkdesk
+/usr/bin/od-tkdesk
+/usr/bin/op-tkdesk
+/usr/bin/pauseme
+/usr/bin/pop-tkdesk
+/usr/bin/tkdesk
+/usr/bin/tkdeskclient
+/usr/lib/TkDesk
+/usr/lib/tkdesk/cb_tools/mkindex
+/usr/lib/tkdesk/configs
+/usr/lib/tkdesk/doc
+/usr/lib/tkdesk/mkindex
+/usr/lib/tkdesk/tkdesksh

@@ -1,0 +1,4 @@
+/etc/cron.weekly/approx
+/usr/sbin/approx
+/usr/sbin/approx-gc
+/usr/sbin/approx-import

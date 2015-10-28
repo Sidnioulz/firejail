@@ -1,0 +1,3 @@
+/etc/init.d/dbeacon
+/usr/bin/dbeacon
+/usr/share/dbeacon/matrix.pl

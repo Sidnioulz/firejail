@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/secpanel
+/usr/share/secpanel/convert_history.tcl
+/usr/share/secpanel/convert_profile.tcl
+/usr/share/secpanel/dppw.tcl
+/usr/share/secpanel/export_profiles.tcl
+/usr/share/secpanel/secpanel_remoteconf.sh
+/usr/share/secpanel/secpanel.wait
+/usr/share/secpanel/spdistkey

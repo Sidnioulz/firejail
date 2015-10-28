@@ -1,0 +1,6 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/afssh
+/usr/bin/ssh-agent-filter
+/usr/bin/ssh-askpass-noinput

@@ -1,0 +1,6 @@
+/usr/bin/mozplugger
+/usr/bin/mozplugger-controller
+/usr/bin/mozplugger-helper
+/usr/bin/mozplugger-linker
+/usr/sbin/update-mozpluggerrc
+/usr/share/man/man1/mozplugger-linker.1.gz

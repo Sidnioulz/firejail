@@ -1,0 +1,14 @@
+/etc/bash_completion.d/gtcli_bash_completion
+/usr/bin/gtcli
+/usr/bin/gtg
+/usr/bin/gtg_new_task
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/gtg/gtcli
+/usr/share/gtg/gtcli_bash_completion
+/usr/share/gtg/gtg
+/usr/share/gtg/gtg_new_task
+/usr/share/gtg/GTG/plugins/export/export_templates/script_pocketmod
+/usr/share/python/runtime.d/gtg.rtupdate

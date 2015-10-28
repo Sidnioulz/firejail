@@ -1,0 +1,4 @@
+/etc/init.d/jove
+/usr/bin/jove
+/usr/bin/teachjove
+/usr/lib/jove/recover

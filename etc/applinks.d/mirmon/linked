@@ -1,0 +1,3 @@
+/etc/cron.hourly/mirmon
+/usr/bin/mirmon
+/usr/bin/probe

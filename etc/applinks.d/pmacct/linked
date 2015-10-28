@@ -1,0 +1,12 @@
+/etc/init.d/nfacctd
+/etc/init.d/pmacctd
+/etc/init.d/sfacctd
+/etc/init.d/uacctd
+/usr/bin/pmacct
+/usr/bin/pmmyplay
+/usr/bin/pmpgplay
+/usr/sbin/nfacctd
+/usr/sbin/pmacct
+/usr/sbin/pmacctd
+/usr/sbin/sfacctd
+/usr/sbin/uacctd

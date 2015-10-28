@@ -1,0 +1,14 @@
+/etc/rootstrap/dhclient-script
+/usr/bin/rootstrap
+/usr/lib/rootstrap/builder
+/usr/lib/rootstrap/modules/base-config
+/usr/lib/rootstrap/modules/debian
+/usr/lib/rootstrap/modules/docpurge
+/usr/lib/rootstrap/modules/localepurge
+/usr/lib/rootstrap/modules/mkfs
+/usr/lib/rootstrap/modules/mkisofs
+/usr/lib/rootstrap/modules/mount
+/usr/lib/rootstrap/modules/network
+/usr/lib/rootstrap/modules/tasksel
+/usr/lib/rootstrap/modules/uml
+/usr/lib/rootstrap/modules/umount

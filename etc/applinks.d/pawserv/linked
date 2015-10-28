@@ -1,0 +1,3 @@
+/etc/cron.hourly/pawserv
+/usr/sbin/pawserv
+/usr/sbin/zserv

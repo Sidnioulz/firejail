@@ -1,0 +1,7 @@
+/etc/init.d/nanoweb
+/usr/bin/apache2nwconf
+/usr/bin/htpasswd.nanoweb
+/usr/bin/mkhugenanoweb
+/usr/sbin/in.nanoweb
+/usr/sbin/nanoctl
+/usr/sbin/nanoweb

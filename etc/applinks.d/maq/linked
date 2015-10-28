@@ -1,0 +1,11 @@
+/usr/bin/farm-run.pl
+/usr/bin/maq
+/usr/bin/maq_eval.pl
+/usr/bin/maq.pl
+/usr/bin/maq_plot.pl
+/usr/share/maq/asub
+/usr/share/maq/fq_all2std.pl
+/usr/share/maq/maq_post.pl
+/usr/share/maq/maq_sanger.pl
+/usr/share/maq/paf_utils.pl
+/usr/share/maq/solid2fastq.pl

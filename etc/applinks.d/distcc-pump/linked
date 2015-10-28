@@ -1,0 +1,7 @@
+/sbin/pump
+/usr/bin/distcc-pump
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/bug/distcc-pump/presubj

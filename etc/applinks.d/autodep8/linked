@@ -1,0 +1,9 @@
+/usr/bin/autodep8
+/usr/share/autodep8/support/dkms/detect
+/usr/share/autodep8/support/dkms/generate
+/usr/share/autodep8/support/nodejs/detect
+/usr/share/autodep8/support/nodejs/generate
+/usr/share/autodep8/support/perl/detect
+/usr/share/autodep8/support/perl/generate
+/usr/share/autodep8/support/ruby/detect
+/usr/share/autodep8/support/ruby/generate

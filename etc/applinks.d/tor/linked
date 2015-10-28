@@ -1,0 +1,17 @@
+/etc/cron.weekly/tor
+/etc/init.d/tor
+/usr/bin/arm
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/tor
+/usr/bin/tor-gencert
+/usr/bin/torify
+/usr/bin/tor-resolve
+/usr/sbin/tor
+/usr/share/arm/resources/startTor
+/usr/share/arm/resources/torrcOverride/override.py
+/usr/share/arm/uninstall
+/usr/share/man/man5/torrc.5.gz
+/usr/share/python/runtime.d/tor-arm.rtupdate

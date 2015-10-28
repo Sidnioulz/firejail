@@ -1,0 +1,2 @@
+/etc/init.d/ceilometer-polling
+/usr/bin/ceilometer-polling

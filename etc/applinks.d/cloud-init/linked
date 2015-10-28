@@ -1,0 +1,12 @@
+
+/bin/bash
+/bin/sh
+/etc/profile.d/Z99-cloud-locale-test.sh
+/usr/bin/cloud-init
+/usr/bin/cloud-init-per
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/cloud-init/uncloud-init
+/usr/lib/cloud-init/write-ssh-key-fingerprints

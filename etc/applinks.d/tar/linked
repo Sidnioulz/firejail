@@ -1,0 +1,12 @@
+
+/bin/bash
+/bin/sh
+/bin/tar
+/etc/rmt
+/usr/lib/tar/backup.sh
+/usr/lib/tar/dump-remind
+/usr/sbin/rmt-tar
+/usr/sbin/tar
+/usr/sbin/tar-backup
+/usr/sbin/tarcat
+/usr/sbin/tar-restore

@@ -1,0 +1,10 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/autossh
+/usr/bin/autossh-argv0
+/usr/bin/rscreen
+/usr/bin/rtmux
+/usr/bin/ruscreen
+/usr/lib/autossh/autossh
+/usr/share/man/man1/autossh-argv0.1.gz

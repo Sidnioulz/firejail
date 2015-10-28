@@ -1,0 +1,3 @@
+/etc/init.d/globus-gatekeeper
+/usr/sbin/globus-gatekeeper
+/usr/sbin/globus-k5

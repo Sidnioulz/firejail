@@ -1,0 +1,14 @@
+/usr/bin/aida2flat
+/usr/bin/aida2root
+/usr/bin/compare-histos
+/usr/bin/flat2aida
+/usr/bin/make-plots
+/usr/bin/rivet
+/usr/bin/rivet-buildplugin
+/usr/bin/rivet-chopbins
+/usr/bin/rivet-mergeruns
+/usr/bin/rivet-mkanalysis
+/usr/bin/rivet-mkhtml
+/usr/bin/rivet-rescale
+/usr/bin/rivet-rmgaps
+/usr/bin/root2flat

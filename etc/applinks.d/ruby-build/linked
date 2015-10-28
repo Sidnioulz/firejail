@@ -1,0 +1,5 @@
+/usr/bin/ruby-build
+/usr/lib/rbenv/libexec/rbenv-install
+/usr/lib/rbenv/libexec/rbenv-uninstall
+/usr/share/man/man1/rbenv-install.1.gz
+/usr/share/man/man1/rbenv-uninstall.1.gz

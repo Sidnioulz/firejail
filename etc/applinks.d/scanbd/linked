@@ -1,0 +1,8 @@
+/etc/init.d/scanbd
+/usr/sbin/scanbd
+/usr/sbin/scanbm
+/usr/share/scanbd/scripts/action.script
+/usr/share/scanbd/scripts/example.script
+/usr/share/scanbd/scripts/insert.script
+/usr/share/scanbd/scripts/scanadf.script
+/usr/share/scanbd/scripts/test.script

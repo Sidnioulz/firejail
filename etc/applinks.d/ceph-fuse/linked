@@ -1,0 +1,5 @@
+/bin/ulockmgr_server
+/sbin/mount.fuse
+/sbin/mount.fuse.ceph
+/usr/bin/ceph-fuse
+/usr/share/initramfs-tools/hooks/fuse

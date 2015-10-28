@@ -1,0 +1,12 @@
+/usr/bin/bnd
+/usr/share/java/bnd.annotation.jar
+/usr/share/java/bnd.jar
+/usr/share/java/bnd.junit.jar
+/usr/share/java/bnd.launcher.jar
+/usr/share/java/bndlib.jar
+/usr/share/maven-repo/biz/aQute/annotation/1.50.0/annotation-1.50.0.jar
+/usr/share/maven-repo/biz/aQute/annotation/debian/annotation-debian.jar
+/usr/share/maven-repo/biz/aQute/bnd/1.50.0/bnd-1.50.0.jar
+/usr/share/maven-repo/biz/aQute/bnd/debian/bnd-debian.jar
+/usr/share/maven-repo/biz/aQute/bndlib/1.50.0/bndlib-1.50.0.jar
+/usr/share/maven-repo/biz/aQute/bndlib/debian/bndlib-debian.jar

@@ -1,0 +1,6 @@
+
+/bin/bash
+/bin/sh
+/etc/ahcp/ahcp-config.sh
+/etc/init.d/ahcpd
+/usr/sbin/ahcpd

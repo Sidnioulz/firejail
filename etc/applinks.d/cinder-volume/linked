@@ -1,0 +1,3 @@
+/etc/init.d/cinder-volume
+/usr/bin/cinder-volume
+/usr/bin/cinder-volume-usage-audit

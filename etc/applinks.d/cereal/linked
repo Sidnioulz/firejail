@@ -1,0 +1,9 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/cereal
+/usr/sbin/cereal
+/usr/sbin/cereal-admin
+/usr/share/cereal/finish
+/usr/share/cereal/logrun
+/usr/share/cereal/mainrun

@@ -1,0 +1,5 @@
+
+/bin/bash
+/bin/sh
+/usr/sbin/csync2
+/usr/share/csync2/csync2_locheck.sh

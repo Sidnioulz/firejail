@@ -1,0 +1,5 @@
+/etc/init.d/hpsockd
+/usr/lib/hpsockd/log2ascii
+/usr/lib/hpsockd/usage
+/usr/sbin/hpsockd
+/usr/sbin/sdc

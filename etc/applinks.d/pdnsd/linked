@@ -1,0 +1,5 @@
+/etc/init.d/pdnsd
+/etc/NetworkManager/dispatcher.d/002_NetMan_pdnsd
+/etc/resolvconf/update.d/pdnsd
+/usr/sbin/pdnsd
+/usr/sbin/pdnsd-ctl

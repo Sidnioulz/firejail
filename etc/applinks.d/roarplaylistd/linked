@@ -1,0 +1,12 @@
+/etc/init.d/roarplaylistd
+/usr/bin/roarplaylistd
+/usr/bin/rpld-codec-helper
+/usr/bin/rpld-ctl
+/usr/bin/rpld-import
+/usr/bin/rpld-listplaylists
+/usr/bin/rpld-listq
+/usr/bin/rpld-next
+/usr/bin/rpld-queueple
+/usr/bin/rpld-setpointer
+/usr/bin/rpld-showplaying
+/usr/bin/rpld-storemgr

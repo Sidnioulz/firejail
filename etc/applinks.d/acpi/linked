@@ -1,0 +1,15 @@
+
+/bin/bash
+/bin/sh
+/etc/acpi/asus-keyboard-backlight.sh
+/etc/acpi/asus-wireless.sh
+/etc/acpi/ibm-wireless.sh
+/etc/acpi/powerbtn.sh
+/etc/acpi/tosh-wireless.sh
+/etc/acpi/undock.sh
+/etc/init.d/acpid
+/usr/bin/acpi
+/usr/bin/acpi_listen
+/usr/bin/acpitail
+/usr/bin/acpitool
+/usr/sbin/acpid

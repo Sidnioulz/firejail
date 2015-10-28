@@ -1,0 +1,10 @@
+
+/bin/bash
+/bin/sh
+/usr/sbin/vmdebootstrap
+/usr/share/vmdebootstrap/examples/auto-serial-console
+/usr/share/vmdebootstrap/examples/beagleboneblack-customise.sh
+/usr/share/vmdebootstrap/examples/beagleboneblack.sh
+/usr/share/vmdebootstrap/examples/cubietruck-customise.sh
+/usr/share/vmdebootstrap/examples/cubietruck.sh
+/usr/share/vmdebootstrap/examples/lava.sh

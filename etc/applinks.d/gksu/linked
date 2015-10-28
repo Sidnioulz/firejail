@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/gksu
+/usr/bin/gksudo
+/usr/share/gksu/gksu-migrate-conf.sh
+/usr/share/man/man1/gksudo.1.gz

@@ -1,0 +1,3 @@
+/etc/init.d/fancontrol
+/usr/sbin/fancontrol
+/usr/sbin/pwmconfig

@@ -1,0 +1,8 @@
+/etc/init.d/mysecureshell
+/usr/bin/mysecureshell
+/usr/bin/sftp-admin
+/usr/bin/sftp-kill
+/usr/bin/sftp-state
+/usr/bin/sftp-user
+/usr/bin/sftp-verif
+/usr/bin/sftp-who

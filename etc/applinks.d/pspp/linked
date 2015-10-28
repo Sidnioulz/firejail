@@ -1,0 +1,7 @@
+/usr/bin/pspp
+/usr/bin/pspp-dump-sav
+/usr/bin/psppire
+/usr/lib/emacsen-common/packages/install/pspp
+/usr/lib/emacsen-common/packages/remove/pspp
+/usr/lib/pspp/libpspp-core.so
+/usr/lib/pspp/libpspp.so

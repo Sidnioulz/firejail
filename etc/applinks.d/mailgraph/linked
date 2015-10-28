@@ -1,0 +1,3 @@
+/etc/init.d/mailgraph
+/usr/lib/cgi-bin/mailgraph.cgi
+/usr/sbin/mailgraph

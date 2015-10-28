@@ -1,0 +1,13 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/okteta
+/usr/bin/struct2osd.sh
+/usr/lib/x86_64-linux-gnu/libkasten3controllers.so
+/usr/lib/x86_64-linux-gnu/libkasten3core.so
+/usr/lib/x86_64-linux-gnu/libkasten3gui.so
+/usr/lib/x86_64-linux-gnu/libkasten3okteta1controllers.so
+/usr/lib/x86_64-linux-gnu/libkasten3okteta1core.so
+/usr/lib/x86_64-linux-gnu/libkasten3okteta1gui.so
+/usr/lib/x86_64-linux-gnu/libokteta2core.so
+/usr/lib/x86_64-linux-gnu/libokteta2gui.so

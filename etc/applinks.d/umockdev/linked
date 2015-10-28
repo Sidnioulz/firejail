@@ -1,0 +1,5 @@
+/usr/bin/umockdev
+/usr/bin/umockdev-record
+/usr/bin/umockdev-run
+/usr/bin/umockdev-wrapper
+/usr/lib/x86_64-linux-gnu/libumockdev-preload.so.0

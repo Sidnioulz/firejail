@@ -1,0 +1,5 @@
+/usr/bin/demangle
+/usr/bin/kminspector
+/usr/bin/kmmatch
+/usr/bin/kmtrace
+/usr/lib/libktrace.so.4

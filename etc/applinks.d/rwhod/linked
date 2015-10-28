@@ -1,0 +1,3 @@
+/etc/cron.monthly/rwhod
+/etc/init.d/rwhod
+/usr/sbin/rwhod

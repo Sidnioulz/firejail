@@ -1,0 +1,3 @@
+/etc/init.d/clamsmtp
+/usr/sbin/clamsmtp
+/usr/sbin/clamsmtpd

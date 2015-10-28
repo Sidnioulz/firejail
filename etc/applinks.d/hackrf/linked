@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/hackrf
+/usr/bin/hackrf_cpldjtag
+/usr/bin/hackrf_info
+/usr/bin/hackrf_max2837
+/usr/bin/hackrf_rffc5071
+/usr/bin/hackrf_si5351c
+/usr/bin/hackrf_spiflash
+/usr/bin/hackrf_transfer

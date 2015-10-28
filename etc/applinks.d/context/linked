@@ -1,0 +1,12 @@
+/usr/bin/context
+/usr/bin/contextjit
+/usr/bin/luatools
+/usr/bin/mtxrun
+/usr/bin/mtxrunjit
+/usr/bin/pdftrimwhite
+/usr/bin/texexec
+/usr/bin/texfind
+/usr/bin/texfont
+/usr/bin/texmfstart
+/usr/share/texmf/scripts/context/lua/mtxrun.lua
+/usr/share/texmf/scripts/context/ruby/texmfstart.rb

@@ -1,0 +1,10 @@
+/etc/cron.daily/acct
+/etc/cron.monthly/acct
+/etc/init.d/acct
+/usr/bin/ac
+/usr/bin/lastcomm
+/usr/sbin/acct
+/usr/sbin/accton
+/usr/sbin/dump-acct
+/usr/sbin/dump-utmp
+/usr/sbin/sa

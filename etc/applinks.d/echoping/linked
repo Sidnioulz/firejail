@@ -1,0 +1,7 @@
+/usr/bin/echoping
+/usr/lib/echoping/dns.so
+/usr/lib/echoping/dns.so.0
+/usr/lib/echoping/random.so
+/usr/lib/echoping/random.so.0
+/usr/lib/echoping/whois.so
+/usr/lib/echoping/whois.so.0

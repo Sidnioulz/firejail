@@ -1,0 +1,14 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/smb4k
+/usr/lib/kde4/libexec/mounthelper
+/usr/lib/libsmb4kcore.so
+/usr/lib/libsmb4kcore.so.4
+/usr/share/kde4/apps/kconf_update/authentication1.sh
+/usr/share/kde4/apps/kconf_update/network1.sh
+/usr/share/kde4/apps/kconf_update/network2.sh
+/usr/share/kde4/apps/kconf_update/samba1.sh
+/usr/share/kde4/apps/kconf_update/samba2.sh
+/usr/share/kde4/apps/kconf_update/userinterface1.sh
+/usr/share/kde4/apps/kconf_update/userinterface2.sh

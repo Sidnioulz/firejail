@@ -1,0 +1,4 @@
+/etc/kernel/postinst.d/apt-dater-host_reboot
+/usr/bin/apt-dater
+/usr/bin/apt-dater-host
+/usr/lib/x86_64-linux-gnu/apt-dater/cmd

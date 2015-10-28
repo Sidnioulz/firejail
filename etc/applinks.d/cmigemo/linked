@@ -1,0 +1,4 @@
+/usr/bin/cmigemo
+/usr/sbin/update-cmigemo-dict
+/usr/share/cmigemo/tools/optimize-dict.pl
+/usr/share/cmigemo/tools/skk2migemo.pl

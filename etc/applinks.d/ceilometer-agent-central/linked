@@ -1,0 +1,2 @@
+/etc/init.d/ceilometer-agent-central
+/usr/bin/ceilometer-agent-central

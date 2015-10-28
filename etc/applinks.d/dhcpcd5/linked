@@ -1,0 +1,3 @@
+/etc/init.d/dhcpcd
+/lib/dhcpcd/dhcpcd-run-hooks
+/sbin/dhcpcd5

@@ -1,0 +1,15 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/debdelta
+/usr/bin/debdeltas
+/usr/bin/debdelta-upgrade
+/usr/bin/debpatch
+/usr/lib/debdelta/minibzip2
+/usr/lib/debdelta/minigzip
+/usr/share/debdelta/debmarshal_list_useless_debs
+/usr/share/debdelta/debmirror-delta-security
+/usr/share/debdelta/debmirror-marshal-deltas
+/usr/share/debdelta/debpatch.sh
+/usr/share/debdelta/debpatch-url
+/usr/share/debdelta/dpkg-sig

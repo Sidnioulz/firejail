@@ -1,0 +1,2 @@
+/etc/init.d/cinder-api
+/usr/bin/cinder-api

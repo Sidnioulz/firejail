@@ -1,0 +1,5 @@
+/usr/bin/dicomscope
+/usr/share/dicomscope/tcl/dcmpschk.tcl
+/usr/share/dicomscope/tcl/dcmpsdmp.tcl
+/usr/share/java/DICOMscope-3.6.0.jar
+/usr/share/java/DICOMscope.jar

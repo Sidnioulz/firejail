@@ -1,0 +1,9 @@
+/etc/init.d/pushpin
+/usr/bin/m2adapter
+/usr/bin/pushpin
+/usr/bin/pushpin-handler
+/usr/bin/pushpin-proxy
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m

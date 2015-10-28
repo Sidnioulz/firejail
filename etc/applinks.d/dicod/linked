@@ -1,0 +1,8 @@
+/etc/dicod/dicodconfig.alias
+/etc/init.d/dicod
+/etc/init.d/dictd
+/lib/systemd/system/dictd.service
+/usr/bin/dicod
+/usr/bin/dicodconfig
+/usr/sbin/dictdconfig
+/usr/share/man/man8/dictdconfig.8.gz

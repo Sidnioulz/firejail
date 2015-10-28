@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/etc/acpi/powerbtn.sh
+/etc/init.d/acpid
+/usr/bin/acpi_listen
+/usr/sbin/acpid

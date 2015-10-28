@@ -1,0 +1,3 @@
+/etc/init.d/ngircd
+/usr/sbin/ngircd
+/usr/share/bug/ngircd

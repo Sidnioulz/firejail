@@ -1,0 +1,4 @@
+/etc/init.d/shorewall-lite
+/sbin/shorewall-lite
+/usr/share/shorewall-lite/functions
+/usr/share/shorewall-lite/shorecap

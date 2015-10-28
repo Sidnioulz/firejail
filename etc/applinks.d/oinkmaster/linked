@@ -1,0 +1,6 @@
+/usr/sbin/oinkmaster
+/usr/share/oinkmaster/addmsg.pl
+/usr/share/oinkmaster/addsid.pl
+/usr/share/oinkmaster/create-sidmap.pl
+/usr/share/oinkmaster/makesidex.pl
+/usr/share/oinkmaster/oinkgui.pl

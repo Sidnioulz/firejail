@@ -1,0 +1,5 @@
+/usr/bin/cinnamon-session
+/usr/bin/cinnamon-session-properties
+/usr/bin/cinnamon-session-quit
+/usr/lib/x86_64-linux-gnu/cinnamon-session-check-accelerated
+/usr/lib/x86_64-linux-gnu/cinnamon-session-check-accelerated-helper

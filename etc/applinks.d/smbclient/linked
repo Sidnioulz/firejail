@@ -1,0 +1,10 @@
+/usr/bin/cifsdd
+/usr/bin/rpcclient
+/usr/bin/smbcacls
+/usr/bin/smbclient
+/usr/bin/smbcquotas
+/usr/bin/smbget
+/usr/bin/smbspool
+/usr/bin/smbtar
+/usr/bin/smbtree
+/usr/lib/cups/backend/smb

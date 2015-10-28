@@ -1,0 +1,4 @@
+/etc/init.d/nbd-client
+/sbin/nbd-client
+/usr/share/initramfs-tools/hooks/nbd
+/usr/share/initramfs-tools/scripts/local-top/nbd

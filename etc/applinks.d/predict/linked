@@ -1,0 +1,17 @@
+/usr/bin/earthtrack
+/usr/bin/fodtrack
+/usr/bin/geosat
+/usr/bin/gsat
+/usr/bin/kep_reload
+/usr/bin/moontracker
+/usr/bin/predict
+/usr/bin/predict-g1yyh
+/usr/bin/predict-map
+/usr/lib/gsat/plugins/radio_FT736
+/usr/lib/gsat/plugins/radio_FT847
+/usr/lib/gsat/plugins/radio_ICR10
+/usr/lib/gsat/plugins/radio_print
+/usr/lib/gsat/plugins/radio_test
+/usr/lib/gsat/plugins/rotor_pictrack
+/usr/lib/gsat/plugins/rotor_print
+/usr/lib/predict/vocalizer

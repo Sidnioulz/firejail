@@ -1,0 +1,17 @@
+/etc/dkms/template-dkms-mkdeb/debian/postinst
+/etc/dkms/template-dkms-mkdeb/debian/prerm
+/etc/dkms/template-dkms-mkdeb/debian/rules
+/etc/dkms/template-dkms-mkdsc
+/etc/kernel/header_postinst.d/dkms
+/etc/kernel/postinst.d/dkms
+/etc/kernel/prerm.d/dkms
+/usr/bin/dh_dkms
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/dkms/common.postinst
+/usr/lib/dkms/dkms_autoinstaller
+/usr/lib/dkms/dkms-autopkgtest
+/usr/sbin/dkms
+/usr/share/apport/package-hooks/dkms_packages.py

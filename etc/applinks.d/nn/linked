@@ -1,0 +1,14 @@
+/usr/bin/nn
+/usr/bin/nnadmin
+/usr/bin/nnbatch
+/usr/bin/nncheck
+/usr/bin/nngoback
+/usr/bin/nngrab
+/usr/bin/nngrep
+/usr/bin/nnpost
+/usr/bin/nnstats
+/usr/bin/nntidy
+/usr/bin/nnusage
+/usr/bin/nnview
+/usr/lib/nn/aux
+/usr/lib/nn/upgrade_rc

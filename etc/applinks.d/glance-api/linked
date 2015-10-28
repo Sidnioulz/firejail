@@ -1,0 +1,7 @@
+/etc/init.d/glance-api
+/usr/bin/glance-api
+/usr/bin/glance-cache-cleaner
+/usr/bin/glance-cache-manage
+/usr/bin/glance-cache-prefetcher
+/usr/bin/glance-cache-pruner
+/usr/bin/glance-scrubber

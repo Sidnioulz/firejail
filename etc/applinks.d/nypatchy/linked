@@ -1,0 +1,13 @@
+/usr/bin/fcasplit
+/usr/bin/nycheck
+/usr/bin/nydiff
+/usr/bin/nyindex
+/usr/bin/nylist
+/usr/bin/nymerge
+/usr/bin/nypatchy
+/usr/bin/nyshell
+/usr/bin/nysynopt
+/usr/bin/nytidy
+/usr/bin/yexpand
+/usr/bin/ypatchy
+/usr/share/man/man1/ypatchy.1.gz

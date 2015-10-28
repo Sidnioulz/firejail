@@ -1,0 +1,3 @@
+/etc/avr-evtd/EventScript
+/etc/init.d/avr-evtd
+/usr/sbin/avr-evtd

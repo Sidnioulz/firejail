@@ -1,0 +1,8 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/simpleburn
+/usr/bin/simpleburn-detect.sh
+/usr/bin/simpleburn-gauges
+/usr/bin/simpleburn-gauges.sh
+/usr/bin/simpleburn.sh

@@ -1,0 +1,10 @@
+/bin/tar
+/etc/rmt
+/usr/bin/pristine-bz2
+/usr/bin/pristine-gz
+/usr/bin/pristine-tar
+/usr/bin/pristine-xz
+/usr/bin/zgz
+/usr/lib/pristine-tar/suse-bzip2/bzip2
+/usr/sbin/rmt-tar
+/usr/sbin/tarcat

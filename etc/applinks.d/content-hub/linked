@@ -1,0 +1,7 @@
+/usr/bin/content-hub
+/usr/bin/content-hub-service
+/usr/bin/content-hub-test-exporter
+/usr/bin/content-hub-test-importer
+/usr/bin/content-hub-test-sharer
+/usr/lib/x86_64-linux-gnu/content-hub/content-hub-peer-hook
+/usr/lib/x86_64-linux-gnu/content-hub/content-hub-peer-hook-wrapper

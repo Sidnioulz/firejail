@@ -1,0 +1,7 @@
+/usr/bin/dose-debcheck
+/usr/bin/dose-distcheck
+/usr/bin/dose-eclipsecheck
+/usr/bin/dose-rpmcheck
+/usr/share/man/man1/dose-debcheck.1.gz
+/usr/share/man/man1/dose-eclipsecheck.1.gz
+/usr/share/man/man1/dose-rpmcheck.1.gz

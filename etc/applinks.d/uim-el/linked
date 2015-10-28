@@ -1,0 +1,5 @@
+/usr/bin/uim-el
+/usr/bin/uim-el-agent
+/usr/bin/uim-el-helper-agent
+/usr/lib/emacsen-common/packages/install/uim-el
+/usr/lib/emacsen-common/packages/remove/uim-el

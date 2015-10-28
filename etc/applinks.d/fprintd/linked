@@ -1,0 +1,9 @@
+/usr/bin/fprintd-delete
+/usr/bin/fprintd-enroll
+/usr/bin/fprintd-list
+/usr/bin/fprintd-verify
+/usr/sbin/fprintd
+/usr/share/man/man1/fprintd-delete.1.gz
+/usr/share/man/man1/fprintd-enroll.1.gz
+/usr/share/man/man1/fprintd-list.1.gz
+/usr/share/man/man1/fprintd-verify.1.gz

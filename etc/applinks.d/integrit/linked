@@ -1,0 +1,4 @@
+/etc/cron.daily/integrit
+/usr/bin/i-ls
+/usr/sbin/integrit
+/usr/sbin/i-viewdb

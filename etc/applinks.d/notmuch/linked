@@ -1,0 +1,6 @@
+/usr/bin/notmuch
+/usr/bin/notmuch-mutt
+/usr/bin/notmuch-web
+/usr/lib/emacsen-common/packages/install/notmuch-emacs
+/usr/lib/emacsen-common/packages/remove/notmuch-emacs
+/usr/share/man/man1/notmuch-setup.1.gz

@@ -1,0 +1,8 @@
+/etc/init.d/dmucs
+/usr/bin/addhost
+/usr/bin/gethost
+/usr/bin/loadavg
+/usr/bin/monitor
+/usr/bin/remhost
+/usr/sbin/dmucs
+/usr/sbin/loadavg

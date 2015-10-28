@@ -1,0 +1,6 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/cqrlog
+/usr/share/cqrlog/cqrlog-apparmor-fix
+/usr/share/cqrlog/voice_keyer/voice_keyer.sh

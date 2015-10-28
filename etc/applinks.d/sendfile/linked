@@ -1,0 +1,15 @@
+/etc/cron.weekly/sendfile
+/etc/csh/login.d/sendfile
+/usr/bin/check-sendfile
+/usr/bin/fetchfile
+/usr/bin/pussy
+/usr/bin/receive
+/usr/bin/sendfile
+/usr/bin/sendmsg
+/usr/bin/sfconf
+/usr/bin/utf7decode
+/usr/bin/utf7encode
+/usr/bin/wlock
+/usr/sbin/sendfile
+/usr/sbin/sendfiled
+/usr/share/man/man1/utf7decode.1.gz

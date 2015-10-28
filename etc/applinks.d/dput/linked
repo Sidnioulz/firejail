@@ -1,0 +1,10 @@
+/etc/dput.d/README
+/usr/bin/dcut
+/usr/bin/dirt
+/usr/bin/dput
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/dput/helper/security-warning
+/usr/share/dput-ng/uploaders/https.json

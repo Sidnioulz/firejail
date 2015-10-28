@@ -1,0 +1,10 @@
+/usr/bin/ksplice-create
+/usr/lib/ksplice-inspect
+/usr/lib/ksplice-kernel-utsname
+/usr/lib/ksplice-objmanip
+/usr/sbin/ksplice
+/usr/sbin/ksplice-apply
+/usr/sbin/ksplice-undo
+/usr/sbin/ksplice-view
+/usr/share/ksplice/ksplice-cc.pl
+/usr/share/ksplice/ksplice-obj.pl

@@ -1,0 +1,4 @@
+/usr/bin/yesod
+/usr/bin/yesod-ar-wrapper
+/usr/bin/yesod-ghc-wrapper
+/usr/bin/yesod-ld-wrapper

@@ -1,0 +1,4 @@
+/etc/cron.daily/slrnpull
+/etc/network/if-up.d/slrnpull
+/etc/ppp/ip-up.d/slrnpull
+/usr/bin/slrnpull

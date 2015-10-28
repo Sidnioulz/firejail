@@ -1,0 +1,11 @@
+/usr/bin/ike-scan
+/usr/bin/psk-crack
+/usr/share/ike-scan/checks/check-decode
+/usr/share/ike-scan/checks/check-packet
+/usr/share/ike-scan/checks/check-psk-crack-1
+/usr/share/ike-scan/checks/check-psk-crack-2
+/usr/share/ike-scan/checks/check-psk-crack-3
+/usr/share/ike-scan/checks/check-psk-crack-4
+/usr/share/ike-scan/checks/check-run1
+/usr/share/ike-scan/checks/check-run2
+/usr/share/ike-scan/checks/check-run3

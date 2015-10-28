@@ -1,0 +1,2 @@
+/etc/init.d/heat-api-cloudwatch
+/usr/bin/heat-api-cloudwatch

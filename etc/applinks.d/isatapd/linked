@@ -1,0 +1,6 @@
+/etc/init.d/isatapd
+/etc/network/if-down.d/isatapd
+/etc/network/if-up.d/isatapd
+/etc/ppp/ip-down.d/isatapd
+/etc/ppp/ip-up.d/isatapd
+/usr/sbin/isatapd

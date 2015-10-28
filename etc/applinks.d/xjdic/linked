@@ -1,0 +1,15 @@
+/usr/bin/exjdxgen
+/usr/bin/xjdic
+/usr/bin/xjdic_cl
+/usr/bin/xjdic_sa
+/usr/bin/xjdrad
+/usr/bin/xjdserver
+/usr/bin/xjdxgen
+/usr/sbin/xjdic
+/usr/sbin/xjdicconfig
+/usr/share/man/man1/exjdxgen.1.gz
+/usr/share/man/man1/xjdic_cl.1.gz
+/usr/share/man/man1/xjdic_sa.1.gz
+/usr/share/man/man1/xjdserver.1.gz
+/usr/share/man/man1/xjdxgen.1.gz
+/var/lib/xjdic/gnu_licence

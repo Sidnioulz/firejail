@@ -1,0 +1,7 @@
+/etc/needrestart/hook.d/10-dpkg
+/etc/needrestart/hook.d/20-rpm
+/etc/needrestart/hook.d/90-none
+/usr/lib/needrestart/apt-pinvoke
+/usr/lib/needrestart/dpkg-status
+/usr/sbin/needrestart
+/usr/share/bug/needrestart/script

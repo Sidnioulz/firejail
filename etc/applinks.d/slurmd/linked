@@ -1,0 +1,3 @@
+/etc/init.d/slurmd
+/usr/sbin/slurmd
+/usr/sbin/slurmstepd

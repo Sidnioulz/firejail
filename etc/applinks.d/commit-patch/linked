@@ -1,0 +1,6 @@
+/usr/bin/commit-partial
+/usr/bin/commit-patch
+/usr/bin/patch
+/usr/lib/emacsen-common/packages/install/commit-patch
+/usr/lib/emacsen-common/packages/remove/commit-patch
+/usr/share/man/man1/commit-partial.1.gz

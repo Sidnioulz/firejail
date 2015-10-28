@@ -1,0 +1,16 @@
+/usr/bin/mpc
+/usr/bin/mpc-ace
+/usr/bin/mwc-ace
+/usr/lib/ace/bin/mpc.pl
+/usr/lib/ace/bin/mwc.pl
+/usr/lib/ace/MPC/clone_build_tree.pl
+/usr/lib/ace/MPC/combine_dsw.pl
+/usr/lib/ace/MPC/create_base.pl
+/usr/lib/ace/MPC/depgen.pl
+/usr/lib/ace/MPC/generate_export_header.pl
+/usr/lib/ace/MPC/mpc.pl
+/usr/lib/ace/MPC/mwc.pl
+/usr/lib/ace/MPC/prj_install.pl
+/usr/lib/ace/MPC/registry.pl
+/usr/lib/ace/MPC/vs_postclean.pl
+/usr/share/man/man1/mwc-ace.1.gz

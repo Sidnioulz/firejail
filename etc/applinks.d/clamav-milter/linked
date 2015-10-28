@@ -1,0 +1,3 @@
+/etc/init.d/clamav-milter
+/usr/sbin/clamav-milter
+/usr/share/bug/clamav-milter/script

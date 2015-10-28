@@ -1,0 +1,3 @@
+/etc/init.d/inputlirc
+/usr/sbin/inputlirc
+/usr/sbin/inputlircd

@@ -1,0 +1,3 @@
+/etc/ha.d/resource.d/ldirectord
+/etc/init.d/ldirectord
+/usr/sbin/ldirectord

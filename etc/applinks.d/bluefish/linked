@@ -1,0 +1,13 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/bluefish
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/bluefish/cssmin.py
+/usr/share/bluefish/jsbeautify
+/usr/share/bluefish/jsmin.py
+/usr/share/bluefish/lorem-ipsum-generator
+/usr/share/python/runtime.d/bluefish-data.rtupdate

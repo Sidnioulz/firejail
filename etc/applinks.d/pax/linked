@@ -1,0 +1,10 @@
+/bin/pax
+/bin/paxcpio
+/bin/paxtar
+/usr/bin/dumpelf
+/usr/bin/lddtree
+/usr/bin/pspax
+/usr/bin/scanelf
+/usr/bin/scanmacho
+/usr/bin/symtree
+/usr/games/pax-britannica

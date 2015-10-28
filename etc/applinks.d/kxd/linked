@@ -1,0 +1,4 @@
+/etc/init.d/kxd
+/usr/bin/create-kxd-config
+/usr/bin/kxd
+/usr/bin/kxd-add-client-key

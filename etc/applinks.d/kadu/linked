@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/kadu
+/usr/lib/x86_64-linux-gnu/kadu/plugins/bin/mime_tex/mimetex
+/usr/share/kadu/plugins/data/sql_history/scripts/history-database-recovery.sh
+/usr/share/kadu/sdk/translations/plugintsupdate.sh

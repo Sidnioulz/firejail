@@ -1,0 +1,15 @@
+/usr/bin/osgearth
+/usr/bin/osgearth_backfill
+/usr/bin/osgearth_boundarygen
+/usr/bin/osgearth_cache
+/usr/bin/osgearth_demo
+/usr/bin/osgearth_overlayviewer
+/usr/bin/osgearth_package
+/usr/bin/osgearth_sharedlayer
+/usr/bin/osgearth_terraineffects
+/usr/bin/osgearth_tfs
+/usr/bin/osgearth_tileindex
+/usr/bin/osgearth_version
+/usr/bin/osgearth_viewer
+/usr/share/osgearth/fonts/arial.ttf
+/usr/share/osgearth/fonts/times.ttf

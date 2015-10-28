@@ -1,0 +1,10 @@
+/etc/init.d/bird
+/etc/init.d/bird6
+/usr/lib/bird/prepare-environment
+/usr/sbin/bird
+/usr/sbin/bird6
+/usr/sbin/birdc
+/usr/sbin/birdc6
+/usr/share/man/man8/bird6.8.gz
+/usr/share/man/man8/birdc6.8.gz
+/usr/share/man/man8/birdc.8.gz

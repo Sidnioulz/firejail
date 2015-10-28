@@ -1,0 +1,4 @@
+/etc/init.d/anon-proxy
+/usr/sbin/anon-proxy
+/usr/sbin/mix
+/usr/share/man/man8/anon-proxy.8.gz

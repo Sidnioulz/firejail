@@ -1,0 +1,9 @@
+/usr/bin/mdm
+/usr/bin/mdm-run
+/usr/bin/mdm.screen
+/usr/bin/mdm-sync
+/usr/bin/ncpus
+/usr/lib/mdm/mdm-master
+/usr/lib/mdm/mdm-slave
+/usr/lib/mdm/mdm-top
+/usr/share/man/man1/mdm-sync.1.gz

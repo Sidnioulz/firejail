@@ -1,0 +1,5 @@
+/usr/bin/cbmc
+/usr/bin/goto-cc
+/usr/bin/goto-instrument
+/usr/share/man/man1/goto-cc.1.gz
+/usr/share/man/man1/goto-instrument.1.gz

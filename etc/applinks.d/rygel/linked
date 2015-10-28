@@ -1,0 +1,6 @@
+/usr/bin/rygel
+/usr/bin/rygel-preferences
+/usr/lib/librygel-core-2.4.so
+/usr/lib/librygel-renderer-2.4.so
+/usr/lib/librygel-renderer-gst-2.4.so
+/usr/lib/librygel-server-2.4.so

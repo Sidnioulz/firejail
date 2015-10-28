@@ -1,0 +1,3 @@
+/etc/init.d/groonga-httpd
+/usr/sbin/groonga-httpd
+/usr/sbin/groonga-httpd-restart

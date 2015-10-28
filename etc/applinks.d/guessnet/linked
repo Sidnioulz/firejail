@@ -1,0 +1,5 @@
+/usr/sbin/guessnet
+/usr/sbin/guessnet-ifupdown
+/usr/share/guessnet/test/test-wireless
+/usr/share/guessnet/test/test-wireless-ap
+/usr/share/guessnet/test/test-wireless-scan

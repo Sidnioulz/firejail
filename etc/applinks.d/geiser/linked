@@ -1,0 +1,4 @@
+/usr/bin/geiser
+/usr/bin/geiser-racket
+/usr/lib/emacsen-common/packages/install/geiser
+/usr/lib/emacsen-common/packages/remove/geiser

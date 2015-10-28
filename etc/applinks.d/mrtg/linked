@@ -1,0 +1,6 @@
+/usr/bin/cfgmaker
+/usr/bin/indexmaker
+/usr/bin/mrtg
+/usr/bin/mrtg-ping-probe
+/usr/bin/rateup
+/usr/lib/cgi-bin/mrtg-rrd.cgi

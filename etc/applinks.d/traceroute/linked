@@ -1,0 +1,12 @@
+/usr/bin/lft.db
+/usr/bin/traceproto.db
+/usr/bin/traceroute
+/usr/bin/traceroute6.db
+/usr/bin/traceroute.db
+/usr/bin/traceroute-nanog
+/usr/sbin/tcptraceroute.db
+/usr/share/man/man1/lft.db.1.gz
+/usr/share/man/man1/traceproto.db.1.gz
+/usr/share/man/man1/traceroute6.db.1.gz
+/usr/share/man/man1/traceroute-nanog.1.gz
+/usr/share/man/man8/tcptraceroute.db.8.gz

@@ -1,0 +1,12 @@
+/etc/cron.daily/leafnode
+/etc/news/leafnode/do-fetch-news
+/etc/ppp/ip-down.d/leafnode
+/etc/ppp/ip-up.d/leafnode
+/usr/bin/leafnode-version
+/usr/bin/newsq
+/usr/bin/touch_newsgroup
+/usr/sbin/applyfilter
+/usr/sbin/checkgroups
+/usr/sbin/fetchnews
+/usr/sbin/leafnode
+/usr/sbin/texpire

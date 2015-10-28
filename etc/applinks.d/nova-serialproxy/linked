@@ -1,0 +1,2 @@
+/etc/init.d/nova-serialproxy
+/usr/bin/nova-serialproxy

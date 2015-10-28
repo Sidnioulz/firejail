@@ -1,0 +1,5 @@
+/etc/init.d/mosquitto
+/usr/bin/mosquitto_passwd
+/usr/bin/mosquitto_pub
+/usr/bin/mosquitto_sub
+/usr/sbin/mosquitto

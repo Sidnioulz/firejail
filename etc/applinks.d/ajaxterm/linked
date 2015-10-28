@@ -1,0 +1,9 @@
+/etc/init.d/ajaxterm
+/usr/bin/ajaxterm
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/ajaxterm/ajaxterm_config.js
+/usr/share/ajaxterm/ajaxterm.py
+/usr/share/python/runtime.d/ajaxterm.rtupdate

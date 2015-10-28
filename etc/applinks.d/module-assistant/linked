@@ -1,0 +1,13 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/m-a
+/usr/bin/module-assistant
+/usr/share/man/fr/man8/m-a.8.gz
+/usr/share/man/man8/m-a.8.gz
+/usr/share/modass/check-known-packages.sh
+/usr/share/modass/include/common-rules.mk
+/usr/share/modass/include/generic.mk
+/usr/share/modass/include/vers_hocus_pocus.mk
+/usr/share/modass/packages/default.sh
+/usr/share/modass/packages/rtai-source

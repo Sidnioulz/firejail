@@ -1,0 +1,8 @@
+/usr/bin/ns3
+/usr/bin/ns3.17-bench-packets
+/usr/bin/ns3.17-bench-simulator
+/usr/bin/ns3.17-emu-sock-creator
+/usr/bin/ns3.17-print-introspected-doxygen
+/usr/bin/ns3.17-raw-sock-creator
+/usr/bin/ns3.17-tap-creator
+/usr/bin/ns3.17-tap-device-creator

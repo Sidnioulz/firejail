@@ -1,0 +1,7 @@
+/usr/bin/mate-power-manager
+/usr/bin/mate-power-manager-bugreport
+/usr/bin/mate-power-preferences
+/usr/bin/mate-power-statistics
+/usr/lib/mate-power-manager/mate-brightness-applet
+/usr/lib/mate-power-manager/mate-inhibit-applet
+/usr/sbin/mate-power-backlight-helper

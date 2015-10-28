@@ -1,0 +1,2 @@
+/sbin/dmsetup
+/usr/share/initramfs-tools/hooks/dmsetup

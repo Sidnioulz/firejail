@@ -1,0 +1,3 @@
+/etc/cron.daily/zz-backup2l
+/usr/bin/backup2l
+/usr/sbin/backup2l

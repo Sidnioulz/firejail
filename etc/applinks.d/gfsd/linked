@@ -1,0 +1,4 @@
+/etc/init.d/gfsd
+/usr/bin/config-gfsd
+/usr/bin/gfarm.arch.guess
+/usr/sbin/gfsd

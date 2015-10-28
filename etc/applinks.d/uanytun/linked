@@ -1,0 +1,8 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/uanytun
+/usr/sbin/uanytun
+/usr/share/uanytun/examples/config/client1/post-up.sh
+/usr/share/uanytun/examples/config/client2/post-up.sh
+/usr/share/uanytun/examples/config/client3/post-up.sh

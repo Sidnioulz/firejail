@@ -1,0 +1,3 @@
+/etc/schroot/setup.d/01launchpad-chroot
+/etc/schroot/setup.d/90apt-sources
+/usr/bin/sbuild-launchpad-chroot

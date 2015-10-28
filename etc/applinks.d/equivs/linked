@@ -1,0 +1,4 @@
+/usr/bin/equivs
+/usr/bin/equivs-build
+/usr/bin/equivs-control
+/usr/share/equivs/template/debian/rules

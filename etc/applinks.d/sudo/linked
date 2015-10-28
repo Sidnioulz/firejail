@@ -1,0 +1,15 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/sudo
+/etc/init.d/sudo-ldap
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/sudo
+/usr/bin/sudoedit
+/usr/bin/sudoreplay
+/usr/lib/sudo/sesh
+/usr/sbin/visudo
+/usr/share/man/man8/sudoedit.8.gz

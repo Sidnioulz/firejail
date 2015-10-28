@@ -1,0 +1,2 @@
+/etc/cron.daily/automysqlbackup
+/usr/sbin/automysqlbackup

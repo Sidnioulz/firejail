@@ -1,0 +1,8 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/fiaif
+/usr/sbin/fiaif
+/usr/sbin/fiaif-getdev
+/usr/sbin/fiaif-scan
+/usr/sbin/fiaif-update

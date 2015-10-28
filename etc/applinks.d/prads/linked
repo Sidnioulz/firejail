@@ -1,0 +1,4 @@
+/etc/init.d/prads
+/usr/bin/prads
+/usr/bin/prads2snort
+/usr/bin/prads-asset-report

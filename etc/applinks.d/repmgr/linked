@@ -1,0 +1,3 @@
+/etc/init.d/repmgrd
+/usr/bin/repmgr
+/usr/bin/repmgrd

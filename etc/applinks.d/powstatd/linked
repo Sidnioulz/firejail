@@ -1,0 +1,4 @@
+/etc/init.d/powerfail
+/etc/init.d/powstatd
+/etc/init.d/ups-monitor
+/sbin/powstatd

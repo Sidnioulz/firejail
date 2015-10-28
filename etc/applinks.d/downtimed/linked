@@ -1,0 +1,5 @@
+/etc/init.d/downtimed
+/usr/bin/downtime
+/usr/bin/downtimes
+/usr/sbin/downtimed
+/usr/share/man/man1/downtime.1.gz

@@ -1,0 +1,13 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/mandos
+/usr/lib/x86_64-linux-gnu/mandos/plugin-runner
+/usr/lib/x86_64-linux-gnu/mandos/plugins.d/password-prompt
+/usr/sbin/mandos
+/usr/sbin/mandos-ctl
+/usr/sbin/mandos-keygen
+/usr/sbin/mandos-monitor
+/usr/share/initramfs-tools/hooks/mandos
+/usr/share/initramfs-tools/scripts/init-premount/mandos
+/usr/share/man/man5/plugin-runner.conf.5mandos.gz

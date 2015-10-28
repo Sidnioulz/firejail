@@ -1,0 +1,12 @@
+/etc/cron.daily/chkrootkit
+/usr/lib/chkrootkit/check_wtmpx
+/usr/lib/chkrootkit/chkdirs
+/usr/lib/chkrootkit/chklastlog
+/usr/lib/chkrootkit/chkproc
+/usr/lib/chkrootkit/chkutmp
+/usr/lib/chkrootkit/chkwtmp
+/usr/lib/chkrootkit/ifpromisc
+/usr/lib/chkrootkit/strings-static
+/usr/sbin/chklastlog
+/usr/sbin/chkrootkit
+/usr/sbin/chkwtmp

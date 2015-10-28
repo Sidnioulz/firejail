@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/activate-global-python-argcomplete
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/python-argcomplete
+/usr/bin/python-argcomplete-check-easy-install-script
+/usr/bin/register-python-argcomplete

@@ -1,0 +1,5 @@
+/usr/bin/letodms
+/usr/share/letodms/utils/letodms-adddoc
+/usr/share/letodms/utils/letodms-createfolder
+/usr/share/letodms/utils/letodms-indexer
+/usr/share/letodms/utils/letodms-xmldump

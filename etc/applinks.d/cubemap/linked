@@ -1,0 +1,4 @@
+/etc/init.d/cubemap
+/usr/bin/cubemap
+/usr/share/munin/plugins/cubemap
+/usr/share/munin/plugins/cubemap_input

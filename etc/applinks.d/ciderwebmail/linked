@@ -1,0 +1,7 @@
+/bin/ciderwebmail
+/usr/share/ciderwebmail/bin/ciderwebmail_cgi.pl
+/usr/share/ciderwebmail/bin/ciderwebmail_create.pl
+/usr/share/ciderwebmail/bin/ciderwebmail_fastcgi.pl
+/usr/share/ciderwebmail/bin/ciderwebmail_server.pl
+/usr/share/ciderwebmail/bin/ciderwebmail_test.pl
+/usr/share/ciderwebmail/root/static/css/custom.css

@@ -1,0 +1,4 @@
+/etc/init.d/lxd
+/usr/bin/lxc
+/usr/bin/lxd
+/usr/bin/lxd-images

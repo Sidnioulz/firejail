@@ -1,0 +1,15 @@
+/usr/bin/subunit
+/usr/bin/subunit-1to2
+/usr/bin/subunit2csv
+/usr/bin/subunit2gtk
+/usr/bin/subunit2junitxml
+/usr/bin/subunit2pyunit
+/usr/bin/subunit-2to1
+/usr/bin/subunit-diff
+/usr/bin/subunit-filter
+/usr/bin/subunit-ls
+/usr/bin/subunit-notify
+/usr/bin/subunit-output
+/usr/bin/subunit-stats
+/usr/bin/subunit-tags
+/usr/bin/tap2subunit

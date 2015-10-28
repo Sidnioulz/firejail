@@ -1,0 +1,14 @@
+/etc/init.d/pure-ftpd-ldap
+/etc/pure-ftpd/auth/30ldap
+/usr/bin/pure-pw
+/usr/bin/pure-pwconvert
+/usr/bin/pure-statsdecode
+/usr/sbin/pure-authd
+/usr/sbin/pure-ftpd-ldap
+/usr/sbin/pure-ftpd-ldap-virtualchroot
+/usr/sbin/pure-ftpwho
+/usr/sbin/pure-mrtginfo
+/usr/sbin/pure-quotacheck
+/usr/sbin/pure-uploadscript
+/usr/share/man/man8/pure-ftpd-ldap.8.gz
+/usr/share/man/man8/pure-ftpd-ldap-virtualchroot.8.gz

@@ -1,0 +1,9 @@
+/usr/bin/regedit-development
+/usr/bin/regsvr32-development
+/usr/bin/wineboot-development
+/usr/bin/winecfg-development
+/usr/bin/winedbg-development
+/usr/bin/wine-development
+/usr/bin/winefile-development
+/usr/bin/winepath-development
+/usr/lib/wine-development/wineapploader

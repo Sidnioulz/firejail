@@ -1,0 +1,12 @@
+/usr/bin/gnunet-conversation-gtk
+/usr/bin/gnunet-fs-gtk
+/usr/bin/gnunet-gtk
+/usr/bin/gnunet-identity-gtk
+/usr/bin/gnunet-namestore-gtk
+/usr/bin/gnunet-peerinfo-gtk
+/usr/bin/gnunet-setup
+/usr/bin/gnunet-statistics-gtk
+/usr/lib/gnunet/gnunet-setup
+/usr/lib/libgnunetgtk.so
+/usr/lib/libgnunetgtk.so.1
+/usr/share/icons/gnunet-fs-gtk.png

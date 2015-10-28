@@ -1,0 +1,4 @@
+/usr/bin/copyfs
+/usr/bin/copyfs-daemon
+/usr/bin/copyfs-fversion
+/usr/bin/copyfs-mount

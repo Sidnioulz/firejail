@@ -1,0 +1,8 @@
+/usr/bin/enca
+/usr/bin/enconv
+/usr/lib/enca/extconv/cstocs
+/usr/lib/enca/extconv/map
+/usr/lib/enca/extconv/piconv
+/usr/lib/enca/extconv/recode
+/usr/lib/enca/extconv/umap
+/usr/share/man/man1/enconv.1.gz

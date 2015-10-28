@@ -1,0 +1,3 @@
+/etc/init.d/privoxy
+/usr/bin/privoxy-log-parser
+/usr/sbin/privoxy

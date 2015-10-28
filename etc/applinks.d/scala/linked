@@ -1,0 +1,16 @@
+/usr/bin/fsc
+/usr/bin/scala
+/usr/bin/scalac
+/usr/bin/scaladoc
+/usr/bin/scalap
+/usr/lib/emacsen-common/packages/install/scala-mode-el
+/usr/lib/emacsen-common/packages/remove/scala-mode-el
+/usr/share/java/scalacheck.jar
+/usr/share/java/scala-compiler.jar
+/usr/share/java/scala-dbc.jar
+/usr/share/java/scala-library.jar
+/usr/share/java/scala-partest.jar
+/usr/share/java/scalap.jar
+/usr/share/java/scala-swing.jar
+/usr/share/maven-repo/org/scala-lang/scala-library/2.9.2/scala-library-2.9.2.jar
+/usr/share/maven-repo/org/scala-lang/scala-library/debian/scala-library-debian.jar

@@ -1,0 +1,9 @@
+
+/bin/bash
+/bin/sh
+/etc/init.d/ifscheme
+/sbin/essidscan
+/sbin/ifscheme
+/sbin/ifscheme-mapping
+/sbin/wifichoice.sh
+/usr/share/man/man8/ifscheme-mapping.8.gz

@@ -1,0 +1,5 @@
+/etc/init.d/mopd
+/usr/sbin/mopchk
+/usr/sbin/mopd
+/usr/sbin/mopprobe
+/usr/sbin/moptrace

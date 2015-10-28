@@ -1,0 +1,5 @@
+/usr/bin/msmtp
+/usr/bin/newaliases
+/usr/lib/sendmail
+/usr/sbin/sendmail
+/usr/share/man/man8/sendmail.8.gz

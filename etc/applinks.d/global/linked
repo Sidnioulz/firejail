@@ -1,0 +1,14 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/global
+/usr/bin/globash
+/usr/bin/gozilla
+/usr/bin/gtags
+/usr/bin/gtags-cscope
+/usr/bin/gtags-parser
+/usr/bin/htags
+/usr/bin/htconfig
+/usr/bin/htmake
+/usr/lib/emacsen-common/packages/install/global
+/usr/lib/emacsen-common/packages/remove/global

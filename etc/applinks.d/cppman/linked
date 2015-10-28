@@ -1,0 +1,12 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/cppman
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/python2.7/dist-packages/cppman/lib/pager_less.sh
+/usr/lib/python2.7/dist-packages/cppman/lib/pager_system.sh
+/usr/lib/python2.7/dist-packages/cppman/lib/pager_vim.sh
+/usr/lib/python2.7/dist-packages/cppman/lib/render.sh

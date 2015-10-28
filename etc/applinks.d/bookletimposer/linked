@@ -1,0 +1,11 @@
+/usr/bin/bookletimposer
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/python2.7/dist-packages/bookletimposer-0.2.egg-info
+/usr/lib/python2.7/dist-packages/bookletimposer/backend.py
+/usr/lib/python2.7/dist-packages/bookletimposer/config.py
+/usr/lib/python2.7/dist-packages/bookletimposer/gui.py
+/usr/lib/python2.7/dist-packages/bookletimposer/__init__.py
+/usr/lib/python2.7/dist-packages/pdfimposer.py

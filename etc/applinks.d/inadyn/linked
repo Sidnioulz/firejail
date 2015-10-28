@@ -1,0 +1,4 @@
+/etc/init.d/inadyn
+/etc/ppp/ip-up.d/inadyn
+/usr/bin/inadyn
+/usr/sbin/inadyn

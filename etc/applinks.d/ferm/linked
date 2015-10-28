@@ -1,0 +1,3 @@
+/etc/init.d/ferm
+/usr/sbin/ferm
+/usr/sbin/import-ferm

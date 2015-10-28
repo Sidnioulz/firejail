@@ -1,0 +1,11 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/sbcl
+/usr/lib/sbcl/sbcl-run
+/usr/share/sbcl-source/src/runtime/Config
+/usr/share/sbcl-source/src/runtime/linux-nm
+/usr/share/sbcl-source/src/runtime/target-arch.h
+/usr/share/sbcl-source/src/runtime/target-arch-os.h
+/usr/share/sbcl-source/src/runtime/target-lispregs.h
+/usr/share/sbcl-source/src/runtime/target-os.h

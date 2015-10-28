@@ -1,0 +1,5 @@
+/usr/bin/spf_example
+/usr/bin/spfquery
+/usr/bin/spfquery.libspf2
+/usr/bin/spftest
+/usr/sbin/spfd.libspf2

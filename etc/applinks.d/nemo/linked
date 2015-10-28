@@ -1,0 +1,10 @@
+/usr/bin/nemo
+/usr/bin/nemo-autorun-software
+/usr/bin/nemo-connect-server
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/x86_64-linux-gnu/nemo/nemo-convert-metadata
+/usr/share/nemo/actions/myaction.py
+/usr/share/python/runtime.d/nemo-data.rtupdate

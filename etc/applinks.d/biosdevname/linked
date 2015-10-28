@@ -1,0 +1,2 @@
+/sbin/biosdevname
+/usr/share/initramfs-tools/hooks/biosdevname

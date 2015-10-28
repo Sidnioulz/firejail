@@ -1,0 +1,13 @@
+/etc/bash_completion.d/bugz
+/usr/bin/bugz
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/python2.7/dist-packages/bugz/argparsers.py
+/usr/lib/python2.7/dist-packages/bugz/bugzilla.py
+/usr/lib/python2.7/dist-packages/bugz/cli.py
+/usr/lib/python2.7/dist-packages/bugz/configfile.py
+/usr/lib/python2.7/dist-packages/bugz/__init__.py
+/usr/lib/python2.7/dist-packages/pybugz-0.10.1.egg-info
+/usr/share/zsh/vendor-completions/_bugz

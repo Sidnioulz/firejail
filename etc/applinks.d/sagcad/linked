@@ -1,0 +1,6 @@
+/usr/bin/sagcad
+/usr/share/sagcad/tool/ruby/diagram.rb
+/usr/share/sagcad/tool/ruby/ellipse_make.rb
+/usr/share/sagcad/tool/ruby/sample_diagram.rb
+/usr/share/sagcad/tool/ruby/square_make.rb
+/usr/share/sagcad/tool/ruby/test.rb

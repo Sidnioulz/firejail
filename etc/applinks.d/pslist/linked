@@ -1,0 +1,5 @@
+/usr/bin/pslist
+/usr/bin/rkill
+/usr/bin/rrenice
+/usr/share/man/man1/rkill.1.gz
+/usr/share/man/man1/rrenice.1.gz

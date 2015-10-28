@@ -1,0 +1,12 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/rhythmbox
+/usr/bin/rhythmbox-client
+/usr/lib/librhythmbox-core.so
+/usr/lib/rhythmbox/rhythmbox-metadata
+/usr/share/python3/runtime.d/rhythmbox-plugin-magnatune.rtupdate
+/usr/share/python3/runtime.d/rhythmbox-plugins.rtupdate
+/usr/share/python3/runtime.d/rhythmbox-plugin-zeitgeist.rtupdate
+/usr/share/python3/runtime.d/rhythmbox.rtupdate

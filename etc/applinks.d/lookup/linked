@@ -1,0 +1,5 @@
+/usr/bin/lookup
+/usr/lib/emacsen-common/packages/install/lookup-el
+/usr/lib/emacsen-common/packages/remove/lookup-el
+/usr/sbin/lookup
+/usr/sbin/lookupconfig

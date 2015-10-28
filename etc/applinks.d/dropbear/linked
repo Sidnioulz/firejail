@@ -1,0 +1,11 @@
+/etc/dropbear/log/main
+/etc/dropbear/log/run
+/etc/dropbear/run
+/etc/init.d/dropbear
+/usr/bin/dbclient
+/usr/bin/dropbearkey
+/usr/lib/dropbear/dropbearconvert
+/usr/sbin/dropbear
+/usr/share/initramfs-tools/hooks/dropbear
+/usr/share/initramfs-tools/scripts/init-bottom/dropbear
+/usr/share/initramfs-tools/scripts/init-premount/dropbear

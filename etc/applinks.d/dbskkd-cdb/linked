@@ -1,0 +1,7 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/makeskkcdbdic
+/usr/sbin/dbskkd-cdb
+/usr/share/dbskkd-cdb/makeskkcdb.sh
+/usr/share/dbskkd-cdb/skktocdbm.sh

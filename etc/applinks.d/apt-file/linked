@@ -1,0 +1,6 @@
+/usr/bin/apt-file
+/usr/bin/diffindex-download
+/usr/bin/diffindex-rred
+/usr/bin/file
+/usr/share/apt-file/do-apt-file-update
+/usr/share/apt-file/is-cache-empty

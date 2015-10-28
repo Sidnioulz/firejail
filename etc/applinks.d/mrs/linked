@@ -1,0 +1,4 @@
+/etc/init.d/mrs
+/usr/bin/mrs
+/var/lib/mrs/docroot/scripts/jquery
+/var/lib/mrs/docroot/scripts/jquery-ui

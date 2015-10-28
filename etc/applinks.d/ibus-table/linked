@@ -1,0 +1,9 @@
+/usr/bin/ibus-table
+/usr/bin/ibus-table-createdb
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/ibus/ibus-engine-table
+/usr/lib/ibus/ibus-setup-table
+/usr/share/python3/runtime.d/ibus-table.rtupdate

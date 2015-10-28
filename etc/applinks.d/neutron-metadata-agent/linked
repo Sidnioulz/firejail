@@ -1,0 +1,3 @@
+/etc/init.d/neutron-metadata-agent
+/usr/bin/neutron-metadata-agent
+/usr/bin/neutron-ns-metadata-proxy

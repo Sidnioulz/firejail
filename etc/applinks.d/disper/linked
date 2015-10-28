@@ -1,0 +1,12 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/disper
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/share/disper/hooks/debug.sh
+/usr/share/disper/hooks/notify.sh
+/usr/share/disper/src/disper.py
+/usr/share/python/runtime.d/disper.rtupdate

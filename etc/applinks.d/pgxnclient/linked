@@ -1,0 +1,16 @@
+/usr/bin/pgxn
+/usr/bin/pgxnclient
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-check
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-download
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-help
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-info
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-install
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-load
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-mirror
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-search
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-uninstall
+/usr/lib/python2.7/dist-packages/pgxnclient/libexec/pgxn-unload

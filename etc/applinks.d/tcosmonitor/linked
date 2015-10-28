@@ -1,0 +1,10 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/tcos-dbus-client
+/usr/bin/tcos-devices-ng
+/usr/bin/tcosmonitor
+/usr/bin/tcospersonalize
+/usr/bin/tcos-volume-manager
+/usr/sbin/tcos-server-utils

@@ -1,0 +1,3 @@
+/etc/network/if-up.d/ntpdate
+/usr/sbin/ntpdate
+/usr/sbin/ntpdate-debian

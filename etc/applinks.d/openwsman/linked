@@ -1,0 +1,15 @@
+/usr/lib/x86_64-linux-gnu/openwsman/authenticators/libwsman_file_auth.so
+/usr/lib/x86_64-linux-gnu/openwsman/authenticators/libwsman_file_auth.so.1
+/usr/lib/x86_64-linux-gnu/openwsman/authenticators/libwsman_pam_auth.so
+/usr/lib/x86_64-linux-gnu/openwsman/authenticators/libwsman_pam_auth.so.1
+/usr/lib/x86_64-linux-gnu/openwsman/plugins/libredirect.so
+/usr/lib/x86_64-linux-gnu/openwsman/plugins/libredirect.so.1
+/usr/lib/x86_64-linux-gnu/openwsman/plugins/libwsman_cim_plugin.so
+/usr/lib/x86_64-linux-gnu/openwsman/plugins/libwsman_cim_plugin.so.1
+/usr/lib/x86_64-linux-gnu/openwsman/plugins/libwsman_identify_plugin.so
+/usr/lib/x86_64-linux-gnu/openwsman/plugins/libwsman_identify_plugin.so.1
+/usr/lib/x86_64-linux-gnu/openwsman/plugins/libwsman_test.so
+/usr/lib/x86_64-linux-gnu/openwsman/plugins/libwsman_test.so.1
+/usr/sbin/openwsman
+/usr/sbin/openwsmand
+/usr/sbin/owsmangencert

@@ -1,0 +1,12 @@
+/usr/bin/gamgi
+/usr/lib/gamgi/gamgi.real
+/usr/share/gamgi/dat/util/perl/car_gml
+/usr/share/gamgi/dat/util/perl/cc1_gml
+/usr/share/gamgi/dat/util/perl/debug_set_get
+/usr/share/gamgi/dat/util/perl/dos_unix
+/usr/share/gamgi/dat/util/perl/mac_unix
+/usr/share/gamgi/dat/util/perl/mol_gml
+/usr/share/gamgi/dat/util/perl/msf_gml
+/usr/share/gamgi/dat/util/perl/pdb_gml
+/usr/share/gamgi/dat/util/perl/xyz_gml
+/usr/share/man/man1/gamgi.real.1.gz

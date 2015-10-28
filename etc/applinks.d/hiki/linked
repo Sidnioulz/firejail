@@ -1,0 +1,8 @@
+/usr/bin/hiki
+/usr/bin/hikisetup
+/usr/share/hiki/hiki/auth/typekey.rb
+/usr/share/hiki/hiki.cgi
+/usr/share/hiki/misc/hikifarm/index.cgi
+/usr/share/hiki/misc/hikifarm/vc-backend-setup.cgi
+/usr/share/hiki/misc/plugin/attach/attach.cgi
+/usr/share/hiki/misc/webrick/hikilet.rb

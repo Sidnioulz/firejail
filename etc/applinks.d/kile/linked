@@ -1,0 +1,14 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/kile
+/usr/share/kde4/apps/kconf_update/kile1.6_upd.pl
+/usr/share/kde4/apps/kconf_update/kile1.7_upd.pl
+/usr/share/kde4/apps/kconf_update/kile1.9-1_upd.pl
+/usr/share/kde4/apps/kconf_update/kile1.9_upd.pl
+/usr/share/kde4/apps/kconf_update/kile2.0-1_upd.pl
+/usr/share/kde4/apps/kconf_update/kile2.0-2_upd.pl
+/usr/share/kde4/apps/kconf_update/kile2.0-3_upd.pl
+/usr/share/kde4/apps/kconf_update/kile2.0-4_upd.pl
+/usr/share/kde4/apps/kconf_update/kile2.0-5_upd.pl
+/usr/share/kde4/apps/kile/test/runTests.sh

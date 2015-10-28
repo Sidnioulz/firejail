@@ -1,0 +1,17 @@
+/usr/bin/evcd2vcd
+/usr/bin/fst2vcd
+/usr/bin/fstminer
+/usr/bin/ghwdump
+/usr/bin/gtkwave
+/usr/bin/lxt2miner
+/usr/bin/lxt2vcd
+/usr/bin/rtlbrowse
+/usr/bin/shmidcat
+/usr/bin/twinwave
+/usr/bin/vcd2fst
+/usr/bin/vcd2lxt
+/usr/bin/vcd2lxt2
+/usr/bin/vcd2vzt
+/usr/bin/vermin
+/usr/bin/vzt2vcd
+/usr/bin/vztminer

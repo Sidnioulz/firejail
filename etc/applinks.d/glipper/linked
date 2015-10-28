@@ -1,0 +1,17 @@
+/usr/bin/glipper
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/python2.7/dist-packages/glipper-2.4.egg-info
+/usr/lib/python2.7/dist-packages/glipper/About.py
+/usr/lib/python2.7/dist-packages/glipper/AppIndicator.py
+/usr/lib/python2.7/dist-packages/glipper/Clipboards.py
+/usr/lib/python2.7/dist-packages/glipper/defs.py
+/usr/lib/python2.7/dist-packages/glipper/History.py
+/usr/lib/python2.7/dist-packages/glipper/__init__.py
+/usr/lib/python2.7/dist-packages/glipper/Keybinder.py
+/usr/lib/python2.7/dist-packages/glipper/Plugin.py
+/usr/lib/python2.7/dist-packages/glipper/PluginsManager.py
+/usr/lib/python2.7/dist-packages/glipper/Preferences.py
+/usr/share/python/runtime.d/glipper.rtupdate

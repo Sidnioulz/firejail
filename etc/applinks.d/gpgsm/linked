@@ -1,0 +1,5 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/gpgsm
+/usr/bin/gpgsm-gencert.sh

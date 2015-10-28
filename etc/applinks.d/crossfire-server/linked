@@ -1,0 +1,6 @@
+/etc/init.d/crossfire-server
+/usr/lib/crossfire/crossfire/add_throw.perl
+/usr/lib/crossfire/crossfire/metaserver.pl
+/usr/lib/crossfire/crossfire/mktable.script
+/usr/lib/crossfire/crossfire/random_map
+/usr/sbin/crossfire-server

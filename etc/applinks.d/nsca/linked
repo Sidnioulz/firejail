@@ -1,0 +1,5 @@
+/etc/init.d/nsca
+/etc/init.d/nsca-ng-server
+/usr/sbin/nsca
+/usr/sbin/nsca-ng
+/usr/sbin/send_nsca

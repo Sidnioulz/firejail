@@ -1,0 +1,8 @@
+/etc/init.d/mason
+/usr/bin/mason
+/usr/bin/mason-gui-text
+/var/lib/mason/baserules
+/var/lib/mason/mason-decide
+/var/lib/mason/masonlib
+/var/lib/mason/regression-test
+/var/lib/mason/samlib

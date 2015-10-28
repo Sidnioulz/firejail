@@ -1,0 +1,13 @@
+/usr/bin/debmake
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/lib/debmake/META.yml.short
+/usr/lib/debmake/python3.long
+/usr/lib/debmake/python3.short
+/usr/lib/debmake/python.long
+/usr/lib/debmake/python.short
+/usr/lib/debmake/Rakefile.short
+/usr/lib/debmake/specin.long
+/usr/lib/debmake/specin.short

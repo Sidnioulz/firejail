@@ -1,0 +1,5 @@
+/usr/bin/dpkg-www
+/usr/lib/cgi-bin/dpkg
+/usr/sbin/dpkg-www
+/usr/sbin/dpkg-www-installer
+/usr/share/man/man8/dpkg-www-installer.8.gz

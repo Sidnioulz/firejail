@@ -1,0 +1,4 @@
+/usr/bin/htcheck
+/usr/share/htcheck/php/include/footer.inc.php
+/usr/share/htcheck/php/include/global.inc.php
+/usr/share/htcheck/php/include/header.inc.php

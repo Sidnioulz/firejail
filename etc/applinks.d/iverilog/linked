@@ -1,0 +1,13 @@
+/usr/bin/iverilog
+/usr/bin/iverilog-vpi
+/usr/bin/vvp
+/usr/lib/x86_64-linux-gnu/ivl/cadpli.vpl
+/usr/lib/x86_64-linux-gnu/ivl/ivl
+/usr/lib/x86_64-linux-gnu/ivl/ivlpp
+/usr/lib/x86_64-linux-gnu/ivl/null.tgt
+/usr/lib/x86_64-linux-gnu/ivl/stub.tgt
+/usr/lib/x86_64-linux-gnu/ivl/system.vpi
+/usr/lib/x86_64-linux-gnu/ivl/v2005_math.vpi
+/usr/lib/x86_64-linux-gnu/ivl/va_math.vpi
+/usr/lib/x86_64-linux-gnu/ivl/vhdl.tgt
+/usr/lib/x86_64-linux-gnu/ivl/vvp.tgt

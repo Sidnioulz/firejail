@@ -1,0 +1,11 @@
+/usr/bin/subtitlecomposer
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_list.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_range.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_rangelist.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_rangesmodule.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_sstring.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_stringsmodule.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_subtitle.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_subtitleline.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_subtitlelinemodule.h
+/usr/share/kde4/apps/subtitlecomposer/scripts/api/scripting_subtitlemodule.h

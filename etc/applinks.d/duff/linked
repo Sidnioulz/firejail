@@ -1,0 +1,5 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/duff
+/usr/share/duff/join-duplicates.sh

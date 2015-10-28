@@ -1,0 +1,11 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/supybot
+/usr/bin/supybot-adduser
+/usr/bin/supybot-botchk
+/usr/bin/supybot-plugin-create
+/usr/bin/supybot-plugin-doc
+/usr/bin/supybot-test
+/usr/bin/supybot-wizard

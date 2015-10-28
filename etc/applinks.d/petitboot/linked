@@ -1,0 +1,7 @@
+/usr/lib/x86_64-linux-gnu/petitboot/pb-console
+/usr/sbin/pb-discover
+/usr/sbin/pb-event
+/usr/sbin/pb-udhcpc
+/usr/sbin/petitboot
+/usr/sbin/petitboot-nc
+/usr/sbin/petitboot-twin

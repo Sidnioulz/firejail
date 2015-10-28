@@ -1,0 +1,15 @@
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/veusz
+/usr/bin/veusz_listen
+/usr/lib/python2.7/dist-packages/veusz/resources
+/usr/share/icons/hicolor/128x128/apps/veusz.png
+/usr/share/icons/hicolor/16x16/apps/veusz.png
+/usr/share/icons/hicolor/32x32/apps/veusz.png
+/usr/share/icons/hicolor/48x48/apps/veusz.png
+/usr/share/icons/hicolor/64x64/apps/veusz.png
+/usr/share/icons/hicolor/scalable/apps/veusz.svg
+/usr/share/veusz/COPYING
+/usr/share/veusz/examples

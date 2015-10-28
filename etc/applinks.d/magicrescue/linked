@@ -1,0 +1,17 @@
+/usr/bin/dupemap
+/usr/bin/magicrescue
+/usr/bin/magicsort
+/usr/lib/magicrescue/tools/checkrecipe
+/usr/lib/magicrescue/tools/elfextract.pl
+/usr/lib/magicrescue/tools/gimp-resave.pl
+/usr/lib/magicrescue/tools/gzip_rename.pl
+/usr/lib/magicrescue/tools/inputseek
+/usr/lib/magicrescue/tools/laola.pl
+/usr/lib/magicrescue/tools/mp3extract.pl
+/usr/lib/magicrescue/tools/oleextract.pl
+/usr/lib/magicrescue/tools/ole_rename.pl
+/usr/lib/magicrescue/tools/pngextract.pl
+/usr/lib/magicrescue/tools/safecat
+/usr/lib/magicrescue/tools/script_rename.pl
+/usr/lib/magicrescue/tools/textextract
+/usr/share/magicrescue/tools

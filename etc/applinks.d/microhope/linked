@@ -1,0 +1,14 @@
+
+/bin/bash
+/bin/sh
+/usr/bin/create-microhope-env
+/usr/bin/microhope
+/usr/bin/microhope-doc
+/usr/bin/python
+/usr/bin/python2.7
+/usr/bin/python3.4
+/usr/bin/python3.4m
+/usr/bin/uhope
+/usr/share/microhope/firmware/setboot-by-usbasp.sh
+/usr/share/microhope/firmware/setboot.sh
+/usr/share/python/runtime.d/microhope.rtupdate

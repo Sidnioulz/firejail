@@ -1,0 +1,5 @@
+/etc/init.d/set6x86
+/usr/sbin/6x86_reg
+/usr/sbin/get6x86
+/usr/sbin/set6x86
+/usr/share/man/man8/get6x86.8.gz

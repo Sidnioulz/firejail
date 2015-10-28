@@ -1,0 +1,3 @@
+/usr/bin/dfu-prefix
+/usr/bin/dfu-suffix
+/usr/bin/dfu-util
