@@ -19,14 +19,13 @@
 */
 	
 #include "firejail.h"
+#include "../include/exechelper.h"
 #include <sys/mount.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/prctl.h>
 #include <sys/time.h>
 #include <sys/resource.h>
-#include <exechelper/exechelper.h>
-
 #include <sched.h>
 #ifndef CLONE_NEWUSER
 #define CLONE_NEWUSER	0x10000000

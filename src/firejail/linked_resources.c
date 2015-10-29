@@ -19,22 +19,22 @@
 */
 	
 #include "firejail.h"
+#include "../include/exechelper.h"
 #include <limits.h>
 #include <stdlib.h>
-#include <exechelper/exechelper.h>
 
-char *get_linked_processes_for_client(void) {
+char *get_linked_apps_for_client(void) {
   char *assocs = exechelp_extract_associations_for_binary(cfg.command_name);
 
-  // always associated with self
-  if (!assocs)
-    assocs = exechelp_resolve_path(cfg.command_name);
+  // always associated with self?
+  // if (!assocs)
+  //   assocs = exechelp_resolve_path(cfg.command_name);
 
   return assocs;
 }
 
 int is_command_linked_for_client(const char *command) {
-  char *linked = get_linked_processes_for_client();
+  char *linked = get_linked_apps_for_client();
   if (!linked)
     return 0;
 

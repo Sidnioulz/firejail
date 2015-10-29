@@ -19,12 +19,10 @@
 */
 	
 #include "firejail.h"
+#include "../include/exechelper.h"
 #include <errno.h>
-#include <exechelper/exechelper.h>
 
 #define MAX_READ                 8192
-#define PROTECTED_PROCESSES_NAME "protected-processes.bin"
-#define PROTECTED_FILES_NAME     "protected-files.bin"
 
 static int profile_name_matches_current(const char *name) {
   if (!cfg.profile_name)
@@ -46,34 +44,34 @@ static int command_name_matches_current(const char *name) {
   }
 }
 
-char *get_protected_processes_for_client (void) {
+char *get_protected_apps_for_client (void) {
   char *result = NULL;
 
   if (arg_debug)
-		printf("Looking up user's config directory for a list of protected processes\n");
+		printf("Looking up user's config directory for a list of protected apps\n");
   char *filepath;
-	if (asprintf(&filepath, "%s/.config/firejail/%s", cfg.homedir, PROTECTED_PROCESSES_NAME) == -1)
+	if (asprintf(&filepath, "%s/.config/firejail/%s", cfg.homedir, PROTECTED_APPS_NAME) == -1)
 		errExit("asprintf");
-	FILE *fp = fopen(PROTECTED_PROCESSES_NAME, "rb");
+	FILE *fp = fopen(PROTECTED_APPS_NAME, "rb");
 	free(filepath);
 
   if (fp == NULL) {
     if (arg_debug)
-		  printf("Looking up /etc/firejail for a list of protected processes\n");
+		  printf("Looking up /etc/firejail for a list of protected apps\n");
     char *filepath;
-	  if (asprintf(&filepath, "/etc/firejail/%s", PROTECTED_PROCESSES_NAME) == -1)
+	  if (asprintf(&filepath, "/etc/firejail/%s", PROTECTED_APPS_NAME) == -1)
 		  errExit("asprintf");
   	fp = fopen(filepath, "rb");
   	free(filepath);
   }
 
 	if (fp == NULL) {
-		fprintf(stderr, "Warning: could not find any file listing protected processes\n");
+		fprintf(stderr, "Warning: could not find any file listing protected apps\n");
 	  return NULL;
 	}
 
   if (arg_debug)
-  	printf("Reading the list of protected processes from a file\n");
+  	printf("Reading the list of protected apps from a file\n");
 
 	// read the file line by line
 	char buf[MAX_READ + 1], process[MAX_READ + 1], proflist[MAX_READ + 1];
@@ -86,7 +84,7 @@ char *get_protected_processes_for_client (void) {
     if (pathlen == -1)
       errExit("snprintf");
     else if (pathlen >= MAX_READ) {
-      fprintf(stderr, "Error: line %d of protected-processes.bin in malformed, the process path is longer than %d characters and the profile list cannot be read\n", lineno, MAX_READ);
+      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the process path is longer than %d characters and the profile list cannot be read\n", lineno, MAX_READ);
       errno = ENAMETOOLONG;
       errExit("snprintf");
     }
@@ -100,7 +98,7 @@ char *get_protected_processes_for_client (void) {
     if (proflen == -1)
       errExit("snprintf");
     else if (*(buf + pathlen + proflen) != '\n') {
-      fprintf(stderr, "Error: line %d of protected-processes.bin in malformed, the line is longer than %d characters and the profile list cannot be read\n", lineno, MAX_READ);
+      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the line is longer than %d characters and the profile list cannot be read\n", lineno, MAX_READ);
       errno = ENAMETOOLONG;
       errExit("snprintf");
     }
@@ -133,7 +131,7 @@ char *get_protected_processes_for_client (void) {
 	}
 
   if (arg_debug)
-    printf("The following processes are protected from being invoked by child process: %s\n", result); 
+    printf("The following apps are protected from being invoked by child process: %s\n", result); 
 	fclose(fp);
 
   return result;
@@ -203,19 +201,19 @@ char *get_protected_files_for_client (void) {
       prev = ptr;
       ptr = split_comma(ptr);
       
-      // split ptr into profile and binary
-      char *binary = strchr(prev, ':');
+      // split ptr into profile and path
+      char *path = strchr(prev, ':');
 
-      if (!binary) {
+      if (!path) {
         fprintf(stderr, "Error: line %d in malformed, should be of the form: <file>\\0<profile name>:<path to handler>,<profile name>:<path to handler>\n", lineno);
         errExit("strchr");
       }
 
-      *binary = '\0';
-      binary++;
+      *path = '\0';
+      path++;
 
-      if ((profile_name_matches_current(prev) && (strcmp("*", binary) == 0 || command_name_matches_current(binary)))
-          || (strcmp("*", prev) == 0 && command_name_matches_current(binary))) {
+      if ((profile_name_matches_current(prev) && (strcmp("*", path) == 0 || command_name_matches_current(path)))
+          || (strcmp("*", prev) == 0 && command_name_matches_current(path))) {
         found = 1;
         break;
       }

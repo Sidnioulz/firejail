@@ -18,13 +18,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "firejail.h"
+#include "../include/exechelper.h"
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <exechelper/exechelper.h>
 
 static int helper_files_generated = 0;
 
@@ -84,66 +84,66 @@ void fs_helper_generate_files(void) {
 	fs_build_mnt_etc_dir();
 	
 	// create /tmp/firejail/mnt/etc/firejail directory
-	if (stat(EXECHELP_SANDBOX_ETC_FJ_DIR, &s)) {
-	  int rv = mkdir(EXECHELP_SANDBOX_ETC_FJ_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
+	if (stat(ETC_FJ_DIR, &s)) {
+	  int rv = mkdir(ETC_FJ_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1)
 		  errExit("mkdir");
-	  if (chown(EXECHELP_SANDBOX_ETC_FJ_DIR, 0, 0) < 0)
+	  if (chown(ETC_FJ_DIR, 0, 0) < 0)
 		  errExit("chown");
-	  if (chmod(EXECHELP_SANDBOX_ETC_FJ_DIR, 0755) < 0)
+	  if (chmod(ETC_FJ_DIR, 0755) < 0)
 		  errExit("chmod");
 	}
 	
 	// create /tmp/firejail/mnt/etc/firejail/self directory
-	if (stat(EXECHELP_SANDBOX_SELF_DIR, &s)) {
-	  int rv = mkdir(EXECHELP_SANDBOX_SELF_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
+	if (stat(SELF_DIR, &s)) {
+	  int rv = mkdir(SELF_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1)
 		  errExit("mkdir");
-	  if (chown(EXECHELP_SANDBOX_SELF_DIR, 0, 0) < 0)
+	  if (chown(SELF_DIR, 0, 0) < 0)
 		  errExit("chown");
-	  if (chmod(EXECHELP_SANDBOX_SELF_DIR, 0755) < 0)
+	  if (chmod(SELF_DIR, 0755) < 0)
 		  errExit("chmod");
 	}
 
-  /* get list of associated helper applications */
+  /* get list of linked helper applications */
   if(arg_debug)
-    printf("Constructing a list of associated applications for child process '%s'...\n", cfg.command_name);
+    printf("Constructing a list of linked applications for child process '%s'...\n", cfg.command_name);
 
-  char *hpstr = get_linked_processes_for_client();
+  char *hpstr = get_linked_apps_for_client();
   if(arg_debug) {
     if (hpstr)
-      printf("Child process has associated applications: '%s'\n", hpstr);
+      printf("Child process has linked applications: '%s'\n", hpstr);
     else
-      printf("Child process has no associated applications, will write an empty file\n");
+      printf("Child process has no linked applications, will write an empty file\n");
   }
-  write_helper_list_to_file(EXECHELP_HELPER_BINS_SB_PATH, hpstr);
+  write_helper_list_to_file(LINKED_APPS_SB_PATH, hpstr);
   free(hpstr);
 
-  /* get list of managed binaries */
+  /* get list of protected binaries */
   if(arg_debug)
     printf("Constructing a list of applications launchable exclusively outside the child process' sandbox...\n");
-  char *mgstr = get_protected_processes_for_client ();
+  char *mgstr = get_protected_apps_for_client ();
   if(arg_debug) {
     if (mgstr)
-      printf("The following applications are managed by the sandbox: '%s'\n", mgstr);
+      printf("The following applications are protected by the sandbox: '%s'\n", mgstr);
     else
-      printf("No applications are managed by the sandbox, will write an empty file\n");
+      printf("No applications are protected by the sandbox, will write an empty file\n");
   }
-  write_helper_list_to_file(EXECHELP_MANAGED_BINS_SB_PATH, mgstr);
+  write_helper_list_to_file(PROTECTED_APPS_SB_PATH, mgstr);
   free(mgstr);
 
 
-  /* get list of managed files */
+  /* get list of protected files */
   if(arg_debug)
     printf("Constructing a list of files openable exclusively outside the child process' sandbox...\n");
   char *mgfstr = get_protected_files_for_client ();
   if(arg_debug) {
     if (mgfstr)
-      printf("The following files are managed by the sandbox: '%s'\n", mgfstr);
+      printf("The following files are protected by the sandbox: '%s'\n", mgfstr);
     else
-      printf("No files are managed by the sandbox, will write an empty file\n");
+      printf("No files are protected by the sandbox, will write an empty file\n");
   }
-  write_helper_list_to_file(EXECHELP_MANAGED_FILES_SB_PATH, mgfstr);
+  write_helper_list_to_file(PROTECTED_FILES_SB_PATH, mgfstr);
   free(mgfstr);
 
   helper_files_generated = 1;
@@ -173,15 +173,15 @@ static int fs_helper_overlay_etc(void) {
 	if (major == 3 && minor < 18)
 		oldkernel = 1;
 
-	if (mkdir(EXECHELP_SANDBOX_SELF_OVERLAY_DIR, S_IRWXU | S_IRWXG | S_IRWXO))
+	if (mkdir(SELF_OVERLAY_DIR, S_IRWXU | S_IRWXG | S_IRWXO))
 		errExit("mkdir");
-	if (chown(EXECHELP_SANDBOX_SELF_OVERLAY_DIR, 0, 0) < 0)
+	if (chown(SELF_OVERLAY_DIR, 0, 0) < 0)
 		errExit("chown");
-	if (chmod(EXECHELP_SANDBOX_SELF_OVERLAY_DIR, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+	if (chmod(SELF_OVERLAY_DIR, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
 		errExit("chmod");
 
 	char *oroot;
-	if(asprintf(&oroot, "%s/oroot", EXECHELP_SANDBOX_SELF_OVERLAY_DIR) == -1)
+	if(asprintf(&oroot, "%s/oroot", SELF_OVERLAY_DIR) == -1)
 		errExit("asprintf");
 	if (mkdir(oroot, S_IRWXU | S_IRWXG | S_IRWXO))
 		errExit("mkdir");
@@ -191,7 +191,7 @@ static int fs_helper_overlay_etc(void) {
 		errExit("chmod");
 
 	char *odiff;
-	if(asprintf(&odiff, "%s/odiff", EXECHELP_SANDBOX_SELF_OVERLAY_DIR) == -1)
+	if(asprintf(&odiff, "%s/odiff", SELF_OVERLAY_DIR) == -1)
 		errExit("asprintf");
 	if (mkdir(odiff, S_IRWXU | S_IRWXG | S_IRWXO))
 		errExit("mkdir");
@@ -201,7 +201,7 @@ static int fs_helper_overlay_etc(void) {
 		errExit("chmod");
 	
 	char *owork;
-	if(asprintf(&owork, "%s/owork", EXECHELP_SANDBOX_SELF_OVERLAY_DIR) == -1)
+	if(asprintf(&owork, "%s/owork", SELF_OVERLAY_DIR) == -1)
 		errExit("asprintf");
 	if (mkdir(owork, S_IRWXU | S_IRWXG | S_IRWXO))
 		errExit("mkdir");
@@ -228,23 +228,23 @@ static int fs_helper_overlay_etc(void) {
 			errExit("mounting overlayfs");
 	}
 	if(arg_debug)
-	  printf("OverlayFS configured in %s directory\n", EXECHELP_SANDBOX_SELF_OVERLAY_DIR);
+	  printf("OverlayFS configured in %s directory\n", SELF_OVERLAY_DIR);
 	
 	// create /etc/firejail/self equivalent in the OverlayFS
 	struct stat s;
-	if (stat(EXECHELP_SANDBOX_SELF_OVERLAY_DIR"/oroot/firejail/self", &s)) {
-	  int rv = mkdir(EXECHELP_SANDBOX_SELF_OVERLAY_DIR"/oroot/firejail/self", S_IRWXU | S_IRWXG | S_IRWXO);
+	if (stat(SELF_OVERLAY_DIR"/oroot/firejail/self", &s)) {
+	  int rv = mkdir(SELF_OVERLAY_DIR"/oroot/firejail/self", S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1)
 	    errExit("mkdir");
-    if (chown(EXECHELP_SANDBOX_SELF_OVERLAY_DIR"/oroot/firejail/self", 0, 0) < 0)
+    if (chown(SELF_OVERLAY_DIR"/oroot/firejail/self", 0, 0) < 0)
 	    errExit("chown");
-    if (chmod(EXECHELP_SANDBOX_SELF_OVERLAY_DIR"/oroot/firejail/self", 0755) < 0)
+    if (chmod(SELF_OVERLAY_DIR"/oroot/firejail/self", 0755) < 0)
 	    errExit("chmod");
 	}
 	
   if (arg_debug)
-	  printf("Mount-bind %s on top of OverlayFS equivalent of /etc/firejail/self\n", EXECHELP_SANDBOX_SELF_DIR);
-  if (mount(EXECHELP_SANDBOX_SELF_DIR, EXECHELP_SANDBOX_SELF_OVERLAY_DIR"/oroot/firejail/self", NULL, MS_BIND|MS_REC, NULL) < 0)
+	  printf("Mount-bind %s on top of OverlayFS equivalent of /etc/firejail/self\n", SELF_DIR);
+  if (mount(SELF_DIR, SELF_OVERLAY_DIR"/oroot/firejail/self", NULL, MS_BIND|MS_REC, NULL) < 0)
 	  errExit("mount bind");
 	
 	// mount-bind overlay directory on top of etc
@@ -260,8 +260,8 @@ static int fs_helper_overlay_etc(void) {
 
 void fs_helper_mount_self_dir(void) {
 	struct stat s;
-	if (stat(EXECHELP_SANDBOX_SELF_DIR, &s) == -1) {
-		fprintf(stderr, "Error: cannot find user %s directory\n", EXECHELP_SANDBOX_SELF_DIR);
+	if (stat(SELF_DIR, &s) == -1) {
+		fprintf(stderr, "Error: cannot find user %s directory\n", SELF_DIR);
 		exit(1);
 	}
 	
@@ -299,8 +299,8 @@ void fs_helper_mount_self_dir(void) {
       errExit("helper overlay");
   } else {
 	  if (arg_debug)
-		  printf("Mount-bind %s on top of /etc/firejail/self\n", EXECHELP_SANDBOX_SELF_DIR);
-	  if (mount(EXECHELP_SANDBOX_SELF_DIR, "/etc/firejail/self", NULL, MS_BIND|MS_REC, NULL) < 0)
+		  printf("Mount-bind %s on top of /etc/firejail/self\n", SELF_DIR);
+	  if (mount(SELF_DIR, "/etc/firejail/self", NULL, MS_BIND|MS_REC, NULL) < 0)
 		  errExit("mount bind");
   }
 }
@@ -315,7 +315,7 @@ char *fs_helper_list_files(void) {
     return "";
 
   char *list = NULL;
-  if (asprintf(&list, "%s,%s,%s", EXECHELP_HELPER_BINS_SB_PATH, EXECHELP_MANAGED_BINS_SB_PATH, EXECHELP_MANAGED_FILES_SB_PATH) == -1)
+  if (asprintf(&list, "%s,%s,%s", LINKED_APPS_SB_PATH, PROTECTED_APPS_SB_PATH, PROTECTED_FILES_SB_PATH) == -1)
 		errExit("asprintf");
   return list;
 }

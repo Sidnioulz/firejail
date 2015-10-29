@@ -22,12 +22,22 @@
 #include "../include/common.h"
 
 #define USELOCK
-#define FIREJAIL_DIR	"/tmp/firejail"
-#define RO_DIR	"/tmp/firejail/firejail.ro.dir"
-#define RO_FILE	"/tmp/firejail/firejail.ro.file"
-#define MNT_DIR	"/tmp/firejail/mnt"
-#define HOME_DIR	"/tmp/firejail/mnt/home"
-#define ETC_DIR	"/tmp/firejail/mnt/etc"
+#define FIREJAIL_DIR	            "/tmp/firejail"
+#define RO_DIR		                "/tmp/firejail/firejail.ro.dir"
+#define RO_FILE		                "/tmp/firejail/firejail.ro.file"
+#define MNT_DIR		                "/tmp/firejail/mnt"
+#define HOME_DIR	                "/tmp/firejail/mnt/home"
+#define SELF_OVERLAY_DIR          "/tmp/firejail/mnt/helperoverlay"
+#define ETC_DIR	                  "/tmp/firejail/mnt/etc"
+#define ETC_FJ_DIR                "/tmp/firejail/mnt/etc/firejail"
+#define SELF_DIR                  "/tmp/firejail/mnt/etc/firejail/self"
+
+#define LINKED_APPS_SB_PATH       SELF_DIR"/"EXECHELP_LINKED_APPS
+#define PROTECTED_APPS_SB_PATH    SELF_DIR"/"EXECHELP_PROTECTED_APPS
+#define PROTECTED_FILES_SB_PATH   SELF_DIR"/"EXECHELP_PROTECTED_FILES
+#define PROTECTED_APPS_NAME       "protected-apps.bin"
+#define PROTECTED_FILES_NAME      "protected-files.bin"
+
 #define DEFAULT_USER_PROFILE	"generic"
 #define DEFAULT_ROOT_PROFILE	"server"
 #define MAX_INCLUDE_LEVEL 6
@@ -376,11 +386,11 @@ char *fs_helper_list_files(void);
 //TODO TODO TODO TODO TODO
 
 // protected_resources.c
-char *get_protected_processes_for_client(void);
+char *get_protected_apps_for_client(void);
 char *get_protected_files_for_client (void);
 
 // linked_resources.c
-char *get_linked_processes_for_client(void);
+char *get_linked_apps_for_client(void);
 int is_command_linked_for_client(const char *command);
 
 // no_sandbox.c
