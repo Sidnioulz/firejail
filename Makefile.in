@@ -1,6 +1,6 @@
 all: apps firejail.1 firemon.1 firejail-profile.5 firejail-login.5
 MYLIBS = src/lib
-APPS = src/firejail src/firemon src/libtrace src/ftee
+APPS = src/firejail src/firemon src/libtrace src/libexechelper src/ftee
 
 datarootdir=@datarootdir@
 PREFIX=@prefix@

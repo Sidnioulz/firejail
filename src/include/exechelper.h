@@ -37,16 +37,16 @@
 #define EXECHELP_NULL_BINARY_PATH         "/dev/null"
 #define EXECHELP_MONITORED_EXEC_PATH      "/run/firejail/exechelper/"
 
-#define EXECHELP_CLIENT_ROOT              "/etc/firejail/self"
 #define EXECHELP_LINKED_APPS              "linked-apps.list"
 #define EXECHELP_PROTECTED_APPS           "protected-apps.list"
 #define EXECHELP_PROTECTED_FILES          "protected-files.list"
 
+#define EXECHELP_CLIENT_ROOT              "/etc/firejail/self"
 #define EXECHELP_LINKED_APPS_PATH         EXECHELP_CLIENT_ROOT"/"EXECHELP_LINKED_APPS
-#define EXECHELP_MANAGED_APPS_PATH        EXECHELP_CLIENT_ROOT"/"EXECHELP_MANAGED_APPS
-#define EXECHELP_MANAGED_FILES_PATH       EXECHELP_CLIENT_ROOT"/"EXECHELP_MANAGED_FILES
+#define EXECHELP_PROTECTED_APPS_PATH      EXECHELP_CLIENT_ROOT"/"EXECHELP_PROTECTED_APPS
+#define EXECHELP_PROTECTED_FILES_PATH     EXECHELP_CLIENT_ROOT"/"EXECHELP_PROTECTED_FILES
 
-#define EXECHELP_LD_PRELOAD_PATH           "/usr/lib/libExecHelper-preload.so"
+#define EXECHELP_LD_PRELOAD_PATH           "/usr/lib/libexechelper.so"
 
 /* General utilities */
 char *exechelp_resolve_path(const char *target);
