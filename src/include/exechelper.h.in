@@ -46,7 +46,7 @@
 #define EXECHELP_PROTECTED_APPS_PATH      EXECHELP_CLIENT_ROOT"/"EXECHELP_PROTECTED_APPS
 #define EXECHELP_PROTECTED_FILES_PATH     EXECHELP_CLIENT_ROOT"/"EXECHELP_PROTECTED_FILES
 
-#define EXECHELP_LD_PRELOAD_PATH           "/tmp/usr/lib/firejail/libexechelper.so"
+#define EXECHELP_LD_PRELOAD_PATH           "@prefix@/lib/firejail/libexechelper.so"
 
 /* General utilities */
 char *exechelp_resolve_path(const char *target);

@@ -49,7 +49,7 @@ AC_CHECK_HEADER(pthread.h,,AC_MSG_ERROR([*** POSIX thread support not installed 
 AC_CHECK_HEADER([linux/seccomp.h], HAVE_SECCOMP_H="-DHAVE_SECCOMP_H", HAVE_SECCOMP_H="")
 AC_SUBST(HAVE_SECCOMP_H)
 
-AC_OUTPUT(Makefile src/lib/Makefile src/firejail/Makefile src/firemon/Makefile src/libtrace/Makefile src/libexechelper/Makefile src/ftee/Makefile)
+AC_OUTPUT(Makefile src/lib/Makefile src/firejail/Makefile src/firemon/Makefile src/libtrace/Makefile src/libexechelper/Makefile src/ftee/Makefile src/include/exechelper.h)
 
 echo
 echo "Configuration options:"
