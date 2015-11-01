@@ -105,6 +105,13 @@ install: all
 	install -c -m 0644 etc/deadbeef.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/filezilla.profile $(DESTDIR)/etc/firejail/.
 	bash -c "if [ ! -f /etc/firejail/login.users ]; then install -c -m 0644 etc/login.users $(DESTDIR)/etc/firejail/.; fi;"
+	# app links
+	mkdir -p $(DESTDIR)/etc/firejail/applinks.d
+	make install -C etc/applinks.d/
+	# libexechelper
+	strip src/libexechelper/libexechelper.so
+	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/
+	install -c -m 0755 src/libexechelper/libexechelper.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
 	# man pages
 	rm -f firejail.1.gz
 	gzip -9n firejail.1

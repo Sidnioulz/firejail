@@ -3,10 +3,6 @@ VERSION=@PACKAGE_VERSION@
 NAME=@PACKAGE_NAME@
 HAVE_FATAL_WARNINGS=@HAVE_FATAL_WARNINGS@
 
-MAJOR_VERSION=0
-MINOR_VERSION=2
-PATCH_VERSION=0
-
 H_FILE_LIST       = $(wildcard *.[h])
 C_FILE_LIST       = $(wildcard *.c)
 OBJS = $(C_FILE_LIST:.c=.o)
@@ -20,21 +16,10 @@ all: libexechelper.so
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
 libexechelper.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o
-	$(CC) $(LDFLAGS) -shared -fPIC -ldl -o libexechelper.so.$(MAJOR_VERSION).$(MINOR_VERSION) libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o $(CFLAGS)
-	ln -fs libexechelper.so.$(MAJOR_VERSION).$(MINOR_VERSION) libexechelper.so.$(MAJOR_VERSION)
-	ln -fs libexechelper.so.$(MAJOR_VERSION).$(MINOR_VERSION) libexechelper.so
+	$(CC) $(LDFLAGS) -shared -fPIC -ldl -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o $(CFLAGS)
 
 test: $(OBJS)
 	$(CC) -lrt -o exec-helper-test test.c $(CFLAGS)
-
-install: all
-	mkdir $(DESTDIR)$(PREFIX)/lib/ -p
-	cp -d $(TARGET_LIB)* $(DESTDIR)$(PREFIX)/lib/
-
-uninstall:
-	rm $(DESTDIR)$(PREFIX)/lib/$(TARGET_LIB) -f
-	rm $(DESTDIR)$(PREFIX)/lib/$(TARGET_LIB).$(MAJOR_VERSION) -f
-	rm $(DESTDIR)$(PREFIX)/lib/$(TARGET_LIB).$(MAJOR_VERSION).$(MINOR_VERSION) -f
 
 clean:; rm -f $(OBJS)
 
