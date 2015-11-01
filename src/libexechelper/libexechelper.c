@@ -61,15 +61,36 @@ static int exechelp_str_has_prefix_on_sep(const char *str, const char *prefix, c
     return 0;
 
   size_t i = 0;
-  for (;str[i] && prefix[i] && prefix[i]!=sep; ++i)
-  {
-    if (str[i] != prefix[i] && prefix[i]!=sep)
-    {
-      return 0;
-    }
-  }
+  for (;str[i] == prefix[i] && str[i] && prefix[i] && prefix[i]!=sep; ++i);
 
-  return (prefix[i] == '\0' || prefix[i] == sep);
+  /* prefix matched entirely, and str's current filename is completely parsed
+   * @prefix: "/abc/def"
+   * @str:    "/abc/def"     1
+   * @str:    "/abc/def/"    1
+   * @str:    "/abc/def/g"   1
+   * @str:    "/abc/defg"    0
+   */
+  if ((prefix[i] == '\0' || prefix[i] == sep || prefix[i] == '/') && (str[i] == '\0' || str[i] == '/'))
+    return 1;
+
+  /* edge case: prefix matched entirely, and we just finished matching folders
+   * @prefix: "/abc/def/"
+   * @str:    "/abc/def/g"    1
+   */
+  if ((prefix[i] == '\0' || prefix[i] == sep) && prefix[i-1] == '/' && str[i-1] == '/')
+    return 1;
+
+  /* edge case: prefix is identical to str except it contains an ending '/' (identical directory name)
+   * @prefix: "/abc/def/"
+   * @str:    "/abc/def"     1
+   * @str:    "/abc/defg"    0
+   * @str:    "/abc/def/"    (would have matched prior rule)
+   * @str:    "/abc/def/g"   (would have matched prior rule)
+   */
+  if (prefix[i] == '/' && (prefix[i+1] == '\0' || prefix[i+1] == sep) && str[i] == '\0')
+    return 1;
+
+  return 0;
 }
 
 /**
@@ -164,9 +185,8 @@ static int exechelp_file_list_contains_path(const char *list, const char *real)
   
   while(iter && iter[0]!='\0' && !matched_a_line)
   {
-    //printf("testing %s vs %s\n", real, iter);
-    matched_a_line = exechelp_str_has_prefix_on_sep(real, iter, '\n');
-    iter = strstr(iter, "\n");
+    matched_a_line = exechelp_str_has_prefix_on_sep(real, iter, ':');
+    iter = strstr(iter, ":");
     if (iter)
       iter++;
   }
