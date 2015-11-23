@@ -33,6 +33,42 @@
 
 static char *cmdsocketpath = NULL;
 
+void exechelp_calculate_sandbox_type(void) {
+  printf ("\n\n\n\n\n\n\n\n");
+
+  // check if the command to be run was originally a protected app
+  int protected = is_current_command_protected();
+  if (arg_debug)
+    printf("Child process is %sa protected application\n", protected?"":"not ");
+
+  // if we're not protected yet, process the argument list
+  char *protected_path = NULL;
+  if (!protected) {
+    char *protected_files = exechelp_read_list_from_file(PROTECTED_FILES_SB_PATH);
+    if (!protected_files)
+      errExit("exechelp_read_list_from_file protected apps");
+  
+		for (int i = cfg.original_program_index; i < cfg.original_argc && !protected; i++) {
+			if (cfg.original_argv[i] == NULL)
+				break;
+
+      if (exechelp_file_list_contains_path(protected_files, cfg.original_argv[i], NULL))
+        protected = 1;
+    }
+
+    if(arg_debug)
+      printf("Child process %s protected files\n", protected?"targets":"does not target");
+  }
+
+  if (protected) {
+    if (setenv("FIREJAIL_SANDBOX_TYPE", "protected", 1) < 0)
+      errExit("setenv");
+  } else {
+    if (setenv("FIREJAIL_SANDBOX_TYPE", "untrusted", 1) < 0)
+      errExit("setenv");
+  }
+}
+
 void exechelp_install_socket(void) {
   exechelp_build_run_dir();
 

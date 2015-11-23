@@ -268,6 +268,7 @@ int sandbox(void* sandbox_arg) {
     fs_helper_mount_self_dir();
     exechelp_install_socket();
     exechelp_register_socket();
+    exechelp_calculate_sandbox_type();
 //TODO:    fs_helper_blacklist_protected();
 	}
 

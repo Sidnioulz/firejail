@@ -389,10 +389,12 @@ void fs_helper_mount_self_dir(void);
 char *fs_helper_list_files(void);
 
 // exechelp_client.c
+void exechelp_calculate_sandbox_type(void);
 void exechelp_install_socket(void);
 void exechelp_register_socket(void);
 
 // protected_resources.c
+int is_current_command_protected(void);
 char *get_protected_apps_for_client(void);
 char *get_protected_files_for_client (void);
 

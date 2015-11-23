@@ -22,6 +22,8 @@
 #include "../include/exechelper.h"
 #include <errno.h>
 
+static int command_is_protected = -1; // whether the command to be run by firejail is protected by the global policy
+
 static int profile_name_matches_current(const char *name) {
   if (!cfg.profile_name)
     return 0;
@@ -40,6 +42,17 @@ static int command_name_matches_current(const char *name) {
 
     return identical;
   }
+}
+
+int is_current_command_protected(void) {
+
+  if(command_is_protected == -1) {
+    // will update command_is_protected
+    char *whatever = get_protected_apps_for_client();
+    free(whatever);
+  }
+
+  return command_is_protected;
 }
 
 char *get_protected_apps_for_client (void) {
@@ -68,6 +81,10 @@ char *get_protected_apps_for_client (void) {
 	  return NULL;
 	}
 
+  // assuming the current command isn't protected, but we'll flag it if we see it
+  char *realcommand = exechelp_resolve_path(cfg.command_name);
+  command_is_protected = 0;
+
   if (arg_debug)
   	printf("Reading the list of protected apps from a file\n");
 
@@ -89,9 +106,14 @@ char *get_protected_apps_for_client (void) {
 
     // if that process is linked to the current profile, we don't care
     if (is_command_linked_for_client(process)) {
+      if(realcommand) {
+        // we don't actually mark the command as protected (we're about to run it!) but we remember seeing it
+        if(strcmp(realcommand, process) == 0)
+          command_is_protected = 1;
+      }
       continue;
     }
-    
+
     int proflen = snprintf(proflist, EXECHELP_POLICY_LINE_MAX_READ - pathlen - 1, "%s", buf + pathlen + 1);
     if (proflen == -1)
       errExit("snprintf");
@@ -131,6 +153,7 @@ char *get_protected_apps_for_client (void) {
   if (arg_debug)
     printf("The following apps are protected from being invoked by child process: %s\n", result); 
 	fclose(fp);
+	free(realcommand);
 
   return result;
 }
