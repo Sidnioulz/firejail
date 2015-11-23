@@ -22,8 +22,6 @@
 #include "../include/exechelper.h"
 #include <errno.h>
 
-#define MAX_READ                 8192
-
 static int profile_name_matches_current(const char *name) {
   if (!cfg.profile_name)
     return 0;
@@ -50,16 +48,16 @@ char *get_protected_apps_for_client (void) {
   if (arg_debug)
 		printf("Looking up user's config directory for a list of protected apps\n");
   char *filepath;
-	if (asprintf(&filepath, "%s/.config/firejail/%s", cfg.homedir, PROTECTED_APPS_NAME) == -1)
+	if (asprintf(&filepath, "%s/.config/firejail/%s", cfg.homedir, EXECHELP_PROTECTED_APPS_BIN) == -1)
 		errExit("asprintf");
-	FILE *fp = fopen(PROTECTED_APPS_NAME, "rb");
+	FILE *fp = fopen(EXECHELP_PROTECTED_APPS_BIN, "rb");
 	free(filepath);
 
   if (fp == NULL) {
     if (arg_debug)
 		  printf("Looking up /etc/firejail for a list of protected apps\n");
     char *filepath;
-	  if (asprintf(&filepath, "/etc/firejail/%s", PROTECTED_APPS_NAME) == -1)
+	  if (asprintf(&filepath, "/etc/firejail/%s", EXECHELP_PROTECTED_APPS_BIN) == -1)
 		  errExit("asprintf");
   	fp = fopen(filepath, "rb");
   	free(filepath);
@@ -74,17 +72,17 @@ char *get_protected_apps_for_client (void) {
   	printf("Reading the list of protected apps from a file\n");
 
 	// read the file line by line
-	char buf[MAX_READ + 1], process[MAX_READ + 1], proflist[MAX_READ + 1];
+	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1], process[EXECHELP_POLICY_LINE_MAX_READ + 1], proflist[EXECHELP_POLICY_LINE_MAX_READ + 1];
 	int lineno = 0;
-	while (fgets(buf, MAX_READ, fp)) {
+	while (fgets(buf, EXECHELP_POLICY_LINE_MAX_READ, fp)) {
 		++lineno;
 
     // get current line's process
-    int pathlen = snprintf(process, MAX_READ, "%s", buf);
+    int pathlen = snprintf(process, EXECHELP_POLICY_LINE_MAX_READ, "%s", buf);
     if (pathlen == -1)
       errExit("snprintf");
-    else if (pathlen >= MAX_READ) {
-      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the process path is longer than %d characters and the profile list cannot be read\n", lineno, MAX_READ);
+    else if (pathlen >= EXECHELP_POLICY_LINE_MAX_READ) {
+      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the process path is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
       errno = ENAMETOOLONG;
       errExit("snprintf");
     }
@@ -94,11 +92,11 @@ char *get_protected_apps_for_client (void) {
       continue;
     }
     
-    int proflen = snprintf(proflist, MAX_READ - pathlen - 1, "%s", buf + pathlen + 1);
+    int proflen = snprintf(proflist, EXECHELP_POLICY_LINE_MAX_READ - pathlen - 1, "%s", buf + pathlen + 1);
     if (proflen == -1)
       errExit("snprintf");
     else if (*(buf + pathlen + proflen) != '\n') {
-      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the line is longer than %d characters and the profile list cannot be read\n", lineno, MAX_READ);
+      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the line is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
       errno = ENAMETOOLONG;
       errExit("snprintf");
     }
@@ -143,16 +141,16 @@ char *get_protected_files_for_client (void) {
   if (arg_debug)
 		printf("Looking up user's config directory for a list of protected files\n");
   char *filepath;
-	if (asprintf(&filepath, "%s/.config/firejail/%s", cfg.homedir, PROTECTED_FILES_NAME) == -1)
+	if (asprintf(&filepath, "%s/.config/firejail/%s", cfg.homedir, EXECHELP_PROTECTED_FILES_BIN) == -1)
 		errExit("asprintf");
-	FILE *fp = fopen(PROTECTED_FILES_NAME, "rb");
+	FILE *fp = fopen(EXECHELP_PROTECTED_FILES_BIN, "rb");
 	free(filepath);
 
   if (fp == NULL) {
     if (arg_debug)
 		  printf("Looking up /etc/firejail for a list of protected files\n");
     char *filepath;
-	  if (asprintf(&filepath, "/etc/firejail/%s", PROTECTED_FILES_NAME) == -1)
+	  if (asprintf(&filepath, "/etc/firejail/%s", EXECHELP_PROTECTED_FILES_BIN) == -1)
 		  errExit("asprintf");
   	fp = fopen(filepath, "rb");
   	free(filepath);
@@ -167,26 +165,26 @@ char *get_protected_files_for_client (void) {
   	printf("Reading the list of protected files from a file\n");
 
 	// read the file line by line
-	char buf[MAX_READ + 1], file[MAX_READ + 1], proflist[MAX_READ + 1];
+	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1], file[EXECHELP_POLICY_LINE_MAX_READ + 1], proflist[EXECHELP_POLICY_LINE_MAX_READ + 1];
 	int lineno = 0;
-	while (fgets(buf, MAX_READ, fp)) {
+	while (fgets(buf, EXECHELP_POLICY_LINE_MAX_READ, fp)) {
 		++lineno;
 
     // get current line's file
-    int pathlen = snprintf(file, MAX_READ, "%s", buf);
+    int pathlen = snprintf(file, EXECHELP_POLICY_LINE_MAX_READ, "%s", buf);
     if (pathlen == -1)
       errExit("snprintf");
-    else if (pathlen >= MAX_READ) {
-      fprintf(stderr, "Error: line %d of protected-file.bin in malformed, the file path is longer than %d characters and the profile list cannot be read\n", lineno, MAX_READ);
+    else if (pathlen >= EXECHELP_POLICY_LINE_MAX_READ) {
+      fprintf(stderr, "Error: line %d of protected-file.bin in malformed, the file path is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
       errno = ENAMETOOLONG;
       errExit("snprintf");
     }
 
-    int proflen = snprintf(proflist, MAX_READ - pathlen - 1, "%s", buf + pathlen + 1);
+    int proflen = snprintf(proflist, EXECHELP_POLICY_LINE_MAX_READ - pathlen - 1, "%s", buf + pathlen + 1);
     if (proflen == -1)
       errExit("snprintf");
     else if (*(buf + pathlen + proflen) != '\n') {
-      fprintf(stderr, "Error: line %d of protected-file.bin in malformed, the line is longer than %d characters and the profile list cannot be read\n", lineno, MAX_READ);
+      fprintf(stderr, "Error: line %d of protected-file.bin in malformed, the line is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
       errno = ENAMETOOLONG;
       errExit("snprintf");
     }

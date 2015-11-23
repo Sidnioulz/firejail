@@ -51,7 +51,6 @@ void fs_build_firejail_dir(void) {
 	}
 }
 
-
 // build /tmp/firejail/mnt directory
 static int tmpfs_mounted = 0;
 void fs_build_mnt_dir(void) {

@@ -1,6 +1,6 @@
-all: apps firejail.1 firemon.1 firejail-profile.5 firejail-login.5
+all: apps firejail.1 firemon.1 fireexecd.1 firejail-profile.5 firejail-login.5
 MYLIBS = src/lib
-APPS = src/firejail src/firemon src/libtrace src/libexechelper src/ftee
+APPS = src/firejail src/firemon src/fireexecd src/libtrace src/libexechelper src/ftee
 
 datarootdir=@datarootdir@
 PREFIX=@prefix@
@@ -23,6 +23,8 @@ $(APPS): $(MYLIBS)
 
 firemon.1: src/man/firemon.txt
 	./mkman.sh $(VERSION) src/man/firemon.txt firemon.1
+fireexecd.1: src/man/fireexecd.txt
+	./mkman.sh $(VERSION) src/man/fireexecd.txt fireexecd.1
 firejail.1: src/man/firejail.txt
 	./mkman.sh $(VERSION) src/man/firejail.txt firejail.1
 firejail-profile.5: src/man/firejail-profile.txt
@@ -37,7 +39,7 @@ clean:
 	for dir in $(MYLIBS); do \
 		$(MAKE) -C $$dir clean; \
 	done
-	rm -f firejail.1 firejail.1.gz firemon.1 firemon.1.gz firejail-profile.5 firejail-profile.5.gz firejail-login.5 firejail-login.5.gz
+	rm -f firejail.1 firejail.1.gz firemon.1 firemon.1.gz fireexecd.1 fireexecd.1.gz firejail-profile.5 firejail-profile.5.gz firejail-login.5 firejail-login.5.gz
 
 distclean: clean
 	for dir in $(APPS); do \
@@ -57,6 +59,10 @@ install: all
 	# firemon executable
 	strip src/firemon/firemon
 	install -c -m 0755 src/firemon/firemon $(DESTDIR)/$(PREFIX)/bin/.
+	# fireexecd executable
+	strip src/fireexecd/fireexecd
+	install -c -m 0755 src/fireexecd/fireexecd $(DESTDIR)/$(PREFIX)/bin/.
+	chmod u+s $(DESTDIR)/$(PREFIX)/bin/fireexecd
 	# libraries and plugins
 	strip src/libtrace/libtrace.so
 	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail
@@ -117,33 +123,40 @@ install: all
 	gzip -9n firejail.1
 	rm -f firemon.1.gz
 	gzip -9n firemon.1
+	rm -f fireexecd.1.gz
+	gzip -9n fireexecd.1
 	rm -f firejail-profile.5.gz
 	gzip -9n firejail-profile.5
 	rm -f firejail-login.5.gz
 	gzip -9n firejail-login.5
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/man/man1
 	install -c -m 0644 firejail.1.gz $(DESTDIR)/$(PREFIX)/share/man/man1/.	
-	install -c -m 0644 firemon.1.gz $(DESTDIR)/$(PREFIX)/share/man/man1/.	
+	install -c -m 0644 firemon.1.gz $(DESTDIR)/$(PREFIX)/share/man/man1/.		
+	install -c -m 0644 fireexecd.1.gz $(DESTDIR)/$(PREFIX)/share/man/man1/.
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/man/man5
 	install -c -m 0644 firejail-profile.5.gz $(DESTDIR)/$(PREFIX)/share/man/man5/.	
 	install -c -m 0644 firejail-login.5.gz $(DESTDIR)/$(PREFIX)/share/man/man5/.	
-	rm -f firejail.1.gz firemon.1.gz firejail-profile.5.gz firejail-login.5.gz
+	rm -f firejail.1.gz firemon.1.gz fireexecd.1.gz firejail-profile.5.gz firejail-login.5.gz
 	# bash completion
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/bash-completion/completions
 	install -c -m 0644 src/bash_completion/firejail.bash_completion $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/firejail
 	install -c -m 0644 src/bash_completion/firemon.bash_completion $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/firemon
+	install -c -m 0644 src/bash_completion/fireexecd.bash_completion $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/fireexecd
 
 uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/bin/firejail
 	rm -f $(DESTDIR)/$(PREFIX)/bin/firemon
+	rm -f $(DESTDIR)/$(PREFIX)/bin/fireexecd
 	rm -fr $(DESTDIR)/$(PREFIX)/lib/firejail
 	rm -fr $(DESTDIR)/$(PREFIX)/share/doc/firejail
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firejail.1*
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firemon.1*
+	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/fireexecd.1*
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man5/firejail-profile.5*
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man5/firejail-login.5*
 	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/firejail
 	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/firemon
+	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/fireexecd
 	
 dist:
 	make distclean

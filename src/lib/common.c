@@ -190,3 +190,45 @@ char *pid_proc_cmdline(const pid_t pid) {
 	}
 	return rv;
 }
+
+int string_in_list(const char* list, const char* string)
+{
+  if(!list || !string)
+    return 0;
+
+  char *found = strstr(list, string);
+  if(!found)
+    return 0;
+
+  char next = *(found + strlen(string));
+  printf("str %s next %c\n", string, next);
+  if(next == '\0' || next == ':')
+    return 1;
+  else
+    return 0;
+}
+
+int strcmp_comma(const char* s1, const char* s2)
+{
+  while(*s1 && (*s1==*s2) && *s1!=',')
+    s1++,s2++;
+
+  // comma and null character are equivalent here
+  if ((*s1 == ',' || *s1 == '\0') && (*s2 == ',' || *s2 == '\0'))
+    return 0;
+
+  return *(const unsigned char*)s1-*(const unsigned char*)s2;
+}
+
+char *split_comma(char *str) {
+	if (str == NULL || *str == '\0')
+		return NULL;
+	char *ptr = strchr(str, ',');
+	if (!ptr)
+		return NULL;
+	*ptr = '\0';
+	ptr++;
+	if (*ptr == '\0')
+		return NULL;
+	return ptr;
+}

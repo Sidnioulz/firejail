@@ -50,6 +50,7 @@ static char child_stack[STACK_SIZE];		// space for child's stack
 Config cfg;					// configuration
 int arg_private = 0;				// mount private /home and /tmp directoryu
 int arg_debug = 0;				// print debug messages
+int arg_slow = 0;				  // pause the program for a while to help debuggers attach
 int arg_nonetwork = 0;				// --net=none
 int arg_command = 0;				// -c
 int arg_overlay = 0;				// overlay option
@@ -61,6 +62,9 @@ int arg_seccomp = 0;				// enable default seccomp filter
 char *arg_seccomp_list = NULL;		// optional seccomp list on top of default filter
 char *arg_seccomp_list_drop = NULL;		// seccomp drop list
 char *arg_seccomp_list_keep = NULL;		// seccomp keep list
+
+char *arg_whitelist_apps = NULL;      // list of apps that can always be opened by this instance (bypass --helper)
+char *arg_whitelist_files = NULL;     // list of files that can always be opened by this instance (bypass --helper)
 
 int arg_caps_default_filter = 0;			// enable default capabilities filter
 int arg_caps_drop = 0;				// drop list
@@ -437,6 +441,9 @@ int main(int argc, char **argv) {
 		if (strcmp(argv[i], "--debug") == 0)
 			arg_debug = 1;
 		
+		else if (strcmp(argv[i], "--slow") == 0)
+			arg_slow = 1;
+		
 		//*************************************
 		// filtering
 		//*************************************
@@ -728,10 +735,25 @@ int main(int argc, char **argv) {
 		else if (strcmp(argv[i], "--helper") == 0) {
 			cfg.helper = 1;
 		}
+		else if (strncmp(argv[i], "--whitelist-apps=", 17) == 0) {
+			if (arg_whitelist_apps) {
+				fprintf(stderr, "Error: a white-list of applications was already given\n");
+				exit(1);
+			}
+			arg_whitelist_apps = strdup(argv[i] + 17);
+			if (!arg_whitelist_apps)
+				errExit("strdup");
+		}
+		else if (strncmp(argv[i], "--whitelist-files=", 18) == 0) {
+			if (arg_whitelist_files) {
+				fprintf(stderr, "Error: a white-list of applications was already given\n");
+				exit(1);
+			}
+			arg_whitelist_files = strdup(argv[i] + 18);
+			if (!arg_whitelist_files)
+				errExit("strdup");
+		}
 		
-			
-
-
 		//*************************************
 		// hostname, etc
 		//*************************************
@@ -1045,6 +1067,16 @@ int main(int argc, char **argv) {
 	assert(cfg.command_name);
 	if (arg_debug)
 		printf("Command name #%s#\n", cfg.command_name);
+	if (arg_slow) {
+	  pid_t my_id = getpid();
+	  int sleep_time = 30;
+	  if(arg_debug)
+	    printf("Program starting in slow mode, you now have %d seconds to attach to process %d.\n"\
+	           "You can use the following command:\n\n\tsudo gdb attach %d\n\n", sleep_time, my_id, my_id);
+	  sleep(sleep_time);
+	  if(arg_debug)
+	    printf("Resuming program...\n");
+  }
 
 	// load the profile
 	if (!arg_noprofile) {
@@ -1157,7 +1189,6 @@ int main(int argc, char **argv) {
 		if (getuid() == 0) // only for root
 			printf("The new log directory is /proc/%d/root/var/log\n", child);
 	}
-	
 	
 
 	// create veth pair or macvlan device

@@ -29,6 +29,8 @@
 #include <unistd.h>
 #include <grp.h>
 
+#warning "Remember to re-put the code to blacklist /tmp when root after debugging is done"
+
 static void skel(const char *homedir, uid_t u, gid_t g) {
 	char *fname;
 	// zsh
@@ -198,6 +200,7 @@ void fs_private_homedir(void) {
 			errExit("mounting home directory");
 	}
 	else {
+	#if 0
 		// mask /home
 		if (arg_debug)
 			printf("Mounting a new /home directory\n");
@@ -209,6 +212,7 @@ void fs_private_homedir(void) {
 			printf("Mounting a new /tmp directory\n");
 		if (mount("tmpfs", "/tmp", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
 			errExit("mounting tmp directory");
+	#endif
 	}
 	
 
@@ -254,11 +258,13 @@ void fs_private(void) {
 			errExit("chown");
 	}
 	else {
+  #if 0
 		// mask tmp only in root mode; KDE keeps all kind of sockets in /tmp!
 		if (arg_debug)
 			printf("Mounting a new /tmp directory\n");
 		if (mount("tmpfs", "/tmp", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
 			errExit("mounting tmp directory");
+  #endif
 	}
 	
 	skel(homedir, u, g);
@@ -497,6 +503,7 @@ void fs_private_home_list(void) {
 			errExit("mounting home directory");
 	}
 	else {
+  #if 0
 		// mask /home
 		if (arg_debug)
 			printf("Mounting a new /home directory\n");
@@ -508,6 +515,7 @@ void fs_private_home_list(void) {
 			printf("Mounting a new /tmp directory\n");
 		if (mount("tmpfs", "/tmp", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
 			errExit("mounting tmp directory");
+  #endif
 	}
 
 	skel(homedir, u, g);

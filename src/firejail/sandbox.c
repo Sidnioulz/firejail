@@ -231,17 +231,17 @@ int sandbox(void* sandbox_arg) {
 	}
 	
 	//****************************
-	// apply the profile file
-	//****************************
-	if (cfg.profile)
-		fs_blacklist(cfg.homedir);
-	
-	//****************************
 	// generate files for the sandbox helper which will run in the sandbox
 	//****************************
 	if (cfg.helper) { // --helper
 		fs_helper_generate_files();
 	}
+	
+	//****************************
+	// apply the profile file
+	//****************************
+	if (cfg.profile)
+		fs_blacklist(cfg.homedir);
 	
 	//****************************
 	// private mode
@@ -262,9 +262,13 @@ int sandbox(void* sandbox_arg) {
 	
 	//****************************
 	// mount sandbox helper files now that /etc is stable
+	// then, set protected files' permissions to 0000
 	//****************************
 	if (cfg.helper) { // --helper
     fs_helper_mount_self_dir();
+    exechelp_install_socket();
+    exechelp_register_socket();
+//TODO:    fs_helper_blacklist_protected();
 	}
 
 	//****************************

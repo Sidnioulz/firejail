@@ -23,6 +23,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,295 +31,223 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/un.h>
 #include <time.h>
 #include <unistd.h>
 
+#include "../include/common.h"
 #include "../include/exechelper.h"
 
-/* Execution policy */
-typedef enum _ExecHelpExecutionPolicy {
-  NOTHING = 0,
-  HELPERS = 1,
-  UNSPECIFIED = 1 << 1,
-  SANDBOX_MANAGED = 1 << 2,
-  SANDBOX_ITSELF = 1 << 3
-} ExecHelpExecutionPolicy;
-#define EXECHELP_DEFAULT_POLICY           HELPERS | UNSPECIFIED
+int arg_debug = DEBUGLVL;
+pthread_mutex_t commandmutex = PTHREAD_MUTEX_INITIALIZER;
 
-/**
- * @fn exechelp_str_has_prefix_on_sep
- * @brief Tells whether a string is prefixed by another one. Lookup of the string
- * will stop when the character specified by sep is reached.
- *
- * @param str: the string to be searched
- * @param prefix: the prefix
- * @param sep: a separator that indicates search should be interrupted
- * @return 1 if the prefix was entirely found before sep was reached, 0 otherwise
- */
-static int exechelp_str_has_prefix_on_sep(const char *str, const char *prefix, const char sep)
-{
-  if (!str || !prefix)
-    return 0;
+#define _SERVER_SOCKET_COUNTER_LIMIT_SECS   10
+#define _SERVER_SOCKET_COUNTER_LIMIT_200MS  50
+static int exechelp_get_command_socket(int closing) {
+  static int fd = -1;
 
-  size_t i = 0;
-  for (;str[i] == prefix[i] && str[i] && prefix[i] && prefix[i]!=sep; ++i);
-
-  /* prefix matched entirely, and str's current filename is completely parsed
-   * @prefix: "/abc/def"
-   * @str:    "/abc/def"     1
-   * @str:    "/abc/def/"    1
-   * @str:    "/abc/def/g"   1
-   * @str:    "/abc/defg"    0
-   */
-  if ((prefix[i] == '\0' || prefix[i] == sep || prefix[i] == '/') && (str[i] == '\0' || str[i] == '/'))
-    return 1;
-
-  /* edge case: prefix matched entirely, and we just finished matching folders
-   * @prefix: "/abc/def/"
-   * @str:    "/abc/def/g"    1
-   */
-  if ((prefix[i] == '\0' || prefix[i] == sep) && prefix[i-1] == '/' && str[i-1] == '/')
-    return 1;
-
-  /* edge case: prefix is identical to str except it contains an ending '/' (identical directory name)
-   * @prefix: "/abc/def/"
-   * @str:    "/abc/def"     1
-   * @str:    "/abc/defg"    0
-   * @str:    "/abc/def/"    (would have matched prior rule)
-   * @str:    "/abc/def/g"   (would have matched prior rule)
-   */
-  if (prefix[i] == '/' && (prefix[i+1] == '\0' || prefix[i+1] == sep) && str[i] == '\0')
-    return 1;
-
-  return 0;
-}
-
-/**
- * @fn exechelp_read_list_from_file
- * @brief Reads a file to extract a list of paths from it. This function
- * caches the contents of previously read files.
- *
- * @param file_path: path to a file containing a list of strings to be read
- * @return the string list that was contained in file_path
- */
-static char *exechelp_read_list_from_file(const char *file_path)
-{
-  static ExecHelpHashTable *cache = NULL;
-  static ExecHelpHashTable *mtime = NULL;
-
-  if (!cache || !mtime)
-  {
-    if (cache)
-    {
-      exechelp_hash_table_destroy(cache);
-      cache = NULL;
-    }
-    if (mtime)
-    {
-      exechelp_hash_table_destroy(mtime);
-      mtime = NULL;
-    }
-    cache = exechelp_hash_table_new_full(exechelp_str_hash, exechelp_str_equal, NULL, free);
-    mtime = exechelp_hash_table_new_full(exechelp_str_hash, exechelp_str_equal, NULL, NULL);
-
-    if (!cache || !mtime)
-      return NULL;
+  if(fd >= 0 && closing) {
+    close(fd);
+    if(arg_debug)
+      fprintf(stdout, "Child process closed its connection to the sandbox helper.\n");
+    fd = -1;
   }
 
-  struct stat sb;
-  time_t last_access = 0;
-  time_t cached_access = 0;
-  int must_refresh = 1;
+  if (fd < 0 && !closing) {
+    char *path = getenv(EXECHELP_COMMANDS_SOCKET);
 
-  if(stat(file_path, &sb) == 0)
-    last_access = sb.st_mtim.tv_sec;
-  if (exechelp_hash_table_contains(mtime, file_path))
-    cached_access = EH_POINTER_TO_ULONG(exechelp_hash_table_lookup(mtime, file_path));
-  must_refresh = (last_access > cached_access);
-    
-  if (must_refresh)
-  {
-    FILE *f = fopen(file_path, "rb");
-    if(f)
-    {
-      fseek(f, 0, SEEK_END);
-      long fsize = ftell(f);
-      rewind(f);
-      
-      char *new_list = malloc(sizeof(char) * (fsize + 1));
-      if(new_list)
-      {
-        int read = fread(new_list, 1, fsize, f);
-        new_list[read] = 0;
+    if(!path) {
+      fprintf(stderr, "Error: Child process was not given the path of the socket it should use to communicate with the sandbox helper (missing environment variable %s)\n", EXECHELP_COMMANDS_SOCKET);
+      fd = -1;
+      return fd;
+    }
 
-        fclose(f);
+    if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
+      fprintf(stderr, "Error: Child process could not create a UNIX socket (error: %s)\n", strerror(errno));
+      fd = -1;
+      return fd;
+    }
 
-        exechelp_hash_table_remove(cache, file_path);
-        exechelp_hash_table_remove(mtime, file_path);
+    struct sockaddr_un remote;
+    remote.sun_family = AF_UNIX;
+    strcpy(remote.sun_path, path);
+    ssize_t len = strlen(remote.sun_path) + sizeof(remote.sun_family);
+          
+    // attempt to connect for the next 10 seconds
+    struct timespec rqtp = {0, 200000000};
+    int counter = 0, connected = 0;
 
-        exechelp_hash_table_insert(cache, (void *)file_path, new_list);
-        exechelp_hash_table_insert(mtime, (void *)file_path, EH_ULONG_TO_POINTER(last_access));
-
-        return new_list;
+    while(!connected && counter < _SERVER_SOCKET_COUNTER_LIMIT_200MS) {
+      if (connect(fd, (struct sockaddr *)&remote, len) == -1) {
+        // still waiting on fireexecd
+        if (errno == ENOENT) {
+          fprintf(stderr, "Warning: Child process could not connect to the sandbox helper, as the helper daemon is not ready yet. Retrying...\n");
+          nanosleep(&rqtp, NULL);
+          counter++;
+        } else {
+          fprintf(stderr, "Error: Child process could not connect to the sandbox helper (error: %s)\n", strerror(errno));
+          close(fd);
+          fd = -1;
+          return fd;
+        }
+      } else {
+        connected = 1;
       }
+    }
 
-      fclose(f);
+    // 10 seconds elapsed without managing to connect... fireexecd is probably not running or has crashed
+    if(counter == _SERVER_SOCKET_COUNTER_LIMIT_200MS) {
+      fprintf(stderr, "Warning: Child process could not connect to the sandbox helper, are you sure the helper daemon is running?\n");
+      close(fd);
+      fd = -1;
+      return fd;
     }
   }
 
-  char *list = exechelp_hash_table_lookup(cache, file_path);
-  return list;
+  return fd;
 }
 
-/**
- * @fn exechelp_file_list_contains_path
- * @brief Tells whether an exec helper file list in /etc/firejail/self contains a path
- *
- * @param list: the buffer containing the file list
- * @param real: the canonical path to be matched
- * @return 1 if the path is contained in the file list, 0 otherwise
- */
-static int exechelp_file_list_contains_path(const char *list, const char *real)
+int exechelp_send_command(const char const  *command, char *argv[])
 {
-  const char *iter = list;
-  int matched_a_line = 0;
-  
-  while(iter && iter[0]!='\0' && !matched_a_line)
-  {
-    matched_a_line = exechelp_str_has_prefix_on_sep(real, iter, ':');
-    iter = strstr(iter, ":");
-    if (iter)
-      iter++;
+  pthread_mutex_lock(&commandmutex);
+
+  int fd = exechelp_get_command_socket(0);
+  if (fd == -1) {
+    fprintf(stderr, "Error: could not get a socket to send the command to the sandbox helper\n");
+    goto send_command_failed;
   }
 
-  return matched_a_line;
+  char msg[EXECHELP_COMMAND_MAXLEN+1], *ptr = NULL;
+  msg[EXECHELP_COMMAND_MAXLEN] = '\0';
+  int written, lenleft = EXECHELP_COMMAND_MAXLEN;
+  if((written = snprintf(msg, EXECHELP_COMMAND_MAXLEN, "%s", command)) == -1) {
+    fprintf(stderr, "Error: snprintf() call failed in exechelp_send_command (error: %s)\n", strerror(errno));
+    goto send_command_failed;
+  }
+  ptr = msg + (written + 1);
+  lenleft = lenleft - (written + 1);
+  //printf("ptr: %p\twrote: %d/%d\tleft: %d\tnow: %s\n", ptr, EXECHELP_COMMAND_MAXLEN - lenleft, written+1, lenleft, command);
+
+  int index = argv? (argv[0]? 1:0) : 0;
+  for (; argv && argv[index] != NULL; index++) {
+    //printf("ptr: %p\twrote: %d/%d\tleft: %d\tnow: %s\n", ptr, EXECHELP_COMMAND_MAXLEN - lenleft, written+1, lenleft, argv[index]);
+    if((written = snprintf(ptr, lenleft, "%s",  argv[index])) == -1) {
+      fprintf(stderr, "Error: snprintf() call failed in exechelp_send_command (error: %s)\n", strerror(errno));
+      goto send_command_failed;
+    }
+
+    ptr = ptr + (written + 1);
+    lenleft = lenleft - (written + 1);
+  }
+
+  if (lenleft == 0) {
+    fprintf(stderr, "Critical: child process attempted to send a command that is too long for the sandbox helper (exceeds %d bytes)\n", EXECHELP_COMMAND_MAXLEN);
+    goto send_command_failed;
+  }
+
+  if (send(fd, msg, EXECHELP_COMMAND_MAXLEN - lenleft, 0) == -1) {
+    fprintf(stderr, "Error: could not send the command to the sandbox helper (error: %s)\n", strerror(errno));
+    goto send_command_failed;
+  } else {
+    fprintf(stdout, "Child process sent a message to the sandbox helper (length %d) to execute '%s'\n", EXECHELP_COMMAND_MAXLEN - lenleft, command);
+  }
+
+  exechelp_get_command_socket(1);
+  pthread_mutex_unlock(&commandmutex);
+  return 0;
+
+send_command_failed:
+  exechelp_get_command_socket(1);
+  pthread_mutex_unlock(&commandmutex);
+  return -1;
+}
+
+static int exechelp_is_whitelisted_app(const char *target)
+{
+  if (arg_debug)
+    printf("Child process determining whether '%s' is white-listed for this firejail instance...", target);
+  int found = 0;
+
+  if (!target)
+    goto ret;
+
+  char *associations = exechelp_read_list_from_file(EXECHELP_WHITELIST_APPS_PATH);
+  if (!associations) {
+    if (arg_debug >= 2)
+      printf("DEBUG: Could not find a list of white-listed apps against which to check '%s'\n", target);
+    goto ret;
+  }
+
+  found = string_in_list(associations, target);
+
+  ret:
+  if (arg_debug)
+    printf(" %s\n", (found? "Yes" : "No"));
+  return found;
 }
 
 /**
- * @fn exechelp_is_associated_helper_client
- * @brief Tells whether a specific binary is associated with the currently
+ * @fn exechelp_is_linked_app
+ * @brief Tells whether a specific binary is linked with the currently
  * running program by its sandbox profile
  *
  * @param target: the full path of the binary to be queried
- * @return 1 if target is associated with the running app, 0 otherwise
+ * @return 1 if target is linked with the running app, 0 otherwise
  */
-static int exechelp_is_associated_helper_client(const char *target)
+static int exechelp_is_linked_app(const char *target)
 {
-  DEBUG("Child process determining whether '%s' is an authorised helper program...", target);
+  if (arg_debug)
+    printf("Child process determining whether '%s' is an authorised linked application...", target);
   int found = 0;
 
   if (!target)
     goto ret;
 
   char *associations = exechelp_read_list_from_file(EXECHELP_LINKED_APPS_PATH);
-  if (!associations)
+  if (!associations) {
+    if (arg_debug >= 2)
+      printf("DEBUG: Could not find a list of linked apps against which to check '%s'\n", target);
     goto ret;
+  }
 
-  found = (strstr(associations, target) != NULL);
+  found = string_in_list(associations, target);
 
   ret:
-  DEBUG(" %s\n", (found? "Yes" : "No"));
+  if (arg_debug)
+    printf(" %s\n", (found? "Yes" : "No"));
   return found;
 }
 
 /**
- * @fn exechelp_is_sandbox_managed_app
+ * @fn exechelp_is_sandbox_protected_app
  * @brief Tells whether a specific binary should be executed in a special
  * environment by the sandbox helper rather than in the current process
  *
  * @param target: the full path of the binary to be queried
  * @return 1 if target is to be managed by the sandbox, 0 otherwise
  */
-static int exechelp_is_sandbox_managed_app(const char *target)
+static int exechelp_is_sandbox_protected_app(const char *target)
 {
-  DEBUG("Child process determining whether '%s' is a forbidden program within the sandbox...", target);
+  if (arg_debug)
+    printf("Child process determining whether '%s' is a forbidden program within the sandbox...", target);
   int found = 0;
 
   if (!target)
     goto ret;
 
   char *managed = exechelp_read_list_from_file(EXECHELP_PROTECTED_APPS_PATH);
-  if (!managed)
+  if (!managed) {
+    if (arg_debug >= 2)
+      printf("DEBUG: Could not find a list of protected apps against which to check '%s'\n", target);
     goto ret;
+  }
 
-  found = (strstr(managed, target) != NULL);
+  found = string_in_list(managed, target);
 
   ret:
-  DEBUG(" %s\n", (found? "Yes" : "No"));
+  if (arg_debug)
+    printf(" %s\n", (found? "Yes" : "No"));
   return found;
-}
-
-/**
- * @fn exechelp_targets_sandbox_managed_file
- * @brief Tries its best to determine whether an execve call is likely to
- * access a resource registered to only be processed in a special sandbox
- * profile. For instance, if /home/user/Secure/foo.pdf must only be opened
- * in a tightened sandbox, execve'ing this file in an image
- *
- * @param target: the full path of the binary to be queried
- * @param argv: the list of arguments forwarded to execve
- * @return a -1 terminated array with the indexes of all the files to be
- * opened by the trusted sandbox helper rather than this local app, or 
- * NULL if it is safe to open all the files in this app's sandbox.
- */
-static ExecHelpExecutionPolicy *exechelp_targets_sandbox_managed_file(const char *target, char *const argv[])
-{
-  DEBUG("Child process determining whether arguments passed to execve('%s') contain forbidden files...", target);
-  DEBUG2("%s", "\n");
-
-  char *managed = exechelp_read_list_from_file(EXECHELP_PROTECTED_FILES_PATH);
-  if (!managed)
-  {
-    DEBUG2("DEBUG: Could not find a list of sandbox-managed files to check arguments before executing '%s'", target);
-    return 0;
-  }
-
-  ExecHelpExecutionPolicy *ret = NULL;
-  int len = 0, some_forbidden = 0;
-  for(;argv[len];++len);
-  ret = exechelp_malloc0(sizeof(ExecHelpExecutionPolicy) * (len+1));
-  ret[0] = HELPERS; /* Just to make the array nicer to loop through, mark executable as a helper */
-
-  DEBUG2("DEBUG: %d arguments will be examined\n", len);
-  for(len=1;argv[len];++len)
-  {
-    const char *arg = argv[len];
-    char *real = exechelp_coreutils_realpath(arg);
-    DEBUG2("DEBUG: checking if argument %d ('%s') is to be managed by the sandbox\n", len, arg);
-
-    short is_file = strchr(arg, '/') != NULL;
-    if(!is_file)
-    {
-      struct stat sb;
-      if(stat(real, &sb) == 0)
-        is_file = 1;
-      else
-        is_file = (errno == EACCES || errno == ELOOP || errno == EOVERFLOW) ? 1:0;
-    }
-
-    if (is_file)
-      DEBUG2("DEBUG: \t\t'%s' is believed to be a file, located at '%s'\n", arg, real);
-    else
-      DEBUG2("DEBUG: \t\t'%s' is believed not to be a file\n", arg);
-
-    if(exechelp_file_list_contains_path(managed, real))
-    {
-      DEBUG2("DEBUG: \t\t'%s' is forbidden within the sandbox\n", arg);
-      ret[len] = SANDBOX_MANAGED;
-      some_forbidden = 1;
-    }
-    else
-    {
-      DEBUG2("DEBUG: \t\t'%s' is allowed within the sandbox\n", arg);
-      ret[len] = UNSPECIFIED;
-    }
-
-    ++arg;
-  }
-
-  DEBUG2("%s", "Found forbidden files in arguments?");
-  DEBUG(" %s\n", some_forbidden? "Yes" : "No");
-  return ret;
 }
 
 static int exechelp_filter_forbidden_exec(const char *target, char *const argv[], char *const envp[],
@@ -330,29 +259,61 @@ static int exechelp_filter_forbidden_exec(const char *target, char *const argv[]
   size_t arg_len = 0;
   while(argv[arg_len++]);
 
-  ExecHelpExecutionPolicy pol = EXECHELP_DEFAULT_POLICY;
+  char *polenv = getenv(EXECHELP_EXECUTION_POLICY);
+  int pol = -1;
+  if (polenv) {
+    errno = 0;
+    pol = strtol(polenv, NULL, 10);
+    if (errno) {
+      fprintf(stderr, "Error: could not read environment variable EXECHELP_EXECUTION_POLICY, was not a number as expected (do not attempt to manually set the policy, this is done automatically by firejail)\n");
+      pol = -1;
+    }
+    if (arg_debug) {
+      printf("The security policy to be followed by child process is set in the environment as %s\n", polenv);
+    }
+  }
 
-  if (exechelp_is_associated_helper_client (target) && (pol & HELPERS))
+  if (pol == -1) {
+    if (arg_debug) {
+      printf("Using the default program execution policy %d\n", EXECHELP_DEFAULT_POLICY);
+    }  
+    pol = EXECHELP_DEFAULT_POLICY;
+  }
+
+  int whitelisted = exechelp_is_whitelisted_app(target);
+  int linked = exechelp_is_linked_app(target);
+  int protected = exechelp_is_sandbox_protected_app(target);
+
+  if (whitelisted)
     goto binary_clear;
-  else if (exechelp_is_sandbox_managed_app (target) && (pol & SANDBOX_MANAGED))
+  else if (linked && (pol & LINKED_APP))
     goto binary_clear;
-  else if (pol & UNSPECIFIED)
+  else if (!linked && protected && pol & SANDBOX_PROTECTED)
+    goto binary_clear;
+  else if (!linked && !protected && pol & UNSPECIFIED)
     goto binary_clear;
   else
     goto binary_forbidden;
 
   binary_clear:
   {
-    DEBUG2("DEBUG: Child process can partly or completely execute '%s', now checking parameters...\n", target);
+    if (arg_debug >= 2)
+      printf("DEBUG: Child process can partly or completely execute '%s', now checking parameters...\n", target);
 
-    ExecHelpExecutionPolicy *decisions = exechelp_targets_sandbox_managed_file(target, argv);
-    ExecHelpExecutionPolicy *iter = decisions + 1;
-    int i = 1, have_forbidden = 0;
-    while (*iter)
-    {
-      have_forbidden |= !(*iter & (HELPERS | UNSPECIFIED));
-      ++iter;
-      ++i;
+    ExecHelpExecutionPolicy *decisions = exechelp_targets_sandbox_protected_file(EXECHELP_PROTECTED_FILES_PATH, target, argv, 1, NULL);
+
+    int have_forbidden = 0;
+    if (decisions) {
+      ExecHelpExecutionPolicy *iter = decisions + 1;
+      int i = 1;
+      while (*iter)
+      {
+        have_forbidden |= !(*iter & (LINKED_APP | UNSPECIFIED));
+        ++iter;
+        ++i;
+      }
+    } else {
+      fprintf(stderr, "Error: could not compute whether arguments passed to '%s' were allowed or forbidden\n", target);
     }
 
     /* Don't do anything fancy yet for mixed forbidden-allowed executions, just
@@ -362,7 +323,8 @@ static int exechelp_filter_forbidden_exec(const char *target, char *const argv[]
     if (have_forbidden)
       goto binary_forbidden;
 
-    DEBUG2("DEBUG: Child process is allowed to execute '%s' and to access all of its parameters, proceeding\n", target);
+    if (arg_debug >= 2)
+      printf("DEBUG: Child process is allowed to execute '%s' and to access all of its parameters, proceeding\n", target);
     *allowed_target = strdup(target);
     *allowed_argv = arg_len? malloc(sizeof(char *) * arg_len) : NULL;
     *allowed_argv = memcpy(*allowed_argv, argv, sizeof(char *) * (arg_len+1));
@@ -372,7 +334,8 @@ static int exechelp_filter_forbidden_exec(const char *target, char *const argv[]
 
   binary_forbidden:
   {
-    DEBUG2("DEBUG: Child process is not allowed to execute '%s', or some parameters are are not allowed; delegating the whole execution\n", target);
+    if (arg_debug >= 2)
+      printf("DEBUG: Child process is not allowed to execute '%s', or some parameters are are not allowed; delegating the whole execution\n", target);
     *forbidden_target = strdup(target);
     *forbidden_argv = arg_len? malloc(sizeof(char *) * (arg_len+1)) : NULL;
     *forbidden_argv = memcpy(*forbidden_argv, argv, sizeof(char *) * (arg_len+1));
@@ -390,7 +353,12 @@ static int exechelp_filter_forbidden_exec(const char *target, char *const argv[]
 int execve(const char *path, char *const argv[], char *const envp[])
 {
   typeof(execve) *original_execve = dlsym(RTLD_NEXT, "execve");
-  DEBUG("Child process is attempting to execute (execve) binary '%s'\n", path);
+  if(!original_execve) {
+    fprintf(stderr, "Critical: the child process is not properly loading the standard C library, and libexechelper cannot find the real implementation of execve(), aborting\n");
+    return EACCES;
+  }
+  if (arg_debug)
+    printf("Child process is attempting to execute (execve) binary '%s'\n", path);
 
   char *allowed_exec = NULL, *forbidden_exec = NULL;
   char **allowed_argv = NULL, **forbidden_argv = NULL;
@@ -400,49 +368,26 @@ int execve(const char *path, char *const argv[], char *const envp[])
                                  &allowed_exec, &allowed_argv,
                                  &forbidden_exec, &forbidden_argv);
 
-  /* First getting rid of the denied process/files because we know we will return from
-   * this call.
-   */
-  if (forbidden_exec)
-  {
-    if (!allowed_exec)
-      DEBUG("Child process delegating the execution of '%s' to the sandbox\n", path); 
-    else
-      DEBUG("Child process must delegate the execution of some parameters of '%s' to the sandbox\n", path); 
+  /* First getting rid of the denied process/files because we know we will return from this call. */
+  if (forbidden_exec) {
+    if (!allowed_exec && arg_debug)
+      printf("Child process delegating the execution of '%s' to the sandbox\n", path); 
+    else if (arg_debug)
+      printf("Child process must delegate the execution of some parameters of '%s' to the sandbox\n", path);
 
-    /* Here we execute a fake execve to a specific path, so the sandbox gets notified.
-     * We do this rather than deny the system call with a built-in security mechanism
-     * because a seccomp + ptrace combination would require that we compile a new
-     * execve seccomp policy every time we want to deny a system call, and that we then
-     * refind and recompile the original seccomp policy, and reload it. This would be
-     * too costly, and ptrace itself cannot prevent the execve call from happening so
-     * we rely on the sandboxed process to self-censor instead. Disobeying processes
-     * could be detected by duplicating the checking logic in the trusted daemon that
-     * monitors the execve calls of the sandboxed process.
-     */
-    size_t altered_len = strlen(EXECHELP_MONITORED_EXEC_PATH) + (forbidden_exec? strlen(forbidden_exec):0) + 1;
-    char *altered_path = malloc(sizeof(char) * altered_len);
-    snprintf(altered_path, altered_len, "%s%s", EXECHELP_MONITORED_EXEC_PATH, (forbidden_exec? forbidden_exec:""));
-
-    int ret = (*original_execve)(altered_path, forbidden_argv, envp);
-    free(altered_path);
-
-    /* Ideally the sandbox is configured to return EACCES for such paths, but the
-     * normal error to be had is ENOENT without a compatible sandbox. We force the
-     * error to EACCES for that reason.
-     */
-    DEBUG("Child process's system call successfully hijacked for sandbox to take over (returned %d)\n", ret);
+    if (exechelp_send_command(forbidden_exec, forbidden_argv) != -1) {
+      if (arg_debug)
+        printf("Child process's execve() system call successfully hijacked for sandbox to take over\n");
+    } else if (arg_debug)
+      printf("Error: Child process's system call should have been sent to the sandbox helper for execution, but an error occurred\n");
   }
 
-  /* Then executing the allowed process with the allowed parameters. We might not return.
-   */
-  if (allowed_exec)
-  {
-    DEBUG("%s", "Child process is allowed to proceed by the sandbox\n");
+  /* Then executing the allowed process with the allowed parameters. We might not return. */
+  if (allowed_exec) {
+    if (arg_debug)
+      printf("%s", "Child process is allowed to proceed by the sandbox\n");
     ret_value = (*original_execve)(allowed_exec, allowed_argv, envp);
-  }
-  else
-  {
+  } else {
     errno = EACCES;
     ret_value = -1;
   }
@@ -462,12 +407,17 @@ int execve(const char *path, char *const argv[], char *const envp[])
 int execvpe(const char *file, char *const argv[], char *const envp[])
 {
   typeof(execvpe) *original_execvpe = dlsym(RTLD_NEXT, "execvpe");
-  DEBUG("Child process is attempting to execute (execvpe) binary name '%s'\n", file);
+  if(!original_execvpe) {
+    fprintf(stderr, "Critical: the child process is not properly loading the standard C library, and libexechelper cannot find the real implementation of execvpe(), aborting\n");
+    return EACCES;
+  }
+  if (arg_debug)
+    printf("Child process is attempting to execute (execvpe) binary name '%s'\n", file);
 
   char *path = exechelp_resolve_path(file);
-  if (!path)
-  {
-    DEBUG2("DEBUG: '%s' could not be resolved to any path, we expect execvpe to return ENOENT or a similar error.\n", file);
+  if (!path) {
+    if (arg_debug >= 2)
+      printf("DEBUG: '%s' could not be resolved to any path, we expect execvpe to return ENOENT or a similar error.\n", file);
     errno = ENOENT;
     return -1;
   }
@@ -480,45 +430,25 @@ int execvpe(const char *file, char *const argv[], char *const envp[])
                                  &allowed_exec, &allowed_argv,
                                  &forbidden_exec, &forbidden_argv);
 
-  /* First getting rid of the denied process/files because we know we will return from
-   * this call.
-   */
-  if (forbidden_exec)
-  {
-    if (!allowed_exec)
-      DEBUG("Child process delegating the execution of '%s' to the sandbox\n", path); 
-    else
-      DEBUG("Child process must delegate the execution of some parameters of '%s' to the sandbox\n", path); 
+  /* First getting rid of the denied process/files because we know we will return from this call. */
+  if (forbidden_exec) {
+    if (!allowed_exec && arg_debug)
+      printf("Child process delegating the execution of '%s' to the sandbox\n", path); 
+    else if (arg_debug)
+      printf("Child process must delegate the execution of some parameters of '%s' to the sandbox\n", path);
 
-    /* Here we execute a fake execvpe to a specific path, so the sandbox gets notified.
-     * We do this rather than deny the system call with a built-in security mechanism
-     * because a seccomp + ptrace combination would require that we compile a new
-     * execvpe seccomp policy every time we want to deny a system call, and that we then
-     * refind and recompile the original seccomp policy, and reload it. This would be
-     * too costly, and ptrace itself cannot prevent the execvpe call from happening so
-     * we rely on the sandboxed process to self-censor instead. Disobeying processes
-     * could be detected by duplicating the checking logic in the trusted daemon that
-     * monitors the execvpe calls of the sandboxed process.
-     */
-    size_t altered_len = strlen(EXECHELP_MONITORED_EXEC_PATH) + (forbidden_exec? strlen(forbidden_exec):0) + 1;
-    char *altered_path = malloc(sizeof(char) * altered_len);
-    snprintf(altered_path, altered_len, "%s%s", EXECHELP_MONITORED_EXEC_PATH, (forbidden_exec? forbidden_exec:""));
-
-    int ret = (*original_execvpe)(altered_path, forbidden_argv, envp);
-    free(altered_path);
-
-    /* Ideally the sandbox is configured to return EACCES for such paths, but the
-     * normal error to be had is ENOENT without a compatible sandbox. We force the
-     * error to EACCES for that reason.
-     */
-    DEBUG("Child process's system call successfully hijacked for sandbox to take over (returned %d)\n", ret);
+    if (exechelp_send_command(forbidden_exec, forbidden_argv) != -1) {
+      if (arg_debug)
+        printf("Child process's execvpe() system call successfully hijacked for sandbox to take over\n");
+    } else if (arg_debug)
+      printf("Error: Child process's system call should have been sent to the sandbox helper for execution, but an error occurred\n");
   }
 
   /* Then executing the allowed process with the allowed parameters. We might not return.
    */
-  if (allowed_exec)
-  {
-    DEBUG("%s", "Child process is allowed to proceed by the sandbox\n");
+  if (allowed_exec) {
+    if (arg_debug)
+      printf("%s", "Child process is allowed to proceed by the sandbox\n");
     
     /* We still execute with 'file' in the rare situation where path returns a ENOEXEC 
      * file that also fails running in a shell, in which case execvpe would try another
@@ -531,9 +461,7 @@ int execvpe(const char *file, char *const argv[], char *const envp[])
       ret_value = (*original_execvpe)(file, allowed_argv, envp);
     else
       ret_value = (*original_execvpe)(allowed_exec, allowed_argv, envp);
-  }
-  else
-  {
+  } else {
     errno = EACCES;
     ret_value = -1;
   }
@@ -553,8 +481,7 @@ int execvpe(const char *file, char *const argv[], char *const envp[])
 
 int fexecve(int fd, char *const argv[], char *const envp[])
 {
-  if(fd<0)
-  {
+  if(fd<0) {
     errno = EINVAL;
     return -1;
   }
@@ -565,15 +492,15 @@ int fexecve(int fd, char *const argv[], char *const envp[])
 
   char *path = exechelp_coreutils_areadlink_with_size(fdpath, 2048);
   free(fdpath);
-  if(!path)
-  {
+  if(!path) {
     errno = EINVAL;
     return -1;
   }
 
   typeof(execve) *original_execve = dlsym(RTLD_NEXT, "execve");
   typeof(fexecve) *original_fexecve = dlsym(RTLD_NEXT, "fexecve");
-  DEBUG("Child process is attempting to execute (fexecve) file descriptor '%s' (%d)\n", path, fd);
+  if (arg_debug)
+    printf("Child process is attempting to execute (fexecve) file descriptor '%s' (%d)\n", path, fd);
 
   char *allowed_exec = NULL, *forbidden_exec = NULL;
   char **allowed_argv = NULL, **forbidden_argv = NULL;
@@ -586,42 +513,24 @@ int fexecve(int fd, char *const argv[], char *const envp[])
   /* First getting rid of the denied process/files because we know we will return from
    * this call.
    */
-  if (forbidden_exec)
-  {
-    if (!allowed_exec)
-      DEBUG("Child process delegating the execution of '%s' to the sandbox\n", path); 
-    else
-      DEBUG("Child process must delegate the execution of some parameters of '%s' to the sandbox\n", path); 
+  if (forbidden_exec) {
+    if (!allowed_exec && arg_debug)
+      printf("Child process delegating the execution of '%s' to the sandbox\n", path); 
+    else if (arg_debug)
+      printf("Child process must delegate the execution of some parameters of '%s' to the sandbox\n", path); 
 
-    /* Here we execute a fake execve to a specific path, so the sandbox gets notified.
-     * We do this rather than deny the system call with a built-in security mechanism
-     * because a seccomp + ptrace combination would require that we compile a new
-     * execve seccomp policy every time we want to deny a system call, and that we then
-     * refind and recompile the original seccomp policy, and reload it. This would be
-     * too costly, and ptrace itself cannot prevent the execve call from happening so
-     * we rely on the sandboxed process to self-censor instead. Disobeying processes
-     * could be detected by duplicating the checking logic in the trusted daemon that
-     * monitors the execve calls of the sandboxed process.
-     */
-    size_t altered_len = strlen(EXECHELP_MONITORED_EXEC_PATH) + (forbidden_exec? strlen(forbidden_exec):0) + 1;
-    char *altered_path = malloc(sizeof(char) * altered_len);
-    snprintf(altered_path, altered_len, "%s%s", EXECHELP_MONITORED_EXEC_PATH, (forbidden_exec? forbidden_exec:""));
-
-    int ret = (*original_execve)(altered_path, forbidden_argv, envp);
-    free(altered_path);
-
-    /* Ideally the sandbox is configured to return EACCES for such paths, but the
-     * normal error to be had is ENOENT without a compatible sandbox. We force the
-     * error to EACCES for that reason.
-     */
-    DEBUG("Child process's system call successfully hijacked for sandbox to take over (returned %d)\n", ret);
+    if (exechelp_send_command(forbidden_exec, forbidden_argv) != -1) {
+      if (arg_debug)
+        printf("Child process's fexecve() system call successfully hijacked for sandbox to take over\n");
+    } else if (arg_debug)
+      printf("Error: Child process's system call should have been sent to the sandbox helper for execution, but an error occurred\n");
   }
 
   /* Then executing the allowed process with the allowed parameters. We might not return.
    */
-  if (allowed_exec)
-  {
-    DEBUG("%s", "Child process is allowed to proceed by the sandbox\n");
+  if (allowed_exec) {
+    if (arg_debug)
+      printf("%s", "Child process is allowed to proceed by the sandbox\n");
         
     /* We still execute with 'file' in the rare situation where the file descriptor has
      * changed since we read the fd info, because we care most about semantic equivalence
@@ -632,9 +541,7 @@ int fexecve(int fd, char *const argv[], char *const envp[])
       ret_value = (*original_fexecve)(fd, allowed_argv, envp);
     else
       ret_value = (*original_execve)(allowed_exec, allowed_argv, envp);
-  }
-  else
-  {
+  } else {
     errno = EACCES;
     ret_value = -1;
   }

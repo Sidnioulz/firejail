@@ -18,10 +18,12 @@
 
 #define _GNU_SOURCE
 
+#include "../include/common.h"
 #include "../include/exechelper.h"
 #include <errno.h>
 #include <dirent.h>
 #include <limits.h>
+#include <pwd.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,6 +33,269 @@
 #include <time.h>
 #include <unistd.h>
 
+/**
+ * @fn exechelp_read_list_from_file
+ * @brief Reads a file to extract a list of paths from it. This function
+ * caches the contents of previously read files.
+ *
+ * @param file_path: path to a file containing a list of strings to be read
+ * @return the string list that was contained in file_path
+ */
+char *exechelp_read_list_from_file(const char *file_path)
+{
+  static ExecHelpHashTable *cache = NULL;
+  static ExecHelpHashTable *mtime = NULL;
+
+  if (!cache || !mtime) {
+    if (cache) {
+      exechelp_hash_table_destroy(cache);
+      cache = NULL;
+    }
+    if (mtime) {
+      exechelp_hash_table_destroy(mtime);
+      mtime = NULL;
+    }
+    cache = exechelp_hash_table_new_full(exechelp_str_hash, exechelp_str_equal, NULL, free);
+    mtime = exechelp_hash_table_new_full(exechelp_str_hash, exechelp_str_equal, NULL, NULL);
+
+    if (!cache || !mtime)
+      return NULL;
+  }
+
+  struct stat sb;
+  time_t last_access = 0;
+  time_t cached_access = 0;
+  int must_refresh = 1;
+
+  if (stat(file_path, &sb) == 0) {
+    last_access = sb.st_mtim.tv_sec;
+  } else if (errno == ENOENT) {
+    fprintf(stderr, "Warning: file '%s' is missing, execution policies will not be computed correctly\n", file_path);
+  } else {
+    fprintf(stderr, "Error: could not open file '%s' (error: %s)\n", file_path, strerror(errno));
+  }
+  if (exechelp_hash_table_contains(mtime, file_path))
+    cached_access = EH_POINTER_TO_ULONG(exechelp_hash_table_lookup(mtime, file_path));
+  must_refresh = (last_access > cached_access);
+
+  if (must_refresh) {
+    FILE *f = fopen(file_path, "rb");
+    if (f) {
+      fseek(f, 0, SEEK_END);
+      long fsize = ftell(f);
+      rewind(f);
+      
+      char *new_list = malloc(sizeof(char) * (fsize + 1));
+      if (new_list) {
+        int read = fread(new_list, 1, fsize, f);
+        new_list[read] = 0;
+
+        fclose(f);
+
+        exechelp_hash_table_remove(cache, file_path);
+        exechelp_hash_table_remove(mtime, file_path);
+
+        exechelp_hash_table_insert(cache, (void *)file_path, new_list);
+        exechelp_hash_table_insert(mtime, (void *)file_path, EH_ULONG_TO_POINTER(last_access));
+
+        return new_list;
+      } else if (arg_debug)
+      fprintf(stderr, "Error: file '%s' could not be opened to extract a list of paths from (error: %s)\n", file_path, strerror(errno));
+
+      fclose(f);
+    }
+  }
+
+  char *list = exechelp_hash_table_lookup(cache, file_path);
+  return list;
+}
+
+int exechelp_str_has_prefix_on_sep(const char *str, const char *prefix, const char sep)
+{
+  if (!str || !prefix)
+    return 0;
+
+  size_t i = 0;
+  for (;str[i] == prefix[i] && str[i] && prefix[i] && prefix[i]!=sep; ++i);
+
+  /* prefix matched entirely, and str's current filename is completely parsed
+   * @prefix: "/abc/def"
+   * @str:    "/abc/def"     1
+   * @str:    "/abc/def/"    1
+   * @str:    "/abc/def/g"   1
+   * @str:    "/abc/defg"    0
+   */
+  if ((prefix[i] == '\0' || prefix[i] == sep) && (str[i] == '\0' || str[i] == '/'))
+    return 1;
+
+  /* edge case: prefix matched entirely, and we just finished matching folders
+   * @prefix: "/abc/def/"
+   * @str:    "/abc/def/g"    1
+   */
+  if ((prefix[i] == '\0' || prefix[i] == sep) && prefix[i-1] == '/' && str[i-1] == '/')
+    return 1;
+
+  /* edge case: prefix is identical to str except it contains an ending '/' (identical directory name)
+   * @prefix: "/abc/def/"
+   * @str:    "/abc/def"     1
+   * @str:    "/abc/defg"    0
+   * @str:    "/abc/def/"    (would have matched prior rule)
+   * @str:    "/abc/def/g"   (would have matched prior rule)
+   */
+  if (prefix[i] == '/' && (prefix[i+1] == '\0' || prefix[i+1] == sep) && str[i] == '\0')
+    return 1;
+
+  return 0;
+}
+
+int exechelp_file_list_contains_path(const char *list, const char *real, char **prefix)
+{
+  const char *iter = list;
+  int found = 0;
+
+  while(iter && iter[0]!='\0' && !found) {
+    found = exechelp_str_has_prefix_on_sep(real, iter, ':');
+    if (found && prefix) {
+      *prefix = strdup(iter);
+      char *cleanup = strstr(*prefix, ":");
+      if (cleanup)
+        *cleanup = '\0';
+    }
+
+    iter = strstr(iter, ":");
+    if (iter)
+      iter++;
+  }
+
+  return found;
+}
+
+static int exechelp_is_whitelisted_file(const char *real)
+{
+  if (arg_debug)
+    printf("Child process determining whether '%s' is a white-listed file for this firejail instance...", real);
+
+  if (!real)
+    goto ret;
+
+  char *associations = exechelp_read_list_from_file(EXECHELP_WHITELIST_FILES_PATH);
+  if (!associations) {
+    if (arg_debug >= 2)
+      printf("DEBUG: Could not find a list of white-listed files against which to check '%s'\n", real);
+    goto ret;
+  }
+
+  const char *iter = associations;
+  int found = 0;
+
+  while(iter && iter[0]!='\0' && !found) {
+    found = exechelp_str_has_prefix_on_sep(real, iter, ':');
+    iter = strstr(iter, ":");
+    if (iter)
+      iter++;
+  }
+
+  ret:
+  if (arg_debug)
+    printf(" %s\n", (found? "Yes" : "No"));
+  return found;
+}
+
+ExecHelpExecutionPolicy *exechelp_targets_sandbox_protected_file(const char *filepath, const char *target, char *const argv[], int whitelist, char **forbiddenpaths) {
+  if (arg_debug)
+    printf("Child process determining whether arguments passed to execve('%s') contain forbidden files...", target);
+  if (arg_debug >= 2)
+    printf("%s", "\n");
+
+  // get a list of protected files first
+  char *managed = exechelp_read_list_from_file(filepath);
+  if (!managed) {
+    if (arg_debug >= 2)
+      printf("DEBUG: Could not find a list of sandbox-managed files to check arguments before executing '%s'\n", target);
+    return NULL;
+  }
+
+  // prepare the return structure
+  ExecHelpExecutionPolicy *ret = NULL;
+  int len = 0, some_forbidden = 0;
+  for(;argv[len];++len);
+  ret = exechelp_malloc0(sizeof(ExecHelpExecutionPolicy) * (len+1));
+  ret[0] = LINKED_APP; /* Just to make the array nicer to loop through, mark executable as a helper */
+
+  // start looping
+  if (arg_debug >= 2)
+    printf("DEBUG: %d arguments will be examined\n", len);
+    
+  for (len=1; argv[len]; ++len) {
+    if (arg_debug >= 2)
+      printf("DEBUG: checking if argument %d ('%s') is to be managed by the sandbox\n", len, argv[len]);
+
+    // get the canonical path of the current argument, if any
+    char *real = exechelp_coreutils_realpath(argv[len]);
+
+    // try to figure out if the parameter is a file
+    short is_file = strchr(argv[len], '/') != NULL;
+    if (!is_file) {
+      struct stat sb;
+      if (stat(real, &sb) == 0)
+        is_file = 1;
+      else
+        is_file = (errno == EACCES || errno == ELOOP || errno == EOVERFLOW) ? 1:0;
+    }
+
+    // debugging
+    if (is_file && arg_debug >= 2)
+      printf("DEBUG: \t\t'%s' is believed to be a file, located at '%s'\n", argv[len], real);
+    else if (arg_debug >= 2)
+      printf("DEBUG: \t\t'%s' is believed not to be a file\n", argv[len]);
+
+    // check if the current argument is white-listed
+    char *prefix = NULL;
+    if (whitelist && exechelp_is_whitelisted_file(real)) {
+      if (arg_debug >= 2)
+        printf("DEBUG: \t\t'%s' is white-listed for this firejail instance\n", argv[len]);
+      ret[len] = LINKED_APP;
+    }
+    // check if the current argument is a protected file
+    else if (exechelp_file_list_contains_path(managed, real, &prefix)) {
+      if (arg_debug >= 2)
+        printf("DEBUG: \t\t'%s' is forbidden within the sandbox\n", argv[len]);
+      
+      // file is protected, indicate we found something forbidden
+      ret[len] = SANDBOX_PROTECTED;
+      some_forbidden = 1;
+
+      // if the caller asked to produce a list of matching forbidden paths, add the current one
+      if(forbiddenpaths && prefix) {
+        char *prev = *forbiddenpaths;
+
+        if (prev) {
+          if(asprintf(forbiddenpaths, "%s:%s", *forbiddenpaths, prefix) == -1) {
+            fprintf(stderr, "Error: could not make a list of sandbox-protected paths because of an error in asprintf: %s\n", strerror(errno));
+            *forbiddenpaths = NULL;
+          }
+          free(prev);
+        } else {
+          *forbiddenpaths = strdup(prefix);
+        }
+      }
+
+      free(prefix);
+    }
+    // the current argument is not white-listed or protected
+    else {
+      if (arg_debug >= 2)
+        printf("DEBUG: \t\t'%s' is allowed within the sandbox\n", argv[len]);
+      ret[len] = UNSPECIFIED;
+    }
+  }
+
+  if (arg_debug >= 2)
+    printf("%s", "Found forbidden files in arguments?");
+  if (arg_debug)
+    printf(" %s\n", some_forbidden? "Yes" : "No");
+  return ret;
+}
 
 char *exechelp_resolve_path(const char *file)
 {
@@ -142,12 +407,11 @@ char *exechelp_resolve_path(const char *file)
 }
 
 #define APPLINKS_DIR "/etc/firejail/applinks.d"
-
 ExecHelpBinaryAssociations *exechelp_get_binary_associations()
 {
   static ExecHelpBinaryAssociations *assoc = NULL;
 
-  if(!assoc) {
+  if (!assoc) {
     assoc = malloc (sizeof(ExecHelpBinaryAssociations));
     assoc->assoc = NULL;
     assoc->index = exechelp_hash_table_new(exechelp_str_hash, exechelp_str_equal);
@@ -183,7 +447,8 @@ ExecHelpBinaryAssociations *exechelp_get_binary_associations()
         FILE* mainfile = fopen(mainpath, "rb");
         free(mainpath);
         if (!mainfile) {
-          DEBUG("Error: package '%s' does not have a main binary, yet is present in the applinks.d directory, ignoring package\n", package_dir->d_name);
+          if (arg_debug)
+            fprintf(stderr, "Error: package '%s' does not have a main binary, yet is present in the applinks.d directory, ignoring package\n", package_dir->d_name);
           continue;
         }
 
@@ -192,7 +457,8 @@ ExecHelpBinaryAssociations *exechelp_get_binary_associations()
         ssize_t linelen = getline(&mainbinary, &n, mainfile);
         fclose(mainfile);
         if (linelen == -1) {
-          DEBUG("Error: could not read the main binary for package '%s', ignoring package\n", package_dir->d_name);
+          if (arg_debug)
+            fprintf(stderr, "Error: could not read the main binary for package '%s', ignoring package\n", package_dir->d_name);
           free(mainbinary);
           continue;
         }
@@ -211,7 +477,8 @@ ExecHelpBinaryAssociations *exechelp_get_binary_associations()
         FILE* linkfile = fopen(linkpath, "rb");
         free(linkpath);
         if (!linkfile) {
-          DEBUG("Error: package '%s' does not have a list of linked binaries, yet is present in the applinks.d directory, ignoring package\n", package_dir->d_name);
+          if (arg_debug)
+            printf("Error: package '%s' does not have a list of linked binaries, yet is present in the applinks.d directory, ignoring package\n", package_dir->d_name);
           free(mainbinary);
           continue;
         }
@@ -235,7 +502,8 @@ ExecHelpBinaryAssociations *exechelp_get_binary_associations()
     }
 
     t2 = time(0);
-    DEBUG("It took %f seconds to load %lu application link definitions.\n", difftime(t2, t1), count);
+    if (arg_debug)
+      printf("It took %f seconds to load %lu application link definitions.\n", difftime(t2, t1), count);
   }
 
   return assoc;
@@ -243,7 +511,7 @@ ExecHelpBinaryAssociations *exechelp_get_binary_associations()
 
 ExecHelpSList *exechelp_get_associations_for_main_binary(ExecHelpBinaryAssociations *assoc, const char *mainkey)
 {
-  if(!assoc || !mainkey)
+  if (!assoc || !mainkey)
     return NULL;
 
   ExecHelpSList *assocs = assoc->assoc;
@@ -269,30 +537,30 @@ ExecHelpSList *exechelp_get_associations_for_arbitrary_binary(ExecHelpBinaryAsso
   char          *path = NULL;
   
   if (!exechelp_hash_table_contains(assoc->index, key)) {
-    DEBUG2("DEBUG: binary '%s' is not a full path, calling realpath()\n", key);
+    if (arg_debug >= 2)
+      printf("DEBUG: binary '%s' is not a full path, calling realpath()\n", key);
     path = exechelp_resolve_path(key);
     if (!path) {
-      DEBUG2("DEBUG: no binary for the name '%s' could be found, aborting\n", key);
+      if (arg_debug >= 2)
+        printf("DEBUG: no binary for the name '%s' could be found, aborting\n", key);
       return NULL;
-    }
-    else
-      DEBUG2("DEBUG: name '%s' corresponds to binary '%s'\n", key, path);
+    } else if (arg_debug >= 2)
+      printf("DEBUG: name '%s' corresponds to binary '%s'\n", key, path);
   }
   
   if (exechelp_hash_table_contains(assoc->index, path?path:key)) {
-    DEBUG2("DEBUG: binary '%s' has associations with other apps\n", path?path:key);
+    if (arg_debug >= 2)
+      printf("DEBUG: binary '%s' has associations with other apps\n", path?path:key);
     const char *mainkey = exechelp_hash_table_lookup(assoc->index, path?path:key);
 
     if (mainkey) {
-      DEBUG2("DEBUG: binary '%s' 's parent app is %s\n", path?path:key, mainkey);
+      if (arg_debug >= 2)
+        printf("DEBUG: binary '%s' 's parent app is %s\n", path?path:key, mainkey);
       ret = exechelp_get_associations_for_main_binary(assoc, mainkey);
-    }
-    else
-      DEBUG2("DEBUG: binary '%s' 's parent app could not be found\n", path?path:key);
-  }
-  else {
-    DEBUG2("DEBUG: binary '%s' is not associated with other apps\n", path?path:key);
-  }
+    } else if (arg_debug >= 2)
+      printf("DEBUG: binary '%s' 's parent app could not be found\n", path?path:key);
+  } else if (arg_debug >= 2)
+    printf("DEBUG: binary '%s' is not associated with other apps\n", path?path:key);
 
   if (path)
     free(path);
@@ -310,14 +578,16 @@ int exechelp_is_associated_app(const char *caller, const char *callee)
   if (assocs)
     associated = exechelp_slist_find_custom(assocs, callee, (ExecHelpCompareFunc)strcmp) != NULL;
 
-  DEBUG2 ("DEBUG: callee '%s' is %sin the list of associated apps for caller '%s'\n", callee, (associated? "":"not "), caller);
+  if (arg_debug >= 2)
+    printf("DEBUG: callee '%s' is %sin the list of associated apps for caller '%s'\n", callee, (associated? "":"not "), caller);
   return associated;
 }
 
 char *exechelp_extract_associations_for_binary(const char *receiving_binary)
 {
   if (receiving_binary) {
-    DEBUG2("DEBUG: extracting the binary associations for '%s'\n", receiving_binary);
+    if (arg_debug >= 2)
+      printf("DEBUG: extracting the binary associations for '%s'\n", receiving_binary);
 
     ExecHelpBinaryAssociations *assoc = exechelp_get_binary_associations();
     ExecHelpSList *assocs = exechelp_get_associations_for_arbitrary_binary(assoc, receiving_binary);
@@ -341,8 +611,8 @@ char *exechelp_extract_associations_for_binary(const char *receiving_binary)
 
       return names;
     }
-    else
-      DEBUG2("DEBUG: %s", "receiving binary is not associated with other apps\n");
+    else if (arg_debug >= 2)
+      printf("DEBUG: %s", "receiving binary is not associated with other apps\n");
   }
 
   return NULL;
@@ -514,7 +784,7 @@ static char *_exechelp_canonicalize_filename_mode (const char *name, _exechelp_c
   }
 
   if (!IS_ABSOLUTE_FILE_NAME (name)) {
-    if(name[0] == '~') {
+    if (name[0] == '~') {
       if (!ISSLASH(name[1])) {
         errno = EINVAL;
         return NULL;
@@ -719,8 +989,8 @@ char *exechelp_coreutils_realpath (const char *fname)
     can_fname = can_fname2;
   }
   
-  if (!can_fname)
-    DEBUG2("ERROR: '%s': %d\n", fname, errno);
+  if (!can_fname && arg_debug >= 2)
+    printf("ERROR: '%s': %d\n", fname, errno);
 
   return can_fname;
 }

@@ -35,11 +35,11 @@
 #define LINKED_APPS_SB_PATH       SELF_DIR"/"EXECHELP_LINKED_APPS
 #define PROTECTED_APPS_SB_PATH    SELF_DIR"/"EXECHELP_PROTECTED_APPS
 #define PROTECTED_FILES_SB_PATH   SELF_DIR"/"EXECHELP_PROTECTED_FILES
+#define WHITELIST_APPS_SB_PATH    SELF_DIR"/"EXECHELP_WHITELIST_APPS
+#define WHITELIST_FILES_SB_PATH   SELF_DIR"/"EXECHELP_WHITELIST_FILES
 #define PROTECTED_APPS_NAME       "protected-apps.bin"
 #define PROTECTED_FILES_NAME      "protected-files.bin"
 
-#define DEFAULT_USER_PROFILE	"generic"
-#define DEFAULT_ROOT_PROFILE	"server"
 #define MAX_INCLUDE_LEVEL 6
 
 // main.c
@@ -146,6 +146,9 @@ extern char *arg_seccomp_list;//  optional seccomp list on top of default filter
 extern char *arg_seccomp_list_drop;		// seccomp drop list
 extern char *arg_seccomp_list_keep;		// seccomp keep list
 
+extern char *arg_whitelist_apps;      // list of apps that can always be opened by this instance (bypass --helper)
+extern char *arg_whitelist_files;     // list of files that can always be opened by this instance (bypass --helper)
+
 extern int arg_caps_default_filter;	// enable default capabilities filter
 extern int arg_caps_drop;		// drop list
 extern int arg_caps_drop_all;		// drop all capabilities
@@ -206,6 +209,7 @@ int net_get_mac(const char *ifname, unsigned char mac[6]);
 void fs_build_firejail_dir(void);
 // build /tmp/firejail/mnt directory
 void fs_build_mnt_dir(void);
+// build /tmp/firejail/mnt/etc directory
 void fs_build_mnt_etc_dir(void);
 // blacklist files or directoies by mounting empty files on top of them
 void fs_blacklist(const char *homedir);
@@ -379,11 +383,14 @@ void network_shm_set_file(pid_t pid);
 void fs_check_etc_list(void);
 void fs_private_etc_list(void);
 
-// fs_helper_etc.c
+// fs_helper.c
 void fs_helper_generate_files(void);
 void fs_helper_mount_self_dir(void);
 char *fs_helper_list_files(void);
-//TODO TODO TODO TODO TODO
+
+// exechelp_client.c
+void exechelp_install_socket(void);
+void exechelp_register_socket(void);
 
 // protected_resources.c
 char *get_protected_apps_for_client(void);

@@ -32,6 +32,9 @@
 #include <ctype.h>
 #include <assert.h>
 
+#define DEFAULT_USER_PROFILE	"generic"
+#define DEFAULT_ROOT_PROFILE	"server"
+
 #define errExit(msg)    do { char msgout[500]; snprintf(msgout, 500, "Error %s:%s(%d)", msg, __FUNCTION__, __LINE__); perror(msgout); exit(1);} while (0)
 
 // macro to print ip addresses in a printf statement
@@ -113,4 +116,7 @@ int join_namespace(pid_t pid, char *type);
 int name2pid(const char *name, pid_t *pid);
 char *pid_proc_comm(const pid_t pid);
 char *pid_proc_cmdline(const pid_t pid);
+int string_in_list(const char* list, const char* string);
+int strcmp_comma(const char* s1, const char* s2);
+char *split_comma(char *str);
 #endif
