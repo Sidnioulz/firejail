@@ -60,28 +60,28 @@ static void command_execute(fireexecd_client_t *cli, const char *command, char *
   DBGLEAVE(cli?cli->pid:-1, "command_execute");
 }
 
-static int exechelp_is_catalogued_generic_run(fireexecd_client_t *cli, const char *catalogue, const char *target) {
-  DBGENTER(cli?cli->pid:-1, "exechelp_is_catalogued_generic_run");
+static int execd_is_catalogued_generic_run(fireexecd_client_t *cli, const char *catalogue, const char *target) {
+  DBGENTER(cli?cli->pid:-1, "execd_is_catalogued_generic_run");
   if (!target || !cli || !catalogue) {
-    DBGLEAVE(cli?cli->pid:-1, "exechelp_is_catalogued_generic_run");
+    DBGLEAVE(cli?cli->pid:-1, "execd_is_catalogued_generic_run");
     return 0;
   }
 
   char *path = NULL;
   if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, catalogue) == -1) {
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
-    DBGLEAVE(cli?cli->pid:-1, "exechelp_is_catalogued_generic_run");
+    DBGLEAVE(cli?cli->pid:-1, "execd_is_catalogued_generic_run");
     return 0;
   }
 
   char *list = exechelp_read_list_from_file(path);
   // free(path);
   if (!list) {
-    DBGLEAVE(cli?cli->pid:-1, "exechelp_is_catalogued_generic_run");
+    DBGLEAVE(cli?cli->pid:-1, "execd_is_catalogued_generic_run");
     return 0;
   }
 
-  DBGLEAVE(cli?cli->pid:-1, "exechelp_is_catalogued_generic_run");
+  DBGLEAVE(cli?cli->pid:-1, "execd_is_catalogued_generic_run");
   return string_in_list(list, target);
 }
 
@@ -313,8 +313,8 @@ static void client_command_process(fireexecd_client_t *cli, char *msg, ssize_t l
     ptr = msg + browsed;
   }
   
-  int associated = exechelp_is_catalogued_generic_run (cli, EXECHELP_LINKED_APPS, command);
-  int protected  = exechelp_is_catalogued_generic_run (cli, EXECHELP_PROTECTED_APPS, command);
+  int associated = execd_is_catalogued_generic_run (cli, EXECHELP_LINKED_APPS, command);
+  int protected  = execd_is_catalogued_generic_run (cli, EXECHELP_PROTECTED_APPS, command);
 
   int allowed_as_linked = (cli->pol & LINKED_APP) && associated;
   int allowed_as_unspec = (cli->pol & UNSPECIFIED) && !associated && !protected;
