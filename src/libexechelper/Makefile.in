@@ -16,7 +16,7 @@ all: libexechelper.so
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
 libexechelper.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o
-	$(CC) $(LDFLAGS) -shared -fPIC -ldl -lpthread -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS)
+	$(CC) $(LDFLAGS) -shared -fPIC -ldl -lpthread -lX11 -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS)
 
 test: $(OBJS)
 	$(CC) -lrt -o exec-helper-test test.c $(CFLAGS)

@@ -34,6 +34,8 @@
 #include <sys/un.h>
 #include <time.h>
 #include <unistd.h>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 #include "../include/common.h"
 #include "../include/exechelper.h"
@@ -559,4 +561,38 @@ int fexecve(int fd, char *const argv[], char *const envp[])
   return ret_value;
 }
 
+// report sandbox parameters to xfwm4
+typedef Window (* xcw_func)(Display *, Window, int, int, unsigned int, unsigned int, unsigned int, int,
+                            unsigned int, Visual *, unsigned long, XSetWindowAttributes *);
 
+Window XCreateWindow(Display *display, Window parent, int x, int y, unsigned int width, unsigned int height, unsigned int border_width, int depth,
+                     unsigned int class, Visual *visual, unsigned long valuemask, XSetWindowAttributes *attributes)
+{
+  static xcw_func xcw = NULL;
+  if (!xcw) {
+      xcw = dlsym(RTLD_NEXT, "XCreateWindow");
+  }
+
+  static Atom container_atom = 0, type_atom = 0, name_atom = 0;
+  if (!container_atom) {
+    container_atom = XInternAtom(display, "CONTAINER", False);
+    type_atom      = XInternAtom(display, EXECHELP_SANDBOX_TYPE_ENV, False);
+    name_atom      = XInternAtom(display, EXECHELP_SANDBOX_NAME_ENV, False);
+  }
+
+  Window window = xcw(display, parent, x, y, width, height, border_width, depth, class, visual, valuemask, attributes);
+
+  char *type = getenv(EXECHELP_SANDBOX_TYPE_ENV);
+  if (!type)
+    type = "untrusted";
+
+  char *name = getenv(EXECHELP_SANDBOX_NAME_ENV);
+  if (!name)
+    name = "";
+
+  XChangeProperty(display, window, container_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) "firejail", 9);
+  XChangeProperty(display, window, type_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) type, strlen(type)+1);
+  XChangeProperty(display, window, name_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) name, strlen(name)+1);
+
+  return window;
+}

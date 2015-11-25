@@ -58,5 +58,6 @@ echo "   seccomp: $HAVE_SECCOMP"
 echo "   <linux/seccomp.h>: $HAVE_SECCOMP_H"
 echo "   chroot: $HAVE_CHROOT"
 echo "   bind: $HAVE_BIND"
+echo "   X11: $HAVE_X11"
 echo "   fatal warnings: $HAVE_FATAL_WARNINGS"
 echo

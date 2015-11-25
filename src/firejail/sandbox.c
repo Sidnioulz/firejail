@@ -265,6 +265,7 @@ int sandbox(void* sandbox_arg) {
 	// then, set protected files' permissions to 0000
 	//****************************
 	if (cfg.helper) { // --helper
+	  fs_helper_fix_gtk3_windows();
     fs_helper_mount_self_dir();
     exechelp_install_socket();
     exechelp_register_socket();

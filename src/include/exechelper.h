@@ -61,6 +61,12 @@ extern int arg_debug;
 #define EXECHELP_PROFILE_ANY              "*"
 #define EXECHELP_PROFILE_NONE             "UNSANDBOXED"
 
+#define EXECHELP_SANDBOX_TYPE_ENV         "FIREJAIL_SANDBOX_TYPE"
+#define EXECHELP_SANDBOX_NAME_ENV         "FIREJAIL_SANDBOX_NAME"
+
+#define DEFAULT_USER_PROFILE	"generic"
+#define DEFAULT_ROOT_PROFILE	"server"
+
 /* Execution policy */
 typedef enum _ExecHelpExecutionPolicy {
   LINKED_APP = 1,

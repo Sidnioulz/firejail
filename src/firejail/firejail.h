@@ -384,6 +384,7 @@ void fs_check_etc_list(void);
 void fs_private_etc_list(void);
 
 // fs_helper.c
+void fs_helper_fix_gtk3_windows(void);
 void fs_helper_generate_files(void);
 void fs_helper_mount_self_dir(void);
 char *fs_helper_list_files(void);

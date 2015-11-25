@@ -206,6 +206,129 @@ void fs_helper_generate_files(void) {
   helper_files_generated = 1;
 }
 
+void fs_helper_fix_gtk3_windows(void) {
+  //mkdir .config
+  //mkdir .config/gtk-3.0
+  //mount bind the folder on top of itself
+  //open concat gtk.css
+  //add our fix!
+  uid_t realuid = getuid();
+  gid_t realgid = getgid();
+  struct stat s;
+
+  if (arg_debug)
+	  printf("Mounting a temporary GTK+3.0 config file for child process, to disable client-side decorations\n");
+
+  // ~/.config
+  char *confpath;
+	if (asprintf(&confpath, "%s/.config/", cfg.homedir) == -1)
+		errExit("asprintf");
+	if (stat(confpath, &s)) {
+		/* coverity[toctou] */
+		int rv = mkdir(confpath, S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1)
+			errExit("mkdir");
+		if (chown(confpath, realuid, realgid) < 0)
+			errExit("chown");
+		if (chmod(confpath, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+  free(confpath);
+
+  // ~/.config/gtk-3.0
+  char *gtkpath;
+	if (asprintf(&gtkpath, "%s/.config/gtk-3.0/", cfg.homedir) == -1)
+		errExit("asprintf");
+	if (stat(gtkpath, &s)) {
+		/* coverity[toctou] */
+		int rv = mkdir(gtkpath, S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1)
+			errExit("mkdir");
+		if (chown(gtkpath, realuid, realgid) < 0)
+			errExit("chown");
+		if (chmod(gtkpath, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+
+  if (mount(gtkpath, gtkpath, NULL, MS_BIND|MS_REC, NULL) < 0)
+	  errExit("mount bind");
+  free(gtkpath);
+  
+  // create a file to hold our gtk config in our temporary folder
+  fs_build_mnt_dir();
+  char *filepath;
+	if (asprintf(&filepath, "%s/gtk.css", MNT_DIR) == -1)
+	  errExit("asprintf");
+  int fd = open(filepath, O_WRONLY | O_APPEND | O_CREAT, 0644);
+  if (fd == -1)
+    errExit("open");
+  if (chown(filepath, realuid, realgid) < 0)
+	  errExit("chown");
+  if (chmod(filepath, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0)
+	  errExit("chmod");
+
+
+  // ensure gtk.css exists, if it does, copy its content into our file
+  char *targetpath;
+  int missing = 0;
+	if (asprintf(&targetpath, "%s/.config/gtk-3.0/gtk.css", cfg.homedir) == -1)
+	  errExit("asprintf");
+	if (stat(targetpath, &s))
+	  missing = 1;
+
+  int targetfd = open(targetpath, O_RDWR | O_CREAT, 0644);
+  if (targetfd == -1)
+    errExit("open");
+
+  // ensure the user owns the new file
+  if (missing) {
+	  if (chown(targetpath, realuid, realgid) < 0)
+		  errExit("chown");
+	  if (chmod(targetpath, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0)
+		  errExit("chmod");
+	}
+	// or copy its existing contents into our temporary file
+	else {
+	  ssize_t len, written;
+	  char buf[1024];
+	  errno = 0;
+	  do {
+	    len = read(targetfd, buf, sizeof(buf));
+	    if (len == -1)
+	      errExit("read");
+      else
+        written = write(fd, buf, len);
+	    if (written != len)
+	      errExit("write");
+	  } while (len > 0);
+	}
+  close(targetfd);
+
+   // write our extra CSS rules
+  char *border_fix = ".window-frame, .window-frame:backdrop {\n" \
+                    "  box-shadow: 0 0 0 black;\n" \
+                    "  border-style: none;\n" \
+                    "  margin: 0;\n" \
+                    "  border-radius: 0;\n" \
+                    "}\n\n" \
+                    ".titlebar {\n" \
+                    "  border-radius: 0;\n" \
+                    "}\n";
+
+  size_t len = strlen(border_fix);
+  ssize_t written = write(fd, border_fix, len);
+  if(written < len)
+    errExit("write");
+  close(fd);
+
+  // finally, mount our temporary file on top of the current one
+  if (mount(filepath, targetpath, NULL, MS_BIND|MS_REC, NULL) < 0)
+	  errExit("mount bind");
+
+  free(filepath);
+  free(targetpath);
+}
+
 #include <sys/utsname.h>
 static int fs_helper_overlay_etc(void) {
 	// check kernel version
