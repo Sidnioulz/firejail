@@ -230,6 +230,8 @@ void usage(void) {
 	printf("\t--shell=program - set default user shell.\n\n");
 	printf("\t--shutdown=name - shutdown the sandbox identified by name.\n\n");
 	printf("\t--shutdown=pid - shutdown the sandbox identified by PID.\n\n");
+	printf("\t--slow - pauses program for 30 seconds on startup and prints the sandbox's pid.\n");
+	printf("\t\tUseful for attaching to the sandbox for debugging purposes.\n\n");
 	printf("\t--tmpfs=dirname - mount a tmpfs filesystem on directory dirname.\n\n");
 	printf("\t--top - monitor the most CPU-intensive sandboxes.\n\n");
 	printf("\t--trace - trace open, access and connect system calls.\n\n");
