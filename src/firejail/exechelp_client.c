@@ -33,7 +33,7 @@
 
 static char *cmdsocketpath = NULL;
 
-void exechelp_calculate_sandbox_type(void) {
+void exechelp_propagate_sandbox_info_to_env(void) {
   // check if the command to be run was originally a protected app
   int protected = is_current_command_protected();
   if (arg_debug)
@@ -58,8 +58,6 @@ void exechelp_calculate_sandbox_type(void) {
       printf("Child process %s protected files\n", protected?"targets":"does not target");
   }
 
-  //TODO debug, with imaginary
-
   // set environment variables for libexechelper to intercept...
   if (protected) {
     if (setenv(EXECHELP_SANDBOX_TYPE_ENV, "protected", 1) < 0)
@@ -72,6 +70,15 @@ void exechelp_calculate_sandbox_type(void) {
   if (cfg.hostname) {
     if (setenv(EXECHELP_SANDBOX_NAME_ENV, cfg.hostname, 1) < 0)
       errExit("setenv");
+  }
+
+  if (arg_debug) {
+    char *level;
+    if (asprintf(&level, "%d", arg_debug) == -1)
+      errExit("asprintf");
+    if (setenv(EXECHELP_DEBUG_ENV, level, 1) < 0)
+      errExit("setenv");
+    free(level);
   }
 }
 

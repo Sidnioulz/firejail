@@ -43,6 +43,28 @@
 int arg_debug = DEBUGLVL;
 pthread_mutex_t commandmutex = PTHREAD_MUTEX_INITIALIZER;
 
+
+void __attribute__ ((constructor)) load(void);
+
+// Called when the library is loaded and before dlopen() returns
+void load(void) {
+  char *debug = getenv(EXECHELP_DEBUG_ENV);
+  if (!debug)
+    arg_debug = 0;
+  else {
+    errno = 0;
+    arg_debug = strtol(debug, NULL, 10);
+    if (errno) {
+      fprintf(stderr, "Warning: environment variable FIREJAIL_DEBUG should be a number. Increasing the number will increase the level of debug.\n");
+      arg_debug = 0;
+    }
+  }
+
+  if (arg_debug >= 2)
+    printf("DEBUG: starting Firejail's execution helper in debug mode.\n");
+}
+
+
 #define _SERVER_SOCKET_COUNTER_LIMIT_SECS   10
 #define _SERVER_SOCKET_COUNTER_LIMIT_200MS  50
 static int exechelp_get_command_socket(int closing) {
@@ -151,7 +173,8 @@ int exechelp_send_command(const char const  *command, char *argv[])
     fprintf(stderr, "Error: could not send the command to the sandbox helper (error: %s)\n", strerror(errno));
     goto send_command_failed;
   } else {
-    fprintf(stdout, "Child process sent a message to the sandbox helper (length %d) to execute '%s'\n", EXECHELP_COMMAND_MAXLEN - lenleft, command);
+    if (arg_debug)
+      fprintf(stdout, "Child process sent a message to the sandbox helper (length %d) to execute '%s'\n", EXECHELP_COMMAND_MAXLEN - lenleft, command);
   }
 
   exechelp_get_command_socket(1);
@@ -181,6 +204,20 @@ static int exechelp_is_whitelisted_app(const char *target)
   }
 
   found = string_in_list(associations, target);
+
+  // white-list self... we didn't do it before to let firejail compute whether this instance semantically
+  // is a protected or untrusted one (that depends on the profile given to us at launch time).
+  if (!found) {
+    char *path = exechelp_resolve_path(program_invocation_name);
+    if (path) {
+      if (strcmp(path, target) == 0) {
+        if (arg_debug >= 2)
+          printf("DEBUG: Child process's own binary is white-listed\n"); 
+        found = 1;
+      }
+      free(path);
+    }
+  }
 
   ret:
   if (arg_debug)

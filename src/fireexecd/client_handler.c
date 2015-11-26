@@ -464,7 +464,7 @@ static void client_command_process(fireexecd_client_t *cli, char *msg, ssize_t l
     sandboxargv[index++] = "--helper";
     // if you add too many lines here, remember to allocate more memory
     if (arg_debug) {
-//      sandboxargv[index++] = "--debug";
+      sandboxargv[index++] = "--debug";
     }
     if (profile) {
       char *profiletxt;

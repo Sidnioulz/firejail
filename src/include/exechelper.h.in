@@ -63,6 +63,7 @@ extern int arg_debug;
 
 #define EXECHELP_SANDBOX_TYPE_ENV         "FIREJAIL_SANDBOX_TYPE"
 #define EXECHELP_SANDBOX_NAME_ENV         "FIREJAIL_SANDBOX_NAME"
+#define EXECHELP_DEBUG_ENV                "EXECHELP_DEBUG"
 
 #define DEFAULT_USER_PROFILE	"generic"
 #define DEFAULT_ROOT_PROFILE	"server"

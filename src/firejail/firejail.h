@@ -390,7 +390,7 @@ void fs_helper_mount_self_dir(void);
 char *fs_helper_list_files(void);
 
 // exechelp_client.c
-void exechelp_calculate_sandbox_type(void);
+void exechelp_propagate_sandbox_info_to_env(void);
 void exechelp_install_socket(void);
 void exechelp_register_socket(void);
 
