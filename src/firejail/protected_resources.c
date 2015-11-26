@@ -45,7 +45,6 @@ static int command_name_matches_current(const char *name) {
 }
 
 int is_current_command_protected(void) {
-
   if(command_is_protected == -1) {
     // will update command_is_protected
     char *whatever = get_protected_apps_for_client();
@@ -82,38 +81,40 @@ char *get_protected_apps_for_client (void) {
 	}
 
   // assuming the current command isn't protected, but we'll flag it if we see it
-  char *realcommand = exechelp_resolve_path(cfg.command_name);
+  char *current_binary = exechelp_resolve_path(cfg.command_name);
   command_is_protected = 0;
 
   if (arg_debug)
   	printf("Reading the list of protected apps from a file\n");
 
 	// read the file line by line
-	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1], process[EXECHELP_POLICY_LINE_MAX_READ + 1], proflist[EXECHELP_POLICY_LINE_MAX_READ + 1];
-	int lineno = 0;
+	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1], binary[EXECHELP_POLICY_LINE_MAX_READ + 1], proflist[EXECHELP_POLICY_LINE_MAX_READ + 1];
+	int lineno = 0, command_seen, command_allowed;
 	while (fgets(buf, EXECHELP_POLICY_LINE_MAX_READ, fp)) {
 		++lineno;
+		command_seen = 0, command_allowed = 0;
 
-    // get current line's process
-    int pathlen = snprintf(process, EXECHELP_POLICY_LINE_MAX_READ, "%s", buf);
+    // get current line's binary
+    int pathlen = snprintf(binary, EXECHELP_POLICY_LINE_MAX_READ, "%s", buf);
     if (pathlen == -1)
       errExit("snprintf");
     else if (pathlen >= EXECHELP_POLICY_LINE_MAX_READ) {
-      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the process path is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
+      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the binary path is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
       errno = ENAMETOOLONG;
       errExit("snprintf");
     }
 
-    // if that process is linked to the current profile, we don't care
-    if (is_command_linked_for_client(process)) {
-      if(realcommand) {
-        // we don't actually mark the command as protected (we're about to run it!) but we remember seeing it
-        if(strcmp(realcommand, process) == 0)
-          command_is_protected = 1;
-      }
-      continue;
+    // does the current line match our own binary?
+    if (current_binary && strcmp(current_binary, binary) == 0) {
+      command_seen = 1;
     }
 
+    // if that binary is linked to the current profile, we don't care
+    if (is_command_linked_for_client(binary)) {
+      command_allowed = 1;
+    }
+
+    // we now want to figure out if our current profile matches one on the line
     int proflen = snprintf(proflist, EXECHELP_POLICY_LINE_MAX_READ - pathlen - 1, "%s", buf + pathlen + 1);
     if (proflen == -1)
       errExit("snprintf");
@@ -123,10 +124,7 @@ char *get_protected_apps_for_client (void) {
       errExit("snprintf");
     }
 
-    // remove the trailing \n before splitting the string
     proflist[proflen-1] = '\0';
-    
-    // split the string
     int found = 0;
     char *ptr = proflist, *prev;
     while (ptr != NULL) {
@@ -138,26 +136,36 @@ char *get_protected_apps_for_client (void) {
       }
     }
 
-    if (found)
-      continue;
-  
-    int written;
-    if (result)
-      written = asprintf(&result, "%s:%s", result, process);
-    else
-      written = asprintf(&result, "%s", process);
-    if (written == -1)
-      errExit("asprintf");
+    // the command is protected but matches our execution context, remember seeing it and don't put it on the forbidden list
+    if (command_seen && found) {
+      command_is_protected = 1;
+      command_allowed = 1;
+    }
+
+    // add the current line's binary to our list of protected binaries  
+    if (!command_allowed) {
+      int written;
+      if (result)
+        written = asprintf(&result, "%s:%s", result, binary);
+      else
+        written = asprintf(&result, "%s", binary);
+      if (written == -1)
+        errExit("asprintf");
+    }
 	}
 
   if (arg_debug)
     printf("The following apps are protected from being invoked by child process: %s\n", result); 
 	fclose(fp);
-	free(realcommand);
+	free(current_binary);
 
   return result;
 }
 
+
+
+
+//FIXME review
 char *get_protected_files_for_client (void) {
   char *result = NULL;
 
