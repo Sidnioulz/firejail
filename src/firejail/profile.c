@@ -23,13 +23,6 @@
 
 #define MAX_READ 8192				  // line buffer for profile files
 
-//TODO add a profile name
-//TODO add a default exec
-//TODO get a whitelist (stuff the profile always wants to execute)
-//TODO get a greylist (stuff the profile cant execute)
-
-//TODO write compiler that reads all reachability/whitelist/greylist arguments and puts them into managed*lists
-
 // find and read the profile specified by name from dir directory
 int profile_find(const char *name, const char *dir) {
 	assert(name);
