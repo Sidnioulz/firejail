@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Firejail Sandbox Helper Daemon
+GenericName=Security Services
+Comment=The firejail helper daemon, fireexecd, lets sandboxed clients open protected files and applications in new sandboxes
+Exec=fireexecd
+Icon=security-medium
+Terminal=false
+Categories=System;Security;
+StartupNotify=false
+OnlyShowIn=XFCE;
+Hidden=true

@@ -110,6 +110,8 @@ install: all
 	install -c -m 0644 etc/quassel.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/deadbeef.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/filezilla.profile $(DESTDIR)/etc/firejail/.
+	mkdir -p $(DESTDIR)/etc/xdg/autostart
+	install -c -m 0644 etc/xdg/autostart/fireexecd.desktop $(DESTDIR)/etc/xdg/autostart/.
 	bash -c "if [ ! -f /etc/firejail/login.users ]; then install -c -m 0644 etc/login.users $(DESTDIR)/etc/firejail/.; fi;"
 	# app links
 	mkdir -p $(DESTDIR)/etc/firejail/applinks.d
