@@ -5,6 +5,7 @@
 Makefile
 config.log
 config.status
+fireexecd.1
 firejail-login.5
 firejail-profile.5
 firejail.1
