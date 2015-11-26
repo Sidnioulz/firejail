@@ -201,7 +201,6 @@ int string_in_list(const char* list, const char* string)
     return 0;
 
   char next = *(found + strlen(string));
-  printf("str %s next %c\n", string, next);
   if(next == '\0' || next == ':')
     return 1;
   else
