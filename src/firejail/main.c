@@ -656,6 +656,21 @@ int main(int argc, char **argv) {
 
 			profile_read(argv[i] + 10, NULL, NULL);
 			custom_profile = 1;
+
+			// remember the name of the profile
+			char *name = strrchr(argv[i] + 10, '/');
+			if (name) {
+			  ++name;
+			  char *ext = strrchr(name, '.');
+			  if (ext && strcmp(ext, ".profile") == 0)
+			    cfg.profile_name = strndup (name, ext - name);
+		    else
+		      cfg.profile_name = strdup(name);
+			}
+			// not quite correct but we don't want an empty string since we read a profile already
+			else {
+		    cfg.profile_name = strdup(argv[i] + 10);
+			}
 		}
 		else if (strcmp(argv[i], "--noprofile") == 0) {
 			if (custom_profile) {
@@ -1028,6 +1043,11 @@ int main(int argc, char **argv) {
 		free(msg);
 	}
 
+  // --helper implies that we don't use a shell, disable shell if we have a program name
+  if (cfg.helper && cfg.command_name) {
+		arg_shell_none = 1; /* implicit */
+  }
+
 	// build the sandbox command
 	if (prog_index == -1 && arg_zsh) {
 		cfg.command_line = "/usr/bin/zsh";
@@ -1078,8 +1098,8 @@ int main(int argc, char **argv) {
 	    printf("Resuming program...\n");
   }
 
-	// load the profile
-	if (!arg_noprofile) {
+	// load the profile, based on the name of the current command
+	if (!custom_profile && !arg_noprofile) {
 		if (!custom_profile) {
 			// look for a profile in ~/.config/firejail directory
 			char *usercfgdir;
@@ -1132,7 +1152,7 @@ int main(int argc, char **argv) {
 			if (custom_profile)
 				printf("\n** Note: %s profile can be disabled by --noprofile option **\n\n", profile_name);
 
-		  cfg.profile_name = strdup(profile_name);
+      cfg.profile_name = strdup(profile_name);
 		  if (!cfg.profile_name)
 		    errExit("strdup");
 		}
