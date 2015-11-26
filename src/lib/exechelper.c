@@ -640,6 +640,48 @@ void *exechelp_memdup (const void *mem, unsigned int byte_size)
   return new_mem;
 }
 
+// build /run/firejail directory
+void exechelp_build_run_dir(void) {
+	struct stat s;
+
+	if (stat("/run", &s)) {
+		if (arg_debug)
+			printf("Creating %s directory\n", "/run");
+		/* coverity[toctou] */
+		int rv = mkdir("/run", S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1)
+			errExit("mkdir");
+		if (chown("/run", 0, 0) < 0)
+			errExit("chown");
+		if (chmod("/run", S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+	else { // check /run directory belongs to root end exit if doesn't!
+		if (s.st_uid != 0 || s.st_gid != 0) {
+			fprintf(stderr, "Error: non-root %s directory, exiting...\n", "/run");
+			exit(1);
+		}
+	}
+
+	if (stat(EXECHELP_RUN_DIR, &s)) {
+		if (arg_debug)
+			printf("Creating %s directory\n", EXECHELP_RUN_DIR);
+		/* coverity[toctou] */
+		int rv = mkdir(EXECHELP_RUN_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1)
+			errExit("mkdir");
+		if (chown(EXECHELP_RUN_DIR, 0, 0) < 0)
+			errExit("chown");
+		if (chmod(EXECHELP_RUN_DIR, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+	else { // check /run/firejail directory belongs to root end exit if doesn't!
+		if (s.st_uid != 0 || s.st_gid != 0) {
+			fprintf(stderr, "Error: non-root %s directory, exiting...\n", EXECHELP_RUN_DIR);
+			exit(1);
+		}
+	}
+}
 
 #define CAN_MODE_MASK (CAN_EXISTING | CAN_ALL_BUT_LAST | CAN_MISSING)
 #define AREAD_MAX_SIZE 4096

@@ -15,8 +15,8 @@ LDFLAGS += -pie -Wl,-z,relro -Wl,-z,now -lpthread
 %.o : %.c $(H_FILE_LIST)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
-fireexecd: $(OBJS) ../lib/common.o ../lib/pid.o  ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-socket.o
-	$(CC)  $(LDFLAGS) -o $@ $(OBJS) ../lib/common.o ../lib/pid.o  ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-socket.o $(LIBS)
+fireexecd: $(OBJS) ../lib/common.o ../lib/pid.o  ../lib/exechelper.o ../lib/exechelper-datatypes.o
+	$(CC)  $(LDFLAGS) -o $@ $(OBJS) ../lib/common.o ../lib/pid.o  ../lib/exechelper.o ../lib/exechelper-datatypes.o $(LIBS)
 
 clean:; rm -f *.o fireexecd
 

@@ -19,7 +19,6 @@
 */
 #include "fireexecd.h"
 #include "../include/exechelper.h"
-#include "../include/exechelper-socket.h"
 #include <limits.h>
 #include <stdlib.h>
 #include <sys/socket.h>

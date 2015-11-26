@@ -408,7 +408,7 @@ static void client_command_process(fireexecd_client_t *cli, char *msg, ssize_t l
     clientcmd = strdup(clientcmd);
 
   char *notification;
-  if (asprintf(&notification, "notify-send -i security-medium \"%s's system call was delegated to the sandbox\" \"%s\"", clientcmd, reason) == -1) {
+  if (asprintf(&notification, "notify-send -i firejail-protect \"%s's system call was delegated to the sandbox\" \"%s\"", clientcmd, reason) == -1) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_command_process");
       return;

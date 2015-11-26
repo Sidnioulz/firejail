@@ -19,17 +19,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "firejail.h"
-#include "../include/exechelper-socket.h"
 #include "../include/exechelper.h"
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/mount.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/un.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
+
 
 static char *cmdsocketpath = NULL;
 
@@ -82,15 +88,68 @@ void exechelp_propagate_sandbox_info_to_env(void) {
   }
 }
 
+#define _EH_HASH_STR_LEN 12
+static char *exechelp_gen_socket_name(const char *socket_name, const uid_t uid, const gid_t gid, const pid_t pid) {
+  char str[_EH_HASH_STR_LEN + 1];
+  str[_EH_HASH_STR_LEN] = '\0';
+  int available, i;
+
+  // get a file path of the form "/run/firejail/<pid>-commands-<rand>
+  char *path = NULL, *dir = NULL;
+  int fd;
+
+  if (asprintf(&dir, "/run/firejail/%d/", pid) == -1)
+    errExit("asprintf");
+
+  struct stat s;
+	if (stat(dir, &s)) {
+		if (arg_debug)
+			printf("Creating %s directory\n", dir);
+		/* coverity[toctou] */
+		int rv = mkdir(dir, S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1)
+			errExit("mkdir");
+		if (chmod(dir, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+	if (chown(dir, uid, gid) < 0)
+		errExit("chown");
+
+  // just in case there are leftovers in there...
+  available = 0;
+  while (!available) {
+    // generate a random string
+    for(i = 0; i < 12; i++)
+      sprintf(str + i, "%x", rand() % 16);
+
+    // generate a file path
+    free(path);
+    if (asprintf(&path, "/run/firejail/%d/%s-%s.sock", pid, socket_name, str) == -1)
+      errExit("asprintf");
+
+    // check the path is available for a socket (save for race conditions...)
+    errno = 0;
+    if (access(path, R_OK | W_OK) == -1) {
+      if(errno == ENOENT) {
+        available = 1;
+      } else if (errno == ENOTDIR || errno == EROFS || errno == EFAULT || errno == EINVAL || errno == EINVAL) {
+        errExit("access");
+      }
+    }
+  }
+
+  return path;
+}
+
 void exechelp_install_socket(void) {
   exechelp_build_run_dir();
 
   uid_t realuid = getuid();
   gid_t realgid = getgid();
 
-  cmdsocketpath = exechelp_make_socket("commands", realuid, realgid, sandbox_pid);
+  cmdsocketpath = exechelp_gen_socket_name("commands", realuid, realgid, sandbox_pid);
   if (!cmdsocketpath)
-    errExit("exechelp_make_socket");
+    errExit("exechelp_gen_socket_name");
   if (setenv(EXECHELP_COMMANDS_SOCKET, cmdsocketpath, 1) < 0)
     errExit("setenv");
   if (arg_debug)

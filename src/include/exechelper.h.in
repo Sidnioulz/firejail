@@ -80,7 +80,6 @@ typedef enum _ExecHelpExecutionPolicy {
 /* execd / exechelper IPC */
 // build /run/firejail directory
 void exechelp_build_run_dir(void);
-void exechelp_make_socket_files(void);
 
 /* General utilities */
 char *exechelp_read_list_from_file(const char *file_path);
