@@ -9,6 +9,7 @@ firejail-login.5
 firejail-profile.5
 firejail.1
 firemon.1
+src/fireexecd/fireexecd
 src/firejail/firejail
 src/firemon/firemon
 src/ftee/ftee
