@@ -82,6 +82,14 @@ void usage(void) {
 	printf("\t--env=name=value - set environment variable in the new sandbox\n");
 	
 	printf("\t--help, -? - this help screen.\n\n");
+
+	printf("\t--helper - configures the program to forward exec* system calls to the\n");
+	printf("\t\tfirejail daemon if they match specific combinations of programs and\n");
+	printf("\t\tfile names as defined in /etc/firejail/protected-{apps,files}.bin.\n\n");
+	printf("\t\tThis option requires a running instance of the fireexecd daemon. See\n");
+	printf("\t\talso the --whitelist-apps and --whitelist-files options to bypass\n");
+	printf("\t\tindividual policy rules if necessary. Implies --shell=none.\n\n");
+
 	printf("\t--ip=address - set interface IP address.\n\n");
 	printf("\t--ip=none - no IP address and no default gateway address are configured\n");
 	printf("\t\tin the new network namespace. Use this option in case you intend\n");
@@ -227,6 +235,12 @@ void usage(void) {
 	printf("\t--trace - trace open, access and connect system calls.\n\n");
 	printf("\t--tree - print a tree of all sandboxed processes.\n\n");
 	printf("\t--version - print program version and exit.\n\n");
+	printf("\t--whitelist-apps=list - list of paths to binaries, separated by a \":\",\n");
+	printf("\t\twhich will always be executable from within the sandbox even if they\n");
+	printf("\t\tare normally protected applications. Use in conjuction with --helper.\n\n");
+	printf("\t--whitelist-files=list - list of paths, separated by a \":\", to files\n");
+	printf("\t\tthat are always reachable within the sandbox, even if they are normally\n");
+	printf("\t\tprotected files. Includes sub-folders. Use in conjuction with --helper.\n\n");
 	printf("\t--zsh - use /usr/bin/zsh as default shell.\n\n");
 	printf("\n");
 	printf("\n");
