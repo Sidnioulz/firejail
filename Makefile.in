@@ -120,7 +120,18 @@ install: all
 	strip src/libexechelper/libexechelper.so
 	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/
 	install -c -m 0755 src/libexechelper/libexechelper.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
-	# exechelper icons
+	# libexechelperutils
+	strip src/lib/libexechelperutils.so
+	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/
+	install -c -m 0755 src/lib/libexechelperutils.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
+	mkdir -p $(DESTDIR)/$(PREFIX)/include/firejail/
+	install -c -m 0644 src/include/common.h $(DESTDIR)/$(PREFIX)/include/firejail/.
+	install -c -m 0644 src/include/exechelper-datatypes.h $(DESTDIR)/$(PREFIX)/include/firejail/.
+	install -c -m 0644 src/include/exechelper.h $(DESTDIR)/$(PREFIX)/include/firejail/.
+	install -c -m 0644 src/include/libnetlink.h $(DESTDIR)/$(PREFIX)/include/firejail/.
+	install -c -m 0644 src/include/pid.h $(DESTDIR)/$(PREFIX)/include/firejail/.
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/pkgconfig/
+	install -c -m 0644 data/libexechelperutils.pc $(DESTDIR)/$(PREFIX)/share/pkgconfig/.
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/emblems/
 	install -c -m 0644 icons/emblems/10/emblem-protected.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/emblems/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/emblems/
@@ -187,6 +198,7 @@ uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/bin/firemon
 	rm -f $(DESTDIR)/$(PREFIX)/bin/fireexecd
 	rm -fr $(DESTDIR)/$(PREFIX)/lib/firejail
+	rm -fr $(DESTDIR)/$(PREFIX)/include/firejail
 	rm -fr $(DESTDIR)/$(PREFIX)/share/doc/firejail
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firejail.1*
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firemon.1*
@@ -196,6 +208,7 @@ uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/firejail
 	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/firemon
 	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/fireexecd
+	rm -f $(DESTDIR)/$(PREFIX)/share/pkgconfig/libexechelperutils.pc
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/emblems/emblem-protected.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/emblems/emblem-protected.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/22x22/emblems/emblem-protected.png

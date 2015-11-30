@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libexechelperutils
+Description: Firejail Remote Process Execution Utility Library
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir}/firejail/ -lexechelperutils
+Cflags: -I${includedir}/
