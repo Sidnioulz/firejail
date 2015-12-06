@@ -15,3 +15,4 @@ src/firejail/firejail
 src/firemon/firemon
 src/ftee/ftee
 src/tags
+data/libexechelperutils.pc
