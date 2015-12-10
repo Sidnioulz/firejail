@@ -156,15 +156,23 @@ install: all
 	install -c -m 0644 icons/actions/22/firejail-protect.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/22x22/actions/
 	install -c -m 0644 icons/actions/22/firejail-unprotect.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/22x22/actions/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/
+	install -c -m 0644 icons/actions/24/firejail-link.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/
+	install -c -m 0644 icons/actions/24/firejail-new.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/
 	install -c -m 0644 icons/actions/24/firejail-protect.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/
 	install -c -m 0644 icons/actions/24/firejail-unprotect.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/
+	install -c -m 0644 icons/actions/32/firejail-link.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/
+	install -c -m 0644 icons/actions/32/firejail-new.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/
 	install -c -m 0644 icons/actions/32/firejail-protect.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/
 	install -c -m 0644 icons/actions/32/firejail-unprotect.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/
+	install -c -m 0644 icons/actions/48/firejail-link.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/
+	install -c -m 0644 icons/actions/48/firejail-new.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/
 	install -c -m 0644 icons/actions/48/firejail-protect.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/
 	install -c -m 0644 icons/actions/48/firejail-unprotect.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/
+	install -c -m 0644 icons/actions/symbolic/firejail-link-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/
+	install -c -m 0644 icons/actions/symbolic/firejail-new-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/
 	install -c -m 0644 icons/actions/symbolic/firejail-protect-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/
 	install -c -m 0644 icons/actions/symbolic/firejail-unprotect-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/
 	gtk-update-icon-cache --ignore-theme-index $(DESTDIR)/$(PREFIX)/share/icons/hicolor
@@ -222,12 +230,20 @@ uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/actions/firejail-unprotect.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/22x22/actions/firejail-protect.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/22x22/actions/firejail-unprotect.png
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/firejail-link.png
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/firejail-new.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/firejail-protect.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/actions/firejail-unprotect.png
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/firejail-link.png
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/firejail-new.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/firejail-protect.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/actions/firejail-unprotect.png
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/firejail-link.png
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/firejail-new.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/firejail-protect.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/firejail-unprotect.png
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/firejail-link-symbolic.svg
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/firejail-new-symbolic.svg
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/firejail-protect-symbolic.svg
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/firejail-unprotect-symbolic.svg
 	gtk-update-icon-cache --ignore-theme-index $(DESTDIR)/$(PREFIX)/share/icons/hicolor
