@@ -296,6 +296,7 @@ void join(pid_t pid, const char *homedir, int argc, char **argv, int index) {
 //      exechelp_set_socket_env_from_pid(pid);
   	  //fs_helper_fix_gtk3_windows();
       exechelp_propagate_sandbox_info_to_env();
+      //TODO: unblacklist files in --whitelist-files...
     }
 		
 		// fix qt 4.8

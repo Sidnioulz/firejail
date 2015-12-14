@@ -213,7 +213,7 @@ void fs_build_mnt_dir(void);
 void fs_build_mnt_etc_dir(void);
 // blacklist files or directoies by mounting empty files on top of them
 void fs_blacklist(const char *homedir);
-//void fs_blacklist(char **blacklist, const char *homedir);
+void fs_blacklist_file(const char *file);
 // remount a directory read-only
 void fs_rdonly(const char *dir);
 // mount /proc and /sys directories
@@ -395,11 +395,12 @@ void exechelp_install_socket(void);
 void exechelp_set_socket_env_from_pid(pid_t pid);
 void exechelp_set_socket_env_manually(char *cmdsocketpath);
 void exechelp_register_socket(void);
+void exechelp_blacklist_protected(void);
 
 // protected_resources.c
 int is_current_command_protected(void);
 char *get_protected_apps_for_client(void);
-char *get_protected_files_for_client (void);
+char *get_protected_files_for_client (int blacklist);
 
 // linked_resources.c
 char *get_linked_apps_for_client(void);

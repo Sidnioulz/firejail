@@ -371,6 +371,16 @@ void fs_blacklist(const char *homedir) {
 	for (i = 0; i < noblacklist_c; i++) free(noblacklist[i]);
 }
 
+// blacklist a single file
+void fs_blacklist_file(const char *file) {
+  //TODO verify that the file is not whitelisted, else don't blacklist
+
+  return; //FIXME: disabled until we can take whitelisted files into account
+	char *emptydir = create_empty_dir();
+	char *emptyfile = create_empty_file();
+	disable_file(BLACKLIST_FILE, file, emptydir, emptyfile);
+}
+
 //***********************************************
 // mount namespace
 //***********************************************

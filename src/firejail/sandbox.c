@@ -270,7 +270,6 @@ int sandbox(void* sandbox_arg) {
     exechelp_install_socket();
     exechelp_register_socket();
     exechelp_propagate_sandbox_info_to_env();
-//TODO:    fs_helper_blacklist_protected();
 	}
 
 	//****************************

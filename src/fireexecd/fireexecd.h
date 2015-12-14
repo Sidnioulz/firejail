@@ -177,7 +177,6 @@ int find_child(int id);
 void fireexecd_drop_privs(void);
 void fireexecd_sleep(int st);
 
-
 // procevent.c
 void procevent(pid_t pid);
 

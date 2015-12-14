@@ -167,7 +167,7 @@ void fs_helper_generate_files(void) {
   /* get list of protected files */
   if(arg_debug)
     printf("Constructing a list of files openable exclusively outside the child process' sandbox...\n");
-  char *protfstr = get_protected_files_for_client ();
+  char *protfstr = get_protected_files_for_client (1);
   if(arg_debug) {
     if (protfstr)
       printf("The following files are protected by the sandbox: '%s'\n", protfstr);
@@ -487,7 +487,8 @@ void fs_helper_mount_self_dir(void) {
 	  if (arg_debug)
 		  printf("Mount-bind %s on top of /etc/firejail/self\n", SELF_DIR);
 	  if (mount(SELF_DIR, "/etc/firejail/self", NULL, MS_BIND|MS_REC, NULL) < 0) {
-	    fprintf(stderr, "Error: could not mount-bind %s on top of /etc/firejail/self (error: %s)", SELF_DIR, strerror(errno));
+	    fprintf(stderr, "Error: could not mount-bind %s on top of /etc/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
 	  }
   }
 }
+

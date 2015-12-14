@@ -159,8 +159,7 @@ char *get_protected_apps_for_client (void) {
 }
 
 
-
-char *get_protected_files_for_client (void) {
+char *get_protected_files_for_client (int blacklist) {
   char *result = NULL;
 
   if (arg_debug)
@@ -217,6 +216,12 @@ char *get_protected_files_for_client (void) {
     /* note that at this stage, buf only contains the file path because
      * parse_get_next_separator injects a '\0' instead of the separator
      */
+
+    // if blacklisting, we can already do this now
+    if (blacklist) {
+      fs_blacklist_file(buf);
+    }
+
 
     // split the remaining string starting from past the separator
     int found = 0;
