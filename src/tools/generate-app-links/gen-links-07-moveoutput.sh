@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Moving files to local etc directory..."
-#FIXME mv out-06 ../../../etc/applinks.d
+mv out-06 ../../../etc/applinks.d
 echo "Done."
 
 echo "Generating Makefile for 'make install'..."
