@@ -118,8 +118,10 @@ install: all
 	make install -C etc/applinks.d/
 	# libexechelper
 	strip src/libexechelper/libexechelper.so
+	strip src/libexechelper/libexechelperdecorations.so
 	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/
 	install -c -m 0755 src/libexechelper/libexechelper.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
+	install -c -m 0755 src/libexechelper/libexechelperdecorations.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
 	# libexechelperutils
 	strip src/lib/libexechelperutils.so
 	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/

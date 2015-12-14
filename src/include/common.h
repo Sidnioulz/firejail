@@ -117,6 +117,12 @@ int name2pid(const char *name, pid_t *pid);
 char *pid_proc_comm(const pid_t pid);
 char *pid_proc_cmdline(const pid_t pid);
 int string_in_list(const char* list, const char* string);
+char *string_list_flatten(char **list, char *sep);
+int string_list_is_empty(char **list);
+void string_list_append(char ***list, char *item);
+char **string_list_copy(char **other);
+void string_list_free(char ***list);
 int strcmp_comma(const char* s1, const char* s2);
 char *split_comma(char *str);
+int firejail_strcmp(const char *a, const char *b);
 #endif

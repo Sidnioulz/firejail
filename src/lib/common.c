@@ -191,8 +191,7 @@ char *pid_proc_cmdline(const pid_t pid) {
 	return rv;
 }
 
-int string_in_list(const char* list, const char* string)
-{
+int string_in_list(const char* list, const char* string) {
   if(!list || !string)
     return 0;
 
@@ -207,8 +206,63 @@ int string_in_list(const char* list, const char* string)
     return 0;
 }
 
-int strcmp_comma(const char* s1, const char* s2)
-{
+char *string_list_flatten(char **list, char *sep) {
+  char   *result  = NULL;
+  size_t  index   = 0;
+  size_t  len     = 0;
+  size_t  printed = 0;
+  size_t  seplen  = 0;
+
+  if (!list)
+    return NULL;
+
+  if (list[0] == NULL)
+    return strdup("");
+
+  seplen = sep ? strlen(sep) : 0;
+  for(index = 0; list[index]; index++) {
+    len += strlen(list[index]) + seplen;
+  }
+
+  result = malloc((++len) * sizeof(char)); // adding 1 for ending "\0"
+  if (!result)
+    return NULL;
+
+  printed = snprintf(result, len, "%s", list[0]);
+  for(index = 1; list[index]; index++) {
+    printed += snprintf (result+printed, len, "%s%s", sep, list[index]);
+  }
+
+  return result;
+}
+
+int string_list_is_empty(char **list) {
+  if (list == NULL)
+    return 1;
+
+  return list[0] == NULL;
+}
+
+void string_list_append(char ***list, char *item) {
+  if (!list)
+    return;
+
+  if (!*list) {
+    *list = malloc(sizeof(char *) * 2);
+    (*list)[0] = item;
+    (*list)[1] = NULL;
+    return;
+  }
+
+  size_t i;
+  for(i = 0; (*list)[i]; i++);
+
+  *list = realloc(*list, sizeof(char *) * (i + 2));
+  (*list)[i] = item;
+  (*list)[i+1] = NULL;
+}
+
+int strcmp_comma(const char* s1, const char* s2) {
   while(*s1 && (*s1==*s2) && *s1!=',')
     s1++,s2++;
 
@@ -217,6 +271,38 @@ int strcmp_comma(const char* s1, const char* s2)
     return 0;
 
   return *(const unsigned char*)s1-*(const unsigned char*)s2;
+}
+
+char **string_list_copy(char **other) {
+  char   **self = NULL;
+  size_t   len  = 0;
+  if (!other)
+    return NULL;
+
+  for(len = 0; other[len]; len++);
+  self = malloc(sizeof(char *) * (len + 1));
+
+  for(len = 0; other[len]; len++)
+    self[len] = other[len] ? strdup(other[len]) : NULL;
+  self[len] = NULL;
+
+  return self;
+}
+
+void string_list_free(char ***list) {
+  printf("list_freeing %p\n", *list);
+  
+  if (!list)
+    return;
+
+  if (!*list)
+    return;
+
+  for (size_t i=0; (*list)[i]; i++)
+    free((*list)[i]);
+
+  free(*list);
+  *list = NULL;
 }
 
 char *split_comma(char *str) {
@@ -230,4 +316,13 @@ char *split_comma(char *str) {
 	if (*ptr == '\0')
 		return NULL;
 	return ptr;
+}
+
+int firejail_strcmp(const char *a, const char *b) {
+  if (!a)
+    return b? -1 : 0;
+  else if (!b)
+    return 1;
+  else
+    return strcmp(a, b);
 }

@@ -35,8 +35,8 @@ static int command_name_matches_current(const char *name) {
   if (!cfg.command_name)
     return 0;
   else {
-    char *realname = exechelp_resolve_path(name);
-    char *realcommand = exechelp_resolve_path(cfg.command_name);
+    char *realname = exechelp_resolve_executable_path(name);
+    char *realcommand = exechelp_resolve_executable_path(cfg.command_name);
 
     int identical = realname && realcommand && strcmp(realname, realcommand) == 0;
 
@@ -62,7 +62,7 @@ char *get_protected_apps_for_client (void) {
   char *filepath;
 	if (asprintf(&filepath, "%s/.config/firejail/%s", cfg.homedir, EXECHELP_PROTECTED_APPS_BIN) == -1)
 		errExit("asprintf");
-	FILE *fp = fopen(EXECHELP_PROTECTED_APPS_BIN, "rb");
+	FILE *fp = fopen(filepath, "rb");
 	free(filepath);
 
   if (fp == NULL) {
@@ -81,52 +81,51 @@ char *get_protected_apps_for_client (void) {
 	}
 
   // assuming the current command isn't protected, but we'll flag it if we see it
-  char *current_binary = exechelp_resolve_path(cfg.command_name);
+  char *current_binary = exechelp_resolve_executable_path(cfg.command_name);
   command_is_protected = 0;
 
   if (arg_debug)
   	printf("Reading the list of protected apps from a file\n");
 
 	// read the file line by line
-	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1], binary[EXECHELP_POLICY_LINE_MAX_READ + 1], proflist[EXECHELP_POLICY_LINE_MAX_READ + 1];
+	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1];
 	int lineno = 0, command_seen, command_allowed;
 	while (fgets(buf, EXECHELP_POLICY_LINE_MAX_READ, fp)) {
 		++lineno;
+		if (*buf == '#') // comment, ignore this line
+		  continue;
 		command_seen = 0, command_allowed = 0;
 
-    // get current line's binary
-    int pathlen = snprintf(binary, EXECHELP_POLICY_LINE_MAX_READ, "%s", buf);
-    if (pathlen == -1)
-      errExit("snprintf");
-    else if (pathlen >= EXECHELP_POLICY_LINE_MAX_READ) {
-      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the binary path is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
-      errno = ENAMETOOLONG;
-      errExit("snprintf");
+    // check for overflows
+    if (strlen(buf) == EXECHELP_POLICY_LINE_MAX_READ) {
+      fprintf(stderr, "Error: line %d of protected-apps.policy is too long, it should be no longer than %d characters\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
+	    return NULL;
+    }
+
+    // remove the trailing "\n"
+    buf[strlen(buf)-1] = '\0';
+
+    // locate the separator, and replace it with a null character
+    char *sep = NULL;
+    if (!exechelp_parse_get_next_separator(buf, &sep, 1)) {
+      if (arg_debug)
+        fprintf(stderr, "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>,<profile name>:<path to handler>,...\n", lineno);
+	    return NULL;
     }
 
     // does the current line match our own binary?
-    if (current_binary && strcmp(current_binary, binary) == 0) {
+    if (current_binary && strcmp(current_binary, buf) == 0) {
       command_seen = 1;
     }
 
     // if that binary is linked to the current profile, we don't care
-    if (is_command_linked_for_client(binary)) {
+    if (is_command_linked_for_client(buf)) {
       command_allowed = 1;
     }
 
-    // we now want to figure out if our current profile matches one on the line
-    int proflen = snprintf(proflist, EXECHELP_POLICY_LINE_MAX_READ - pathlen - 1, "%s", buf + pathlen + 1);
-    if (proflen == -1)
-      errExit("snprintf");
-    else if (*(buf + pathlen + proflen) != '\n') {
-      fprintf(stderr, "Error: line %d of protected-apps.bin in malformed, the line is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
-      errno = ENAMETOOLONG;
-      errExit("snprintf");
-    }
-
-    proflist[proflen-1] = '\0';
+    // now check the profile
     int found = 0;
-    char *ptr = proflist, *prev;
+    char *ptr = sep, *prev;
     while (ptr != NULL) {
       prev = ptr;
       ptr = split_comma(ptr);
@@ -144,11 +143,8 @@ char *get_protected_apps_for_client (void) {
 
     // add the current line's binary to our list of protected binaries  
     if (!command_allowed) {
-      int written;
-      if (result)
-        written = asprintf(&result, "%s:%s", result, binary);
-      else
-        written = asprintf(&result, "%s", binary);
+      int written = result ? asprintf(&result, "%s:%s", result, buf)
+                   : asprintf(&result, "%s", buf);
       if (written == -1)
         errExit("asprintf");
     }
@@ -164,8 +160,6 @@ char *get_protected_apps_for_client (void) {
 
 
 
-
-//FIXME review
 char *get_protected_files_for_client (void) {
   char *result = NULL;
 
@@ -174,7 +168,7 @@ char *get_protected_files_for_client (void) {
   char *filepath;
 	if (asprintf(&filepath, "%s/.config/firejail/%s", cfg.homedir, EXECHELP_PROTECTED_FILES_BIN) == -1)
 		errExit("asprintf");
-	FILE *fp = fopen(EXECHELP_PROTECTED_FILES_BIN, "rb");
+	FILE *fp = fopen(filepath, "rb");
 	free(filepath);
 
   if (fp == NULL) {
@@ -196,36 +190,37 @@ char *get_protected_files_for_client (void) {
   	printf("Reading the list of protected files from a file\n");
 
 	// read the file line by line
-	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1], file[EXECHELP_POLICY_LINE_MAX_READ + 1], proflist[EXECHELP_POLICY_LINE_MAX_READ + 1];
+	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1];
 	int lineno = 0;
 	while (fgets(buf, EXECHELP_POLICY_LINE_MAX_READ, fp)) {
 		++lineno;
+		if (*buf == '#') // comment, ignore this line
+		  continue;
 
-    // get current line's file
-    int pathlen = snprintf(file, EXECHELP_POLICY_LINE_MAX_READ, "%s", buf);
-    if (pathlen == -1)
-      errExit("snprintf");
-    else if (pathlen >= EXECHELP_POLICY_LINE_MAX_READ) {
-      fprintf(stderr, "Error: line %d of protected-file.bin in malformed, the file path is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
-      errno = ENAMETOOLONG;
-      errExit("snprintf");
+    // check for overflows
+    if (strlen(buf) == EXECHELP_POLICY_LINE_MAX_READ) {
+      fprintf(stderr, "Error: line %d of protected-files.policy is too long, it should be no longer than %d characters\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
+	    return NULL;
     }
 
-    int proflen = snprintf(proflist, EXECHELP_POLICY_LINE_MAX_READ - pathlen - 1, "%s", buf + pathlen + 1);
-    if (proflen == -1)
-      errExit("snprintf");
-    else if (*(buf + pathlen + proflen) != '\n') {
-      fprintf(stderr, "Error: line %d of protected-file.bin in malformed, the line is longer than %d characters and the profile list cannot be read\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
-      errno = ENAMETOOLONG;
-      errExit("snprintf");
+    // remove the trailing "\n"
+    buf[strlen(buf)-1] = '\0';
+
+    // locate the separator, and replace it with a null character
+    char *sep = NULL;
+    if (!exechelp_parse_get_next_separator(buf, &sep, 1)) {
+      if (arg_debug)
+        fprintf(stderr, "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>,<profile name>:<path to handler>,...\n", lineno);
+	    return NULL;
     }
 
-    // remove the trailing \n before splitting the string
-    proflist[proflen-1] = '\0';
-    
-    // split the string
+    /* note that at this stage, buf only contains the file path because
+     * parse_get_next_separator injects a '\0' instead of the separator
+     */
+
+    // split the remaining string starting from past the separator
     int found = 0;
-    char *ptr = proflist, *prev;
+    char *ptr = sep, *prev;
     while (ptr != NULL) {
       prev = ptr;
       ptr = split_comma(ptr);
@@ -234,8 +229,8 @@ char *get_protected_files_for_client (void) {
       char *path = strchr(prev, ':');
 
       if (!path) {
-        fprintf(stderr, "Error: line %d in malformed, should be of the form: <file>\\0<profile name>:<path to handler>,<profile name>:<path to handler>\n", lineno);
-        errExit("strchr");
+        fprintf(stderr, "Error: line %d is malformed, should be of the form: <file>\\0<profile name>:<path to handler>,<profile name>:<path to handler>\n", lineno);
+        return NULL;
       }
 
       *path = '\0';
@@ -248,14 +243,12 @@ char *get_protected_files_for_client (void) {
       }
     }
 
+    /* at this point we know if the profile matches the app to be run, and we know the file path */
     if (found)
       continue;
-  
-    int written;
-    if (result)
-      written = asprintf(&result, "%s:%s", result, file);
-    else
-      written = asprintf(&result, "%s", file);
+
+    int written = result ? asprintf(&result, "%s:%s", result, buf)
+                         : asprintf(&result, "%s", buf);
     if (written == -1)
       errExit("asprintf");
 	}

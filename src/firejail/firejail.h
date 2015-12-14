@@ -37,8 +37,8 @@
 #define PROTECTED_FILES_SB_PATH   SELF_DIR"/"EXECHELP_PROTECTED_FILES
 #define WHITELIST_APPS_SB_PATH    SELF_DIR"/"EXECHELP_WHITELIST_APPS
 #define WHITELIST_FILES_SB_PATH   SELF_DIR"/"EXECHELP_WHITELIST_FILES
-#define PROTECTED_APPS_NAME       "protected-apps.bin"
-#define PROTECTED_FILES_NAME      "protected-files.bin"
+#define PROTECTED_APPS_NAME       "protected-apps.policy"
+#define PROTECTED_FILES_NAME      "protected-files.policy"
 
 #define MAX_INCLUDE_LEVEL 6
 
@@ -392,6 +392,8 @@ char *fs_helper_list_files(void);
 // exechelp_client.c
 void exechelp_propagate_sandbox_info_to_env(void);
 void exechelp_install_socket(void);
+void exechelp_set_socket_env_from_pid(pid_t pid);
+void exechelp_set_socket_env_manually(char *cmdsocketpath);
 void exechelp_register_socket(void);
 
 // protected_resources.c

@@ -85,7 +85,7 @@ void usage(void) {
 
 	printf("\t--helper - configures the program to forward exec* system calls to the\n");
 	printf("\t\tfirejail daemon if they match specific combinations of programs and\n");
-	printf("\t\tfile names as defined in /etc/firejail/protected-{apps,files}.bin.\n\n");
+	printf("\t\tfile names as defined in /etc/firejail/protected-{apps,files}.policy.\n\n");
 	printf("\t\tThis option requires a running instance of the fireexecd daemon. See\n");
 	printf("\t\talso the --whitelist-apps and --whitelist-files options to bypass\n");
 	printf("\t\tindividual policy rules if necessary. Implies --shell=none.\n\n");

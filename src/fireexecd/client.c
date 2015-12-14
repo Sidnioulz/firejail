@@ -37,7 +37,10 @@ static ExecHelpList *ids = NULL;
 static pthread_mutex_t cli_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t ids_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-fireexecd_client_t *client_new(pid_t pid, const char *cmdpath) {
+fireexecd_client_t *client_new(pid_t pid,
+                               const char *cmdpath,
+                               const char *profile,
+                               const char *name) {
   DBGENTER(pid, "client_new");
   fireexecd_client_t *cli = malloc(sizeof(fireexecd_client_t));
   if(!cli) {
@@ -51,7 +54,24 @@ fireexecd_client_t *client_new(pid_t pid, const char *cmdpath) {
     DBGLEAVE(pid, "client_new");
     return NULL;
   }
-  
+
+  cli->profile = profile ? strdup(profile) : NULL;
+  if(profile && !cli->profile) {
+    free(cli->cmdpath);
+    free(cli);
+    DBGLEAVE(pid, "client_new");
+    return NULL;
+  }
+
+  cli->name = name ? strdup(name) : NULL;
+  if(name && !cli->name) {
+    free(cli->profile);
+    free(cli->cmdpath);
+    free(cli);
+    DBGLEAVE(pid, "client_new");
+    return NULL;
+  }
+
   cli->pid = pid;
   cli->handler = 0;
   cli->regtime = 0;
@@ -141,6 +161,24 @@ void client_delete_socket(fireexecd_client_t *cli) {
     if (unlink(path) == -1)
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's protected files file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
     free(path);
+    
+    if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_WHITELIST_APPS) == -1) {
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
+      DBGLEAVE(cli?cli->pid:-1, "client_delete_socket");
+      return;
+    }
+    if (unlink(path) == -1)
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's whitelisted apps file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
+    free(path);
+    
+    if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_WHITELIST_FILES) == -1) {
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
+      DBGLEAVE(cli?cli->pid:-1, "client_delete_socket");
+      return;
+    }
+    if (unlink(path) == -1)
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's whitelisted files file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
+    free(path);
 
     DBGOUT("[%d]\tINFO:  Client successfully cleaned up\n", cli->pid);
     cli->status = ERASED;
@@ -152,9 +190,24 @@ void client_delete_socket(fireexecd_client_t *cli) {
 void client_free(fireexecd_client_t *cli) {
   pid_t tmp = cli?cli->pid:0;
   DBGENTER(tmp, "client_free");
-  if (cli && cli->cmdpath) {
+  if(!cli) {
+    DBGLEAVE(tmp, "client_free");
+    return;
+  }
+  
+  if (cli->cmdpath) {
     free(cli->cmdpath);
     cli->cmdpath = NULL;
+  }
+  
+  if (cli->profile) {
+    free(cli->profile);
+    cli->profile = NULL;
+  }
+  
+  if (cli->name) {
+    free(cli->name);
+    cli->name = NULL;
   }
 
   free(cli);

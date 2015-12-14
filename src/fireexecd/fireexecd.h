@@ -100,16 +100,16 @@ typedef enum _client_status_t {
 // client.c
 typedef struct _fireexecd_client_t {
   pid_t                   pid;        // PID of the client
-  char                   *commandline;// command line that was used to run the client sandbox
-  char                   *profilename;// name of the client's firejail profile
   char                   *cmdpath;    // path of the UNIX socket the client uses to issue commands
+  char                   *profile;    // firejail profile of the sandboxed client
+  char                   *name;       // name of the client's firejail sandbox
   pid_t                   handler;    // PID of the child that handles communication with the client
   time_t                  regtime;    // timestamp indicating when the client was registered
   client_status_t         status;     // current status of the client
   ExecHelpExecutionPolicy pol;        // policy to apply to the commands received from client
 } fireexecd_client_t;
 
-fireexecd_client_t *client_new(pid_t, const char *);
+fireexecd_client_t *client_new(pid_t, const char *, const char *, const char *);
 void client_delete_socket(fireexecd_client_t *);
 void client_free(fireexecd_client_t *);
 void client_register(fireexecd_client_t *);
@@ -129,9 +129,48 @@ void *client_identities_list_find(pid_t id);
 void client_cleanup_for_privileged_daemon(pid_t id);
 
 // client_handler.c
+int client_execute_sandboxed(fireexecd_client_t *cli,
+                             const char *command,
+                             char *argv[], int argc,
+                             const char *profile,
+                             const char *name,
+                             int is_protected_app,
+                             int has_protected_files,
+                             char **files_to_whitelist);
+int client_execute_unsandboxed(fireexecd_client_t *cli,
+                             const char *command,
+                             char *argv[]);
 void client_handle_real(fireexecd_client_t *cli);
 
 
+// client_dialogs.c
+typedef struct _DialogExecData {
+  char *caller_command;
+  char *command;
+  char **argv;
+  size_t argc;
+  char *profile;
+  int sandbox;
+  ExecHelpProtectedFileHandler *backup_command;
+  ExecHelpProtectedFileHandler *backup_valid_handler;
+} DialogExecData;
+
+int client_notify(fireexecd_client_t *cli, const char *icon, const char *header, const char *body);
+void client_dialog_run_without_reason(fireexecd_client_t *cli,
+                                      const char *caller_command,
+                                      const char *command,
+                                      char *argv[],
+                                      const size_t argc,
+                                      char **files_to_whitelist);
+void client_dialog_run_incompatible  (fireexecd_client_t *cli,
+                                      const char *caller_command,
+                                      const char *command,
+                                      char *argv[],
+                                      const size_t argc,
+                                      char **forbidden_files,
+                                      char **files_to_whitelist,
+                                      ExecHelpProtectedFileHandler *backup_command,
+                                      ExecHelpProtectedFileHandler *backup_valid_handler);
 // fireexecd.c
 extern int arg_nowrap;
 int find_child(int id);

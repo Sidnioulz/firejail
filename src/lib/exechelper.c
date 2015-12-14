@@ -20,8 +20,8 @@
 
 #include "../include/common.h"
 #include "../include/exechelper.h"
-#include <errno.h>
 #include <dirent.h>
+#include <errno.h>
 #include <limits.h>
 #include <pwd.h>
 #include <stdarg.h>
@@ -55,8 +55,8 @@ char *exechelp_read_list_from_file(const char *file_path)
       exechelp_hash_table_destroy(mtime);
       mtime = NULL;
     }
-    cache = exechelp_hash_table_new_full(exechelp_str_hash, exechelp_str_equal, NULL, free);
-    mtime = exechelp_hash_table_new_full(exechelp_str_hash, exechelp_str_equal, NULL, NULL);
+    cache = exechelp_hash_table_new_full(exechelp_str_hash, exechelp_str_equal, free, free);
+    mtime = exechelp_hash_table_new_full(exechelp_str_hash, exechelp_str_equal, free, NULL);
 
     if (!cache || !mtime)
       return NULL;
@@ -95,8 +95,8 @@ char *exechelp_read_list_from_file(const char *file_path)
         exechelp_hash_table_remove(cache, file_path);
         exechelp_hash_table_remove(mtime, file_path);
 
-        exechelp_hash_table_insert(cache, (void *)file_path, new_list);
-        exechelp_hash_table_insert(mtime, (void *)file_path, EH_ULONG_TO_POINTER(last_access));
+        exechelp_hash_table_insert(cache, (void *) strdup(file_path), new_list);
+        exechelp_hash_table_insert(mtime, (void *) strdup(file_path), EH_ULONG_TO_POINTER(last_access));
 
         return new_list;
       } else if (arg_debug)
@@ -170,134 +170,7 @@ int exechelp_file_list_contains_path(const char *list, const char *real, char **
   return found;
 }
 
-static int exechelp_is_whitelisted_file(const char *real)
-{
-  if (arg_debug)
-    printf("Child process determining whether '%s' is a white-listed file for this firejail instance...", real);
-
-  if (!real)
-    goto ret;
-
-  char *associations = exechelp_read_list_from_file(EXECHELP_WHITELIST_FILES_PATH);
-  if (!associations) {
-    if (arg_debug >= 2)
-      printf("DEBUG: Could not find a list of white-listed files against which to check '%s'\n", real);
-    goto ret;
-  }
-
-  const char *iter = associations;
-  int found = 0;
-
-  while(iter && iter[0]!='\0' && !found) {
-    found = exechelp_str_has_prefix_on_sep(real, iter, ':');
-    iter = strstr(iter, ":");
-    if (iter)
-      iter++;
-  }
-
-  ret:
-  if (arg_debug)
-    printf(" %s\n", (found? "Yes" : "No"));
-  return found;
-}
-
-ExecHelpExecutionPolicy *exechelp_targets_sandbox_protected_file(const char *filepath, const char *target, char *const argv[], int whitelist, char **forbiddenpaths) {
-  if (arg_debug)
-    printf("Child process determining whether arguments passed to execve('%s') contain forbidden files...", target);
-  if (arg_debug >= 2)
-    printf("%s", "\n");
-
-  // get a list of protected files first
-  char *managed = exechelp_read_list_from_file(filepath);
-  if (!managed) {
-    if (arg_debug >= 2)
-      printf("DEBUG: Could not find a list of sandbox-managed files to check arguments before executing '%s'\n", target);
-    return NULL;
-  }
-
-  // prepare the return structure
-  ExecHelpExecutionPolicy *ret = NULL;
-  int len = 0, some_forbidden = 0;
-  for(;argv[len];++len);
-  ret = exechelp_malloc0(sizeof(ExecHelpExecutionPolicy) * (len+1));
-  ret[0] = LINKED_APP; /* Just to make the array nicer to loop through, mark executable as a helper */
-
-  // start looping
-  if (arg_debug >= 2)
-    printf("DEBUG: %d arguments will be examined\n", len);
-    
-  for (len=1; argv[len]; ++len) {
-    if (arg_debug >= 2)
-      printf("DEBUG: checking if argument %d ('%s') is to be managed by the sandbox\n", len, argv[len]);
-
-    // get the canonical path of the current argument, if any
-    char *real = exechelp_coreutils_realpath(argv[len]);
-
-    // try to figure out if the parameter is a file
-    short is_file = strchr(argv[len], '/') != NULL;
-    if (!is_file) {
-      struct stat sb;
-      if (stat(real, &sb) == 0)
-        is_file = 1;
-      else
-        is_file = (errno == EACCES || errno == ELOOP || errno == EOVERFLOW) ? 1:0;
-    }
-
-    // debugging
-    if (is_file && arg_debug >= 2)
-      printf("DEBUG: \t\t'%s' is believed to be a file, located at '%s'\n", argv[len], real);
-    else if (arg_debug >= 2)
-      printf("DEBUG: \t\t'%s' is believed not to be a file\n", argv[len]);
-
-    // check if the current argument is white-listed
-    char *prefix = NULL;
-    if (whitelist && exechelp_is_whitelisted_file(real)) {
-      if (arg_debug >= 2)
-        printf("DEBUG: \t\t'%s' is white-listed for this firejail instance\n", argv[len]);
-      ret[len] = LINKED_APP;
-    }
-    // check if the current argument is a protected file
-    else if (exechelp_file_list_contains_path(managed, real, &prefix)) {
-      if (arg_debug >= 2)
-        printf("DEBUG: \t\t'%s' is forbidden within the sandbox\n", argv[len]);
-      
-      // file is protected, indicate we found something forbidden
-      ret[len] = SANDBOX_PROTECTED;
-      some_forbidden = 1;
-
-      // if the caller asked to produce a list of matching forbidden paths, add the current one
-      if(forbiddenpaths && prefix) {
-        char *prev = *forbiddenpaths;
-
-        if (prev) {
-          if(asprintf(forbiddenpaths, "%s:%s", *forbiddenpaths, prefix) == -1) {
-            fprintf(stderr, "Error: could not make a list of sandbox-protected paths because of an error in asprintf: %s\n", strerror(errno));
-            *forbiddenpaths = NULL;
-          }
-          free(prev);
-        } else {
-          *forbiddenpaths = strdup(prefix);
-        }
-      }
-
-      free(prefix);
-    }
-    // the current argument is not white-listed or protected
-    else {
-      if (arg_debug >= 2)
-        printf("DEBUG: \t\t'%s' is allowed within the sandbox\n", argv[len]);
-      ret[len] = UNSPECIFIED;
-    }
-  }
-
-  if (arg_debug >= 2)
-    printf("%s", "Found forbidden files in arguments?");
-  if (arg_debug)
-    printf(" %s\n", some_forbidden? "Yes" : "No");
-  return ret;
-}
-
-char *exechelp_resolve_path(const char *file)
+static char *_exechelp_resolve_executable_path(const char *file)
 {
   if (!file || *file == '\0')
     return NULL;
@@ -404,6 +277,19 @@ char *exechelp_resolve_path(const char *file)
 
     return return_value;
   }
+}
+
+char *exechelp_resolve_executable_path(const char *file)
+{
+  char *first_pass = _exechelp_resolve_executable_path(file);
+  if (!first_pass)
+    return NULL;
+
+  // symlinks...
+  char *second_pass = realpath(first_pass, NULL);
+  free(first_pass);
+
+  return second_pass;
 }
 
 #define APPLINKS_DIR "/etc/firejail/applinks.d"
@@ -539,7 +425,7 @@ ExecHelpSList *exechelp_get_associations_for_arbitrary_binary(ExecHelpBinaryAsso
   if (!exechelp_hash_table_contains(assoc->index, key)) {
     if (arg_debug >= 2)
       printf("DEBUG: binary '%s' is not a full path, calling realpath()\n", key);
-    path = exechelp_resolve_path(key);
+    path = exechelp_resolve_executable_path(key);
     if (!path) {
       if (arg_debug >= 2)
         printf("DEBUG: no binary for the name '%s' could be found, aborting\n", key);
@@ -1037,3 +923,544 @@ char *exechelp_coreutils_realpath (const char *fname)
   return can_fname;
 }
 
+int exechelp_parse_get_next_separator(char *string, char **sep, int insert_nul) {
+  if (!string)
+    return 0;
+
+  if (!sep) {
+    fprintf(stderr, "Error: exechelp_parse_get_next_separator() requires a placeholder for the next separator\n");
+    return 0;
+  }
+
+  *sep = string;
+  int found_separator = 0;
+  while (*sep && !found_separator) {
+    *sep = strchr(*sep, '/');
+    if (*sep) {
+      // detected "///"
+      if ((*sep)[1] == '/' && (*sep)[2] == '/') {
+        found_separator = 1;
+        if (insert_nul)
+          (*sep)[0] = '\0';
+        *sep = (*sep)+3;
+      }
+      // did not find the separator, move to the next char to avoid looping
+      else *sep = (*sep) + 3;
+    }
+  }
+
+  return found_separator;
+}
+
+FILE *exechelp_get_protected_files_handle(void) {
+  FILE *fp = NULL;
+  errno = 0;
+
+  // First try home, then /etc
+  struct passwd pw, *result = NULL;
+  char buf[PATH_MAX+1000];
+  if (errno = getpwuid_r(getuid(), &pw, buf, sizeof(buf), &result)) {
+    fprintf(stderr, "Error: getpwuid_r() call failed (error: %s)\n", strerror(errno));
+  } else if (result) {
+    const char *homedir = result->pw_dir;
+    char *filepath = NULL;
+    if (arg_debug)
+	    printf("Looking up user's config directory for a list of protected files\n");
+    if (asprintf(&filepath, "%s/.config/firejail/%s", homedir, EXECHELP_PROTECTED_FILES_BIN) == -1) {
+      fprintf(stderr, "Error: asprintf() call failed (error: %s)\n", strerror(errno));
+      return NULL;
+    }
+    fp = fopen(filepath, "rb");
+    if (arg_debug && fp)
+    	printf("Reading the list of protected files from '%s'\n", filepath);
+    free(filepath);
+  }
+
+  // Try /etc/ if home failed
+  if (fp == NULL) {
+    char *filepath = NULL;
+    if (arg_debug)
+		  printf("Looking up /etc/firejail for a list of protected files\n");
+	  if (asprintf(&filepath, "/etc/firejail/%s", EXECHELP_PROTECTED_FILES_BIN) == -1) {
+      fprintf(stderr, "Error: asprintf() call failed (error: %s)\n", strerror(errno));
+	    return NULL;
+    }
+
+  	fp = fopen(filepath, "rb");
+      if (arg_debug && fp)
+    	printf("Reading the list of protected files from '%s'\n", filepath);
+  	free(filepath);
+  }
+
+	if (fp == NULL) {
+	  if (arg_debug)
+  		fprintf(stderr, "Warning: could not find any file listing protected files\n");
+		errno = ENOENT;
+	  return NULL;
+	}
+
+  return fp;
+}
+
+int protected_files_parse (FILE **fp, int *lineno, char **path, char **profiles) {
+  if (!fp || !lineno || !path || !profiles) {
+    fprintf(stderr, "Error: protected_files_parse() requires placeholders for the parsed file, line number, current file path and current profile string\n");
+    return -1;
+  }
+
+  // Open a config file if there's none
+  if (*fp == NULL) {
+    *lineno = 0;
+    *fp = exechelp_get_protected_files_handle();
+  }
+
+  // abandon if we couldn't open a file
+  if (*fp == NULL)
+	  return (errno == ENOENT) ? -3 : -1;
+
+	// read the file line by line
+	errno = 0;
+	char buf[EXECHELP_POLICY_LINE_MAX_READ+1];
+	char *ret = fgets(buf, EXECHELP_POLICY_LINE_MAX_READ+1, *fp);
+  if (errno) {
+  		fprintf(stderr, "Error: fgets() call failed (error: %s)\n", strerror(errno));
+    fclose(*fp);
+    *fp = NULL;
+    return -1;
+  }
+
+  // still got lines to read
+  if (ret) {
+    buf[strlen(buf)-1] = '\0';
+
+	  ++(*lineno);
+	  if (arg_debug >= 2)
+	    printf("DEBUG: processing line %d: %s\n", *lineno, buf);
+
+	  // comment, ignore this line
+	  if (*buf == '#') {
+	    return 0;
+	  }
+
+    // check for overflows
+    if (strlen(buf) == EXECHELP_POLICY_LINE_MAX_READ) {
+      fprintf(stderr, "Error: line %d of protected-file.policy is too long, it should be no longer than %d characters\n", *lineno, EXECHELP_POLICY_LINE_MAX_READ);
+	    return -2;
+    }
+
+    // locate the separator
+    char *sep = NULL;
+    if (!exechelp_parse_get_next_separator(buf, &sep, 1)) {
+      if (arg_debug)
+        fprintf(stderr, "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>///<profile name>:<path to handler>,...\n", *lineno);
+	    return -2;
+    }
+
+    // extract binary name and profile list
+    *path = strdup(buf);
+    *profiles = strdup(sep);
+  }
+  // we're done processing the file
+  else {
+	  fclose(*fp);
+	  *fp = NULL;
+	  *path = NULL;
+	  *profiles = NULL;
+  }
+
+  return 0;
+}
+
+int protected_files_parse_handler (char *list, char **endptr, ExecHelpProtectedFileHandler **handler) {
+  if(!list || !endptr || !handler) {
+    fprintf(stderr, "Error: protected_files_parse_handler() requires placeholders for the remainder of the parsed string, current handler and current profile name\n");
+    return -1;
+  }
+
+  if(!*list) {
+    fprintf(stderr, "Error: protected_files_parse_handler() requires a profile string to parse\n");
+    *endptr = NULL;
+    return -1;
+  }
+
+  if (!*endptr)
+    *endptr = list;
+
+  // locate the next item, if any
+  char *next = NULL;
+  int has_next = exechelp_parse_get_next_separator(*endptr, &next, 1);
+
+  // separate the profile name and handler
+  char *path_sep = strchr(*endptr, ':');
+  if (!path_sep) {
+    fprintf(stderr, "Error: profile string '%s' is malformed, should be of the form: <profile name>:<path to handler> (missing separator)\n", *endptr);
+    *endptr = NULL;
+    return -1;
+  }
+  *path_sep = '\0';
+  ++path_sep;
+
+  if (*path_sep == '\0') {
+    fprintf(stderr, "Error: profile string '%s' is malformed, should be of the form: <profile name>:<path to handler> (missing path to handler)\n", *endptr);
+    *endptr = NULL;
+    return -1;
+  }
+
+  *handler = malloc(sizeof(ExecHelpProtectedFileHandler));
+  if(!*handler) {
+    fprintf(stderr, "Error: malloc() call failed, could not allocate structure to store a file handler and its profile name\n");
+    *endptr = NULL;
+    return -1;
+  }
+
+  // identify the end of the string, using next if it exists
+  if (has_next) {
+    size_t handler_len = next - path_sep;
+    (*handler)->handler_path = strndup (path_sep, handler_len);
+  } else {
+    (*handler)->handler_path = strdup(path_sep);
+  }
+
+  (*handler)->profile_name = strdup(*endptr);
+
+  if ((*handler)->profile_name == NULL || (*handler)->handler_path == NULL) {
+    fprintf(stderr, "Error: malloc() call failed, could not allocate strings to store a file handler and its profile name\n");
+    *endptr = NULL;
+    return -1;
+  } else {
+    *endptr = next;
+    return 0;
+  }
+}
+
+ExecHelpProtectedFileHandler *protected_files_handler_new (char *handler, char *profile) {
+  if (!handler || !profile)
+    return NULL;
+
+  ExecHelpProtectedFileHandler *h = malloc(sizeof(ExecHelpProtectedFileHandler));
+  if (!h)
+    return NULL;
+
+  h->handler_path = handler;
+  h->profile_name = profile;
+  return h;
+}
+
+ExecHelpProtectedFileHandler *protected_files_handler_copy (const ExecHelpProtectedFileHandler *other, void *ignored) {
+  if (!other)
+    return NULL;
+
+  char *handler = other->handler_path ? strdup (other->handler_path) : NULL;
+  char *profile = other->profile_name ? strdup (other->profile_name) : NULL;
+
+  return protected_files_handler_new (handler, profile);
+}
+
+ExecHelpHandlerMergeResult protected_files_handlers_merge(const ExecHelpProtectedFileHandler *a,
+                                                          const ExecHelpProtectedFileHandler *b,
+                                                          ExecHelpProtectedFileHandler **placeholder) {
+  if (!a || !b)
+    return HANDLER_MERGE_ERROR;
+
+  if (!a->handler_path || !b->handler_path || !a->profile_name || !b->profile_name)
+    return HANDLER_MERGE_ERROR;
+
+  if (placeholder && *placeholder)
+    return HANDLER_MERGE_ERROR;
+
+  if (protected_files_handler_cmp(a, b) == 0)
+    return HANDLER_IDENTICAL;
+
+  // get the new handler, if any
+  char *merge_handler = NULL;
+  int ident_handler = 0;
+  if (strcmp(a->handler_path, EXECHELP_COMMAND_ANY) == 0) {
+    merge_handler = b->handler_path;
+  } else if (strcmp(b->handler_path, EXECHELP_COMMAND_ANY) == 0) {
+    merge_handler = a->handler_path;
+  } else if (strcmp(a->handler_path, b->handler_path) == 0)
+    ident_handler = 1;
+
+  char *merge_profile = NULL;
+  int ident_profile = 0;
+  if (strcmp(a->profile_name, EXECHELP_PROFILE_ANY) == 0) {
+    merge_profile = b->profile_name;
+  } else if (strcmp(b->profile_name, EXECHELP_PROFILE_ANY) == 0) {
+    merge_profile = a->profile_name;
+  } else if (strcmp(a->profile_name, b->profile_name) == 0)
+    ident_profile = 1;
+
+  if ((merge_handler || ident_handler) && (merge_profile || ident_profile)) {
+    if (ident_handler)
+      merge_handler = strdup(a->handler_path);
+    else
+      merge_handler = strdup(merge_handler);
+
+    if (ident_profile)
+      merge_profile = strdup(a->profile_name);
+    else
+      merge_profile = strdup(merge_profile);
+
+    *placeholder = protected_files_handler_new(merge_handler, merge_profile);
+    return HANDLER_USE_MERGED;
+  }
+
+  return HANDLER_UNMERGEABLE;
+}
+
+int protected_files_handler_cmp (const ExecHelpProtectedFileHandler *a, const ExecHelpProtectedFileHandler *b) {
+  // check for NULL first
+  if (!a && !b)
+    return 0;
+
+  if (!a)
+    return INT_MAX;
+
+  if (!b)
+    return INT_MIN;
+
+  // then sort by path
+  if (a->handler_path && !b->handler_path)
+    return INT_MAX-1;
+
+  if (!a->handler_path && b->handler_path)
+    return INT_MIN+1;
+
+  int path = 0;
+  if (a->handler_path && b->handler_path)
+    path = strcmp(a->handler_path, b->handler_path);
+
+  if (path)
+    return path;
+
+  // then sort by profile
+  if (a->profile_name && !b->profile_name)
+    return INT_MAX-1;
+
+  if (!a->profile_name && b->profile_name)
+    return INT_MIN+1;
+
+  int profile = 0;
+  if (a->profile_name && b->profile_name)
+    profile = strcmp(a->profile_name, b->profile_name);
+
+  return profile;
+}
+
+void protected_files_handler_free (ExecHelpProtectedFileHandler *handler) {
+  free (handler->profile_name);
+  free (handler->handler_path);
+  free (handler);
+}
+
+ExecHelpList *protected_files_get_handlers_for_file (const char *file) {
+  ExecHelpList *list  = NULL;
+  FILE         *fp    = NULL;
+  int           found = 0;
+
+  if (file == NULL) {
+    if (arg_debug >= 2)
+      fprintf(stderr, "Error: called protected_files_get_handlers_for_file() with a NULL parameter, aborting\n");
+    return NULL;
+  }
+
+  // Open a config file, first try home, then /etc
+  fp = exechelp_get_protected_files_handle();
+  if (fp == NULL) {
+    if (arg_debug >= 2)
+      fprintf(stderr, "Warning: no list of protected files found, cannot get handlers for a protected file\n");
+	  return NULL;
+  }
+
+	// read the file line by line
+	char buf[EXECHELP_POLICY_LINE_MAX_READ + 1];
+	int lineno = 0, command_seen, command_allowed;
+	while (!found && fgets(buf, EXECHELP_POLICY_LINE_MAX_READ, fp)) {
+		++lineno;
+		if (*buf == '#') // comment, ignore this line
+		  continue;
+
+    // check for overflows
+    if (strlen(buf) == EXECHELP_POLICY_LINE_MAX_READ) {
+      fprintf(stderr, "Error: line %d of protected-apps.policy is too long, it should be no longer than %d characters\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
+	    continue;
+    }
+
+    // remove the trailing "\n"
+    buf[strlen(buf)-1] = '\0';
+
+    // locate the separator, and replace it with a null character
+    char *sep = NULL;
+    if (!exechelp_parse_get_next_separator(buf, &sep, 1)) {
+      if (arg_debug)
+        fprintf(stderr, "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>///<profile name>:<path to handler>,...\n", lineno);
+      continue;
+    }
+
+    if (strcmp (buf, file) == 0) {
+      found = 1;
+
+      // split the remaining string starting from past the separator
+      char *ptr = sep, *current;
+      while (ptr != NULL) {
+        current = ptr;
+        if (exechelp_parse_get_next_separator(current, &ptr, 1) == -1) {
+          fprintf(stderr, "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>///<profile name>:<path to handler>,...\n", lineno);
+	        break;
+        }
+
+        // split ptr into profile and path
+        char *path = strchr(current, ':');
+        if (!path) {
+          fprintf(stderr, "Error: line %d is malformed, should be of the form: <file>\\0<profile name>:<path to handler>///<profile name>:<path to handler>\n", lineno);
+          continue;
+        }
+        *path = '\0';
+        path++;
+
+        // get the profile and path
+        char *profile = strdup(current);
+        path = strdup(path);
+
+        ExecHelpProtectedFileHandler *h = protected_files_handler_new(path, profile);
+        if (!h) {
+          free(profile);
+          free(path);
+          fprintf(stderr, "Error: could not allocate a structure to hold the profiles found for client\n");
+          continue;
+        } else {
+          list = exechelp_list_append (list, h);
+        }
+      }
+    }
+	}
+
+  fclose(fp);
+  return list;
+}
+
+static size_t protected_files_save_write (FILE *fp, const char *buf) {
+  return fwrite(buf, sizeof(char), strlen(buf), fp);
+}
+
+int protected_files_save_start (FILE **fp) {
+  if (!fp || *fp) {
+    fprintf(stderr, "Error: protected_files_save_start() requires a placeholder for the file to be written to, and its value must be set to NULL\n");
+    return -1;
+  }
+
+  // get home directory
+  struct passwd pw, *result = NULL;
+  char buf[PATH_MAX+1000];
+  if (errno = getpwuid_r(getuid(), &pw, buf, sizeof(buf), &result)) {
+    fprintf(stderr, "Error: getpwuid_r() call failed (error: %s)\n", strerror(errno));
+    return -1;
+  }
+  const char *homedir = result->pw_dir;
+
+  // check if ~/.config/firejail/ exists, else create it
+  char *dirpath = NULL;
+  if (asprintf(&dirpath, "%s/.config/firejail/", homedir) == -1) {
+    fprintf(stderr, "Error: asprintf() call failed (error: %s)\n", strerror(errno));
+    return -1;
+  }
+
+	struct stat s;
+	if(stat(dirpath, &s)) {
+		if (arg_debug)
+			printf("Creating %s directory\n", dirpath);
+		/* coverity[toctou] */
+		int rv = mkdir(dirpath, S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1) {
+      fprintf(stderr, "Error: mkdir() call failed (error: %s)\n", strerror(errno));
+      return -1;
+		}
+	}
+	free(dirpath);
+
+  // create the file to save protected files to
+  char *filepath = NULL;
+  if (asprintf(&filepath, "%s/.config/firejail/%s", homedir, EXECHELP_PROTECTED_FILES_BIN) == -1) {
+    fprintf(stderr, "Error: asprintf() call failed (error: %s)\n", strerror(errno));
+    return -1;
+  }
+  *fp = fopen(filepath, "wb");
+  free(filepath);
+
+  if (*fp) {
+    protected_files_save_write(*fp, EXECHELP_GENERATED_POLICY_HEADER);
+  }
+
+  return 0;
+}
+
+int protected_files_save_add_file_start (FILE **fp, const char *file) {
+  if (!fp || !*fp) {
+    fprintf(stderr, "Error: protected_files_save_add_file_start() requires a placeholder for the file to be written to, and its value should not be NULL\n");
+    return -1;
+  }
+
+  if (!file)
+    return -1;
+
+  // prevent paths with ending slashes that would conflict with the separator
+  char file_path[PATH_MAX];
+  snprintf(file_path, PATH_MAX, "%s", file);
+  size_t last = strlen(file_path)-1;
+  if (file_path[last] == '/')
+    file_path[last] = '\0';
+
+  int ret = protected_files_save_write(*fp, file_path);
+  if (ret == -1)
+    return -1;
+
+  return ret + protected_files_save_write(*fp, "///");
+}
+
+int protected_files_save_add_file_add_handler (FILE **fp, const char *handler, const char *profile, int index) {
+  if (!fp || !*fp) {
+    fprintf(stderr, "Error: protected_files_save_add_file_add_handler() requires a placeholder for the file to be written to, and its value should not be NULL\n");
+    return -1;
+  }
+
+  int r0 = 0;
+  if (index) {
+    r0 = protected_files_save_write(*fp, "///");
+    if (r0 == -1)
+      return -1;
+  }
+
+  int r1 = protected_files_save_write(*fp, profile);
+  if (r1 == -1)
+    return -1;
+
+  int r2 = protected_files_save_write(*fp, ":");
+  if (r2 == -1)
+    return -1;
+
+  int r3 = protected_files_save_write(*fp, handler);
+  if (r3 == -1)
+    return -1;
+
+  return r0+r1+r2+r3;
+}
+
+int protected_files_save_add_file_finish (FILE **fp) {
+  if (!fp || !*fp) {
+    fprintf(stderr, "Error: protected_files_save_add_file_finish() requires a placeholder for the file to be written to, and its value should not be NULL\n");
+    return -1;
+  }
+
+  return protected_files_save_write(*fp, "\n");
+}
+
+int protected_files_save_finish (FILE **fp) {
+  if (!fp || !*fp) {
+    fprintf(stderr, "Error: protected_files_save_finish() requires a placeholder for the file to be written to, and its value should not be NULL\n");
+    return -1;
+  }
+
+  int ret = fclose(*fp);
+  *fp = NULL;
+  return ret;
+}

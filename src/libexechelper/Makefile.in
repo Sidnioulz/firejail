@@ -9,7 +9,7 @@ OBJS = $(C_FILE_LIST:.c=.o)
 BINOBJS =  $(foreach file, $(OBJS), $file)
 CFLAGS += -ggdb $(HAVE_FATAL_WARNINGS) -O0 -g -DVERSION='"$(VERSION)"' -fstack-protector-all -D_FORTIFY_SOURCE=2 -fPIC -Wformat -Wformat-security -Wall -DLIBEXECHELPER_BUILD
 
-all: libexechelper.so
+all: libexechelper.so libexechelperdecorations.so
 
 %.o : %.c $(H_FILE_LIST)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
@@ -17,6 +17,11 @@ all: libexechelper.so
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
 libexechelper.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o
 	$(CC) $(LDFLAGS) -shared -fPIC -ldl -lpthread -lX11 -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS)
+
+
+# gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
+libexechelperdecorations.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o
+	$(CC) $(LDFLAGS) -shared -fPIC -ldl -lpthread -lX11 -o libexechelperdecorations.so libexechelperdecorations.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS)
 
 test: $(OBJS)
 	$(CC) -lrt -o exec-helper-test test.c $(CFLAGS)

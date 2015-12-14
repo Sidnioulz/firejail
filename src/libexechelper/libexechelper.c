@@ -34,8 +34,6 @@
 #include <sys/un.h>
 #include <time.h>
 #include <unistd.h>
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
 
 #include "../include/common.h"
 #include "../include/exechelper.h"
@@ -208,7 +206,7 @@ static int exechelp_is_whitelisted_app(const char *target)
   // white-list self... we didn't do it before to let firejail compute whether this instance semantically
   // is a protected or untrusted one (that depends on the profile given to us at launch time).
   if (!found) {
-    char *path = exechelp_resolve_path(program_invocation_name);
+    char *path = exechelp_resolve_executable_path(program_invocation_name);
     if (path) {
       if (strcmp(path, target) == 0) {
         if (arg_debug >= 2)
@@ -289,6 +287,116 @@ static int exechelp_is_sandbox_protected_app(const char *target)
   return found;
 }
 
+static int _exechelp_is_whitelisted_file(const char *real, int dbg)
+{
+  if (dbg)
+    printf("Child process determining whether '%s' is a white-listed file for this firejail instance...", real);
+
+  if (!real)
+    goto ret;
+
+  char *associations = exechelp_read_list_from_file(EXECHELP_WHITELIST_FILES_PATH);
+  if (!associations) {
+    if (dbg >= 2)
+      printf("DEBUG: Could not find a list of white-listed files against which to check '%s'\n", real);
+    goto ret;
+  }
+
+  const char *iter = associations;
+  int found = 0;
+
+  while(iter && iter[0]!='\0' && !found) {
+    found = exechelp_str_has_prefix_on_sep(real, iter, ':');
+    iter = strstr(iter, ":");
+    if (iter)
+      iter++;
+  }
+
+  ret:
+  if (dbg)
+    printf(" %s\n", (found? "Yes" : "No"));
+  return found;
+}
+
+/*static int exechelp_is_whitelisted_file(const char *real)
+{
+  return _exechelp_is_whitelisted_file (real, arg_debug);
+}*/
+
+int exechelp_targets_any_sandbox_protected_file(const char *command, char *const argv[]) {
+  if (arg_debug)
+    printf("Child process determining whether arguments passed to execve('%s') contain forbidden files...", command);
+  if (arg_debug >= 2)
+    printf("%s", "\n");
+
+  // get a list of protected files first
+  char *managed = exechelp_read_list_from_file(EXECHELP_PROTECTED_FILES_PATH);
+  if (!managed) {
+    if (arg_debug >= 2)
+      printf("DEBUG: Could not find a list of sandbox-managed files to check arguments before executing '%s'\n", command);
+    return 0;
+  }
+
+  // prepare the return structure
+  int len = 0, some_forbidden = 0;
+  for(;argv[len];++len);
+
+  // start looping
+  if (arg_debug >= 2)
+    printf("DEBUG: %d arguments will be examined\n", len);
+    
+  for (len=1; argv[len] && !some_forbidden; ++len) {
+    if (arg_debug >= 2)
+      printf("DEBUG: checking if argument %d ('%s') is to be managed by the sandbox\n", len, argv[len]);
+
+    // get the canonical path of the current argument, if any
+    char *real = exechelp_coreutils_realpath(argv[len]);
+
+    // try to figure out if the parameter is a file
+    short is_file = strchr(argv[len], '/') != NULL;
+    if (!is_file) {
+      struct stat sb;
+      if (stat(real, &sb) == 0)
+        is_file = 1;
+      else
+        is_file = (errno == EACCES || errno == ELOOP || errno == EOVERFLOW) ? 1:0;
+    }
+
+    // debugging
+    if (is_file && arg_debug >= 2)
+      printf("DEBUG: \t\t'%s' is believed to be a file, located at '%s'\n", argv[len], real);
+    else if (arg_debug >= 2)
+      printf("DEBUG: \t\t'%s' is believed not to be a file\n", argv[len]);
+
+    // check if the current argument is white-listed
+    char *prefix = NULL;
+    if (_exechelp_is_whitelisted_file(real, 0)) {
+      if (arg_debug >= 2)
+        printf("DEBUG: \t\t'%s' is white-listed for this firejail instance\n", argv[len]);
+    }
+    // check if the current argument is a protected file
+    else if (exechelp_file_list_contains_path(managed, real, &prefix)) {
+      if (arg_debug >= 2)
+        printf("DEBUG: \t\t'%s' is forbidden within the sandbox (matches '%s')\n", argv[len], prefix);
+      
+      // file is protected, indicate we found something forbidden
+      some_forbidden = 1;
+      free(prefix);
+    }
+    // the current argument is not white-listed or protected
+    else {
+      if (arg_debug >= 2)
+        printf("DEBUG: \t\t'%s' is allowed within the sandbox\n", argv[len]);
+    }
+  }
+
+  if (arg_debug >= 2)
+    printf("%s", "Found forbidden files in arguments?");
+  if (arg_debug)
+    printf(" %s\n", some_forbidden? "Yes" : "No");
+  return some_forbidden;
+}
+
 static int exechelp_filter_forbidden_exec(const char *target, char *const argv[], char *const envp[],
                                           char **allowed_target, char **allowed_argv[],
                                           char **forbidden_target, char **forbidden_argv[])
@@ -339,34 +447,18 @@ static int exechelp_filter_forbidden_exec(const char *target, char *const argv[]
     if (arg_debug >= 2)
       printf("DEBUG: Child process can partly or completely execute '%s', now checking parameters...\n", target);
 
-    ExecHelpExecutionPolicy *decisions = exechelp_targets_sandbox_protected_file(EXECHELP_PROTECTED_FILES_PATH, target, argv, 1, NULL);
-
-    int have_forbidden = 0;
-    if (decisions) {
-      ExecHelpExecutionPolicy *iter = decisions + 1;
-      int i = 1;
-      while (*iter)
-      {
-        have_forbidden |= !(*iter & (LINKED_APP | UNSPECIFIED));
-        ++iter;
-        ++i;
-      }
-    } else {
-      fprintf(stderr, "Error: could not compute whether arguments passed to '%s' were allowed or forbidden\n", target);
-    }
-
     /* Don't do anything fancy yet for mixed forbidden-allowed executions, just
      * delegate to the sandbox but let it know to expect a mixed setup, we can
      * then ask users how they want the execution handled
      */
-    if (have_forbidden)
+    if (exechelp_targets_any_sandbox_protected_file(target, argv))
       goto binary_forbidden;
 
     if (arg_debug >= 2)
       printf("DEBUG: Child process is allowed to execute '%s' and to access all of its parameters, proceeding\n", target);
     *allowed_target = strdup(target);
-    *allowed_argv = arg_len? malloc(sizeof(char *) * arg_len) : NULL;
-    *allowed_argv = memcpy(*allowed_argv, argv, sizeof(char *) * (arg_len+1));
+    *allowed_argv = arg_len? exechelp_malloc0(sizeof(char *) * (arg_len+1)) : NULL;
+    *allowed_argv = memcpy(*allowed_argv, argv, sizeof(char *) * (arg_len));
 
     return 1;
   }
@@ -376,8 +468,8 @@ static int exechelp_filter_forbidden_exec(const char *target, char *const argv[]
     if (arg_debug >= 2)
       printf("DEBUG: Child process is not allowed to execute '%s', or some parameters are are not allowed; delegating the whole execution\n", target);
     *forbidden_target = strdup(target);
-    *forbidden_argv = arg_len? malloc(sizeof(char *) * (arg_len+1)) : NULL;
-    *forbidden_argv = memcpy(*forbidden_argv, argv, sizeof(char *) * (arg_len+1));
+    *forbidden_argv = arg_len? exechelp_malloc0(sizeof(char *) * (arg_len+1)) : NULL;
+    *forbidden_argv = memcpy(*forbidden_argv, argv, sizeof(char *) * (arg_len));
 
     return 0;
   }
@@ -453,7 +545,7 @@ int execvpe(const char *file, char *const argv[], char *const envp[])
   if (arg_debug)
     printf("Child process is attempting to execute (execvpe) binary name '%s'\n", file);
 
-  char *path = exechelp_resolve_path(file);
+  char *path = exechelp_resolve_executable_path(file);
   if (!path) {
     if (arg_debug >= 2)
       printf("DEBUG: '%s' could not be resolved to any path, we expect execvpe to return ENOENT or a similar error.\n", file);
@@ -491,10 +583,10 @@ int execvpe(const char *file, char *const argv[], char *const envp[])
     
     /* We still execute with 'file' in the rare situation where path returns a ENOEXEC 
      * file that also fails running in a shell, in which case execvpe would try another
-     * entry in the path. We should improve exechelp_resolve_path to better determine
-     * the executability of a path rather than merely checking for permission. However
-     * we want to use allowed_exec if it has been modified compared to the original
-     * path given to the filter function.
+     * entry in the path. We should improve exechelp_resolve_executable_path to better
+     * determine the executability of a path rather than merely checking for permission.
+     * However we want to use allowed_exec if it has been modified compared to the
+     * original path given to the filter function.
      */
     if (strcmp(path, allowed_exec) == 0)
       ret_value = (*original_execvpe)(file, allowed_argv, envp);
@@ -598,38 +690,3 @@ int fexecve(int fd, char *const argv[], char *const envp[])
   return ret_value;
 }
 
-// report sandbox parameters to xfwm4
-typedef Window (* xcw_func)(Display *, Window, int, int, unsigned int, unsigned int, unsigned int, int,
-                            unsigned int, Visual *, unsigned long, XSetWindowAttributes *);
-
-Window XCreateWindow(Display *display, Window parent, int x, int y, unsigned int width, unsigned int height, unsigned int border_width, int depth,
-                     unsigned int class, Visual *visual, unsigned long valuemask, XSetWindowAttributes *attributes)
-{
-  static xcw_func xcw = NULL;
-  if (!xcw) {
-      xcw = dlsym(RTLD_NEXT, "XCreateWindow");
-  }
-
-  static Atom container_atom = 0, type_atom = 0, name_atom = 0;
-  if (!container_atom) {
-    container_atom = XInternAtom(display, "CONTAINER", False);
-    type_atom      = XInternAtom(display, EXECHELP_SANDBOX_TYPE_ENV, False);
-    name_atom      = XInternAtom(display, EXECHELP_SANDBOX_NAME_ENV, False);
-  }
-
-  Window window = xcw(display, parent, x, y, width, height, border_width, depth, class, visual, valuemask, attributes);
-
-  char *type = getenv(EXECHELP_SANDBOX_TYPE_ENV);
-  if (!type)
-    type = "untrusted";
-
-  char *name = getenv(EXECHELP_SANDBOX_NAME_ENV);
-  if (!name)
-    name = "";
-
-  XChangeProperty(display, window, container_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) "firejail", 9);
-  XChangeProperty(display, window, type_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) type, strlen(type)+1);
-  XChangeProperty(display, window, name_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) name, strlen(name)+1);
-
-  return window;
-}

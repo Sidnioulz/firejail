@@ -20,6 +20,7 @@
 */
 #include "firejail.h"
 #include "../include/exechelper.h"
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -150,10 +151,61 @@ void exechelp_install_socket(void) {
   cmdsocketpath = exechelp_gen_socket_name("commands", realuid, realgid, sandbox_pid);
   if (!cmdsocketpath)
     errExit("exechelp_gen_socket_name");
-  if (setenv(EXECHELP_COMMANDS_SOCKET, cmdsocketpath, 1) < 0)
-    errExit("setenv");
+  exechelp_set_socket_env_manually(cmdsocketpath);
   if (arg_debug)
     printf("Created a socket at '%s' for client to inform fireexecd of commands it wants to run\n", cmdsocketpath);
+}
+
+void exechelp_set_socket_env_from_pid(pid_t pid) {
+  char *socketdir, *socketpath = NULL;
+  if (asprintf(&socketdir, EXECHELP_RUN_DIR"/%d", pid-1) == -1)
+    errExit("asprintf");
+
+  DIR* dir = opendir(socketdir);
+  if(dir == NULL)
+    errExit("opendir");
+
+  struct dirent *result = NULL;
+  struct dirent *entry = malloc(sizeof(struct dirent));
+  int found = 0;
+  if(!entry)
+    errExit("malloc");
+
+  while(!found) {
+    if (readdir_r(dir, entry, &result)) {
+      fprintf(stderr, "Error when reading runtime directory %s to find child process's socket: %s\n", socketdir, strerror(errno));
+      continue;
+    }
+
+    if(!result)
+      break;
+
+    if((strcmp(entry->d_name, ".") != 0) && (strcmp(entry->d_name, "..") != 0)) {
+      if (asprintf(&socketpath, "%s/%s", socketpath, entry->d_name) == -1)
+        errExit("asprintf");
+      found = 1;
+    }
+  }
+
+  if(closedir(dir))
+    errExit("closedir");
+  free(socketdir);
+
+  if (socketpath) {
+    exechelp_set_socket_env_manually(socketpath);
+    free(socketpath);
+  } else {
+    fprintf(stderr, "Could not find any socket in child process's runtime directory, aborting\n");
+    exit(-1);
+  }
+}
+
+void exechelp_set_socket_env_manually(char *cmdsocketpath) {
+  if(!cmdsocketpath)
+    return;
+
+  if (setenv(EXECHELP_COMMANDS_SOCKET, cmdsocketpath, 1) < 0)
+    errExit("setenv");
 }
 
 void exechelp_register_socket(void) {
@@ -178,7 +230,7 @@ void exechelp_register_socket(void) {
 
   // message fireexecd to register the socket paths
   char *msg;
-  if (asprintf(&msg, "register %d %s", sandbox_pid, cmdsocketpath) == -1)
+  if (asprintf(&msg, "register %d %s %s %s", sandbox_pid, cmdsocketpath, cfg.profile_name, cfg.hostname) == -1)
     errExit("asprintf");
 
   if (send(s, msg, strlen(msg), 0) == -1)

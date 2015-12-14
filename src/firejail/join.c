@@ -17,6 +17,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
+#define _GNU_SOURCE
+#include "../include/exechelper.h"
 #include "firejail.h"
 #include <sys/stat.h>
 #include <sys/wait.h>
@@ -289,12 +291,35 @@ void join(pid_t pid, const char *homedir, int argc, char **argv, int index) {
 		if (apply_seccomp == 1)
 			seccomp_set();
 #endif
+	
+	  if (cfg.helper) { // --helper
+//      exechelp_set_socket_env_from_pid(pid);
+  	  //fs_helper_fix_gtk3_windows();
+      exechelp_propagate_sandbox_info_to_env();
+    }
 		
 		// fix qt 4.8
 		if (setenv("QT_X11_NO_MITSHM", "1", 1) < 0)
 			errExit("setenv");
 		if (setenv("container", "firejail", 1) < 0) // LXC sets container=lxc,
 			errExit("setenv");
+
+	  if (cfg.helper)	{
+      char *existing = getenv("LD_PRELOAD");
+      char *preload = NULL;
+
+      if (existing) {
+        size_t len = strlen(EXECHELP_LD_PRELOAD_DECO_ONLY) + 1 /* : */ + strlen(existing) + 1 /* \0 */;
+        preload = malloc(sizeof(char) * len);
+        snprintf(preload, len, "%s:%s", EXECHELP_LD_PRELOAD_DECO_ONLY, existing);
+      } else {
+        preload = strdup(EXECHELP_LD_PRELOAD_DECO_ONLY);
+      }
+
+	    if (setenv("LD_PRELOAD", preload, 1) < 0)
+		    errExit("setenv");
+	    free(preload);
+	  }
 
 		// mount user namespace or drop privileges
 		if (arg_noroot) {

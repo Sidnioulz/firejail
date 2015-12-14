@@ -75,12 +75,34 @@ static fireexecd_client_t *process_registration(int clisocket, char *ptr) {
     return NULL;
   }
 
-    
   // position endptr to the space between both paths, and cut them
   char *cmdpath = endptr+1;
-  DBGOUT("[n/a]\tINFO:  new client registered: PID %d, Command socket '%s'\n", (pid_t) pid, cmdpath);
 
-  fireexecd_client_t *client = client_new(pid, cmdpath);
+  // pointer to next bit after cmdpath
+  char *next = strchr(cmdpath, ' ');
+  char *profile = NULL;
+  char *name = NULL;
+
+  if (next) {
+    next[0] = '\0';
+    next++;
+
+    char *nnext = strchr(next, ' ');
+    if (nnext) {
+      nnext[0] = '\0';
+      nnext++;
+      if (strcmp(nnext, "(null)")) {
+        name = nnext;
+      }
+    }
+
+    if (strcmp(next, "(null)")) {
+      profile = next;
+    }
+  }
+
+  DBGOUT("[n/a]\tINFO:  new client registered: PID %d, Command socket '%s', Profile '%s', Name '%s'\n", (pid_t) pid, cmdpath, profile, name);
+  fireexecd_client_t *client = client_new(pid, cmdpath, profile, name);
   if(!client)
     errExit("client_new");
 
