@@ -18,6 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "firejail.h"
+#include <errno.h>
 #include <sys/mount.h>
 #include <linux/limits.h>
 #include <glob.h>
@@ -28,8 +29,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <grp.h>
-
-#warning "Remember to re-put the code to blacklist /tmp when root after debugging is done"
 
 static void skel(const char *homedir, uid_t u, gid_t g) {
 	char *fname;
@@ -200,7 +199,6 @@ void fs_private_homedir(void) {
 			errExit("mounting home directory");
 	}
 	else {
-	#if 0
 		// mask /home
 		if (arg_debug)
 			printf("Mounting a new /home directory\n");
@@ -212,7 +210,6 @@ void fs_private_homedir(void) {
 			printf("Mounting a new /tmp directory\n");
 		if (mount("tmpfs", "/tmp", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
 			errExit("mounting tmp directory");
-	#endif
 	}
 	
 
@@ -258,13 +255,11 @@ void fs_private(void) {
 			errExit("chown");
 	}
 	else {
-  #if 0
 		// mask tmp only in root mode; KDE keeps all kind of sockets in /tmp!
 		if (arg_debug)
 			printf("Mounting a new /tmp directory\n");
 		if (mount("tmpfs", "/tmp", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
 			errExit("mounting tmp directory");
-  #endif
 	}
 	
 	skel(homedir, u, g);
@@ -372,7 +367,6 @@ void fs_check_private_dir(void) {
 	}
 }
 
-#if 0
 static int mkpath(char* file_path, mode_t mode) {
 	assert(file_path && *file_path);
 	char* p;
@@ -385,7 +379,6 @@ static int mkpath(char* file_path, mode_t mode) {
 	}
 	return 0;
 }
-#endif
 
 static void duplicate(char *name) {
 	char *cmd;
@@ -503,7 +496,6 @@ void fs_private_home_list(void) {
 			errExit("mounting home directory");
 	}
 	else {
-  #if 0
 		// mask /home
 		if (arg_debug)
 			printf("Mounting a new /home directory\n");
@@ -515,7 +507,6 @@ void fs_private_home_list(void) {
 			printf("Mounting a new /tmp directory\n");
 		if (mount("tmpfs", "/tmp", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
 			errExit("mounting tmp directory");
-  #endif
 	}
 
 	skel(homedir, u, g);
