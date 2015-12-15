@@ -30,34 +30,6 @@
 
 static int helper_files_generated = 0;
 
-static void check_dir_or_file(const char *name) {
-	assert(name);
-	struct stat s;
-	char *fname;
-	if (asprintf(&fname, "/etc/%s", name) == -1)
-		errExit("asprintf");
-	if (arg_debug)
-		printf("Checking %s\n", fname);		
-	if (stat(fname, &s) == -1) {
-		fprintf(stderr, "Error: file %s not found.\n", fname);
-		exit(1);
-	}
-	
-	// dir or regular file
-	if (S_ISDIR(s.st_mode) || S_ISREG(s.st_mode)) {
-		free(fname);
-		return;
-	}
-
-	if (!is_link(fname)) {
-		free(fname);
-		return;
-	}
-	
-	fprintf(stderr, "Error: invalid file type, %s.\n", fname);
-	exit(1);
-}
-
 static void write_helper_list_to_file(const char *path, const char *list)
 {
   /* write list down to appropriate file */
