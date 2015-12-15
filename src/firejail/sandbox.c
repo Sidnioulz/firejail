@@ -158,7 +158,6 @@ int sandbox(void* sandbox_arg) {
 	//****************************
 	// mount namespace
 	//****************************
-	//TODO ensure all the helper stuff is well carried over!
 	// mount events are not forwarded between the host the sandbox
 	if (mount(NULL, "/", NULL, MS_SLAVE | MS_REC, NULL) < 0) {
 		chk_chroot();
