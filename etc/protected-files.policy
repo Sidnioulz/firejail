@@ -1,6 +1,6 @@
-~/Private///generic:*
-~/Secret///generic:*
-~/Documents/Banking///generic:*
-~/Documents/Bank///generic:*
-~/Banking///generic:*
-~/Bank///generic:*
+~/Private///restricted:*
+~/Secret///restricted:*
+~/Documents/Banking///restricted:*
+~/Documents/Bank///restricted:*
+~/Banking///restricted:*
+~/Bank///restricted:*
