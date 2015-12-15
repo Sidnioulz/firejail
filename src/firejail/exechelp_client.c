@@ -20,6 +20,7 @@
 */
 #include "firejail.h"
 #include "../include/exechelper.h"
+#include "../include/exechelper-logger.h"
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -67,9 +68,11 @@ void exechelp_propagate_sandbox_info_to_env(void) {
 
   // set environment variables for libexechelper to intercept...
   if (protected) {
+    exechelp_logv("firejail", "Declaring sandbox as protected\n");
     if (setenv(EXECHELP_SANDBOX_TYPE_ENV, "protected", 1) < 0)
       errExit("setenv");
   } else {
+    exechelp_logv("firejail", "Declaring sandbox as untrusted\n");
     if (setenv(EXECHELP_SANDBOX_TYPE_ENV, "untrusted", 1) < 0)
       errExit("setenv");
   }

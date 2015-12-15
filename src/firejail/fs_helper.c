@@ -20,6 +20,7 @@
 */
 #include "firejail.h"
 #include "../include/exechelper.h"
+#include "../include/exechelper-logger.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/mount.h>
@@ -115,10 +116,13 @@ void fs_helper_generate_files(void) {
 
   char *linkastr = get_linked_apps_for_client();
   if(arg_debug) {
-    if (linkastr)
+    if (linkastr) {
       printf("Child process has linked applications: '%s'\n", linkastr);
-    else
+      exechelp_logv("firejail", "Child process has linked applications: '%s'\n", linkastr);
+    } else {
       printf("Child process has no linked applications, will write an empty file\n");
+      exechelp_logv("firejail", "Child process has no linked applications, will write an empty file\n");
+    }
   }
   write_helper_list_to_file(LINKED_APPS_SB_PATH, linkastr);
   free(linkastr);
@@ -128,10 +132,13 @@ void fs_helper_generate_files(void) {
     printf("Constructing a list of applications launchable exclusively outside the child process' sandbox...\n");
   char *protastr = get_protected_apps_for_client ();
   if(arg_debug) {
-    if (protastr)
+    if (protastr) {
       printf("The following applications are protected by the sandbox: '%s'\n", protastr);
-    else
+      exechelp_logv("firejail", "The following applications are protected by the sandbox: '%s'\n", protastr);
+    } else {
       printf("No applications are protected by the sandbox, will write an empty file\n");
+      exechelp_logv("firejail", "No applications are protected by the sandbox, will write an empty file\n");
+    }
   }
   write_helper_list_to_file(PROTECTED_APPS_SB_PATH, protastr);
   free(protastr);
@@ -141,10 +148,13 @@ void fs_helper_generate_files(void) {
     printf("Constructing a list of files openable exclusively outside the child process' sandbox...\n");
   char *protfstr = get_protected_files_for_client (1);
   if(arg_debug) {
-    if (protfstr)
+    if (protfstr) {
       printf("The following files are protected by the sandbox: '%s'\n", protfstr);
-    else
+      exechelp_logv("firejail", "The following files are protected by the sandbox: '%s'\n", protfstr);
+    } else {
       printf("No files are protected by the sandbox, will write an empty file\n");
+      exechelp_logv("firejail", "No files are protected by the sandbox, will write an empty file\n");
+    }
   }
   write_helper_list_to_file(PROTECTED_FILES_SB_PATH, protfstr);
   free(protfstr);
@@ -154,10 +164,13 @@ void fs_helper_generate_files(void) {
     if(arg_debug)
       printf("Constructing a list of white-listed apps passed as parameters to firejail...\n");
     if(arg_debug) {
-      if (arg_whitelist_apps)
+      if (arg_whitelist_apps) {
         printf("The following apps are white-listed for this firejail instance: '%s'\n", arg_whitelist_apps);
-      else
+        exechelp_logv("firejail", "The following apps are white-listed for this firejail instance: '%s'\n", arg_whitelist_apps);
+      } else {
         printf("No apps are white-listed by the sandbox, will write an empty file\n");
+        exechelp_logv("firejail", "No apps are white-listed by the sandbox, will write an empty file\n");
+      }
     }
   }
   write_helper_list_to_file(WHITELIST_APPS_SB_PATH, arg_whitelist_apps);
@@ -167,10 +180,13 @@ void fs_helper_generate_files(void) {
     if(arg_debug)
       printf("Constructing a list of white-listed files passed as parameters to firejail...\n");
     if(arg_debug) {
-      if (arg_whitelist_files)
+      if (arg_whitelist_files) {
         printf("The following files are white-listed for this firejail instance: '%s'\n", arg_whitelist_files);
-      else
+        exechelp_logv("firejail", "The following files are white-listed for this firejail instance: '%s'\n", arg_whitelist_files);
+      } else {
         printf("No files are white-listed by the sandbox, will write an empty file\n");
+        exechelp_logv("firejail", "No files are white-listed by the sandbox, will write an empty file\n");
+      }
     }
   }
   write_helper_list_to_file(WHITELIST_FILES_SB_PATH, arg_whitelist_files);

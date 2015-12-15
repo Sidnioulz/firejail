@@ -19,6 +19,7 @@
 */
 #define _GNU_SOURCE
 #include "../include/exechelper.h"
+#include "../include/exechelper-logger.h"
 #include "firejail.h"
 #include <sys/stat.h>
 #include <sys/wait.h>
@@ -191,6 +192,7 @@ void join_name(const char *name, const char *homedir, int argc, char **argv, int
 		exit(1);
 	}
 
+  exechelp_logv("firejail", "About to join namespace %s aka %d\n", name, pid);
 	join(pid, homedir, argc, argv, index);
 }
 
@@ -366,6 +368,7 @@ void join(pid_t pid, const char *homedir, int argc, char **argv, int index) {
 			arg[1] = "-c";
 			if (arg_debug)
 				printf("Starting %s\n", cfg.command_line);
+      exechelp_logv("firejail", "Starting %s in sandbox %d\n", cfg.command_line, pid);
 			if (!arg_doubledash) {
 				arg[2] = cfg.command_line;
 				arg[3] = NULL;

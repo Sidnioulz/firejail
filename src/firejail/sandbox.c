@@ -20,6 +20,7 @@
 	
 #include "firejail.h"
 #include "../include/exechelper.h"
+#include "../include/exechelper-logger.h"
 #include <sys/mount.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
@@ -501,6 +502,7 @@ int sandbox(void* sandbox_arg) {
 		assert(cfg.command_line);
 		if (arg_debug)
 			printf("Starting %s\n", cfg.command_line);
+    exechelp_logv("firejail", "Starting %s\n", cfg.command_line);
 		if (arg_doubledash) 
 			arg[index++] = "--";
 		arg[index++] = cfg.command_line;

@@ -19,6 +19,7 @@
  */
 #include "firejail.h"
 #include "../include/pid.h"
+#include "../include/exechelper-logger.h"
 #define _GNU_SOURCE
 #include <sys/utsname.h>
 #include <sched.h>
@@ -105,6 +106,7 @@ static void myexit(int rv) {
 	bandwidth_shm_del_file(sandbox_pid);		// bandwidht file
 	network_shm_del_file(sandbox_pid);		// network map file
 	
+  exechelp_logv("firejail", "Exiting firejail\n");
 	exit(rv); 
 }
 
@@ -392,6 +394,13 @@ int main(int argc, char **argv) {
 	int custom_profile = 0;	// custom profile loaded
 	int arg_noprofile = 0; // use generic.profile if none other found/specified
 
+  exechelp_logv("firejail", "Entering firejail\n");
+	for (i = 0; i < argc; i++) {
+		if (argv[i] == NULL)
+			break;
+    exechelp_logv("firejail", "\tfirejail argument %d: %s\n", i, argv[i]);
+	}
+
 	// check if we already have a sandbox running
 	int rv = check_kernel_procs();
 	if (rv == 0) {
@@ -604,6 +613,7 @@ int main(int argc, char **argv) {
 			}
 			arg_overlay = 1;
 			arg_overlay_keep = 1;
+      exechelp_logv("firejail", "Running with an overlay filesystem\n");
 			
 			// create ~/.firejail directory
 			char *dirname;
@@ -749,6 +759,7 @@ int main(int argc, char **argv) {
 		//*************************************
 		else if (strcmp(argv[i], "--helper") == 0) {
 			cfg.helper = 1;
+      exechelp_logv("firejail", "Running with the Execution Helper\n");
 		}
 		else if (strncmp(argv[i], "--whitelist-apps=", 17) == 0) {
 			if (arg_whitelist_apps) {
@@ -765,6 +776,7 @@ int main(int argc, char **argv) {
 			arg_whitelist_apps = strdup(s);
 			if (!arg_whitelist_apps)
 				errExit("strdup");
+      exechelp_logv("firejail", "Running with whitelisted apps: %s\n", arg_whitelist_apps);
 		}
 		else if (strncmp(argv[i], "--whitelist-files=", 18) == 0) {
 			if (arg_whitelist_files) {
@@ -781,6 +793,7 @@ int main(int argc, char **argv) {
 			arg_whitelist_files = strdup(s);
 			if (!arg_whitelist_files)
 				errExit("strdup");
+      exechelp_logv("firejail", "Running with whitelisted files: %s\n", arg_whitelist_files);
 		}
 		
 		//*************************************
@@ -792,6 +805,7 @@ int main(int argc, char **argv) {
 				fprintf(stderr, "Error: please provide a name for sandbox\n");
 				return 1;
 			}
+      exechelp_logv("firejail", "Running with name: %s\n", cfg.hostname);
 		}
 		else if (strcmp(argv[i], "--nogroups") == 0)
 			arg_nogroups = 1;
@@ -806,6 +820,7 @@ int main(int argc, char **argv) {
 		//*************************************
 		else if (strncmp(argv[i], "--net=", 6) == 0) {
 			if (strcmp(argv[i] + 6, "none") == 0) {
+        exechelp_logv("firejail", "Running without network\n");
 				arg_nonetwork  = 1;
 				cfg.bridge0.configured = 0;
 				cfg.bridge1.configured = 0;
@@ -1099,8 +1114,10 @@ int main(int argc, char **argv) {
 	}
 	
 	assert(cfg.command_name);
-	if (arg_debug)
+	if (arg_debug) {
 		printf("Command name #%s#\n", cfg.command_name);
+    exechelp_logv("firejail", "Command name #%s#\n", cfg.command_name);
+	}
 	if (arg_slow) {
 	  pid_t my_id = getpid();
 	  int sleep_time = 30;
@@ -1171,6 +1188,7 @@ int main(int argc, char **argv) {
 		    errExit("strdup");
 		}
 	}
+  exechelp_logv("firejail", "Running with profile '%s'\n", cfg.profile_name);
 
 	// check and assign an IP address - for macvlan it will be done again in the sandbox!
 	if (any_bridge_configured()) {
@@ -1210,6 +1228,7 @@ int main(int argc, char **argv) {
 	else if (arg_debug)
 		printf("Using the local network stack\n");
 
+  exechelp_logv("firejail", "About to clone\n");
 	child = clone(sandbox,
 		child_stack + STACK_SIZE,
 		flags,
@@ -1219,6 +1238,7 @@ int main(int argc, char **argv) {
 
 	if (!arg_command) {
 		printf("Parent pid %u, child pid %u\n", sandbox_pid, child);
+    exechelp_logv("firejail", "Parent pid %u, child pid %u\n", sandbox_pid, child);
 		// print the path of the new log directory
 		if (getuid() == 0) // only for root
 			printf("The new log directory is /proc/%d/root/var/log\n", child);

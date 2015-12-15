@@ -51,6 +51,7 @@ static int exechelp_log_make_dir(void) {
 	    free(local);
 	    return -1;
 	  }
+    int ignore = chown(local, getuid(), getgid());
   }
 
   if (asprintf(&share, "%s/share", local) == -1) {
@@ -64,6 +65,7 @@ static int exechelp_log_make_dir(void) {
 	    free(share);
 	    return -1;
 	  }
+    int ignore = chown(share, getuid(), getgid());
   }
 
   if (asprintf(&firejail, "%s/firejail", share) == -1) {
@@ -77,7 +79,7 @@ static int exechelp_log_make_dir(void) {
 	    free(firejail);
 	    return -1;
 	  }
-	  return -1;
+    int ignore = chown(firejail, getuid(), getgid());
   }
 
   return 0;
@@ -85,7 +87,7 @@ static int exechelp_log_make_dir(void) {
 
 static void exechelp_log_cleanup();
 
-static int exechelp_log_get_handle(int reset) {
+static int exechelp_log_get_handle(const char *id, int reset) {
   static int fd = -1;
 
   if (fd != -1 && reset) {
@@ -110,8 +112,13 @@ static int exechelp_log_get_handle(int reset) {
     if (!strftime(date, sizeof(date), "%Y-%m-%d_%H%M%S", &ttm))
       date[0] = '\0';
 
-    if (asprintf(&path, "%s/.local/share/firejail/%s_%d.log", env, date, getpid()) == -1)
-      return -1;
+    if (id) {
+      if (asprintf(&path, "%s/.local/share/firejail/%s_%s_%d.log", env, id, date, getpid()) == -1)
+        return -1;
+    } else {
+      if (asprintf(&path, "%s/.local/share/firejail/%s_%d.log", env, date, getpid()) == -1)
+        return -1;
+    }
 
     fd = open(path, O_CREAT | O_APPEND | O_DSYNC | O_WRONLY, 0644);
 
@@ -129,7 +136,7 @@ static int exechelp_log_get_handle(int reset) {
 
 static void exechelp_log_cleanup()
 {
-  exechelp_log_get_handle(1);
+  exechelp_log_get_handle(NULL, 1);
 }
 
 ssize_t exechelp_log(const char *id, const char *fmt, va_list args) {
@@ -137,7 +144,7 @@ pthread_mutex_lock(&log_mutex);
   ssize_t  ret = 0;
   char    *buf;
   char    *buf2;
-  int      fd = exechelp_log_get_handle(0);
+  int      fd = exechelp_log_get_handle(id, 0);
 
   if (fd == -1) {
     pthread_mutex_unlock(&log_mutex);
@@ -151,7 +158,7 @@ pthread_mutex_lock(&log_mutex);
 
 
   if (id) {
-    if (asprintf(&buf2, "[%s]%s", id, buf) == -1) {
+    if (asprintf(&buf2, "[%s] %s", id, buf) == -1) {
       free(buf);
       pthread_mutex_unlock(&log_mutex);
       return -1;
@@ -180,6 +187,6 @@ ssize_t exechelp_logv(const char *id, const char *fmt, ...) {
 }
 
 void exechelp_log_close(void) {
-  (void)exechelp_log_get_handle(1);
+  (void)exechelp_log_get_handle(NULL, 1);
 }
 
