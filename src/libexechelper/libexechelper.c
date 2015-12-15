@@ -491,6 +491,18 @@ int execve(const char *path, char *const argv[], char *const envp[])
   if (arg_debug)
     printf("Child process is attempting to execute (execve) binary '%s'\n", path);
 
+  if (!path) {
+    errno = ENOENT;
+    return -1;
+  }
+
+  if (access(path, R_OK | X_OK)) {
+    if (arg_debug)
+      printf("Child process cannot execute '%s' as this binary cannot be accessed, aborting\n", path);
+    // we keep the errno from access
+    return -1;
+  }
+
   char *allowed_exec = NULL, *forbidden_exec = NULL;
   char **allowed_argv = NULL, **forbidden_argv = NULL;
   int ret_value = 0;
@@ -553,6 +565,14 @@ int execvpe(const char *file, char *const argv[], char *const envp[])
     return -1;
   }
 
+  if (access(path, R_OK | X_OK)) {
+    if (arg_debug)
+      printf("Child process cannot execute '%s' as this binary cannot be accessed, aborting\n", path);
+    free(path);
+    // we keep the errno from access
+    return -1;
+  }
+
   char *allowed_exec = NULL, *forbidden_exec = NULL;
   char **allowed_argv = NULL, **forbidden_argv = NULL;
   int ret_value = 0;
@@ -580,18 +600,7 @@ int execvpe(const char *file, char *const argv[], char *const envp[])
   if (allowed_exec) {
     if (arg_debug)
       printf("%s", "Child process is allowed to proceed by the sandbox\n");
-    
-    /* We still execute with 'file' in the rare situation where path returns a ENOEXEC 
-     * file that also fails running in a shell, in which case execvpe would try another
-     * entry in the path. We should improve exechelp_resolve_executable_path to better
-     * determine the executability of a path rather than merely checking for permission.
-     * However we want to use allowed_exec if it has been modified compared to the
-     * original path given to the filter function.
-     */
-    if (strcmp(path, allowed_exec) == 0)
-      ret_value = (*original_execvpe)(file, allowed_argv, envp);
-    else
-      ret_value = (*original_execvpe)(allowed_exec, allowed_argv, envp);
+    ret_value = (*original_execvpe)(allowed_exec, allowed_argv, envp);
   } else {
     errno = EACCES;
     ret_value = -1;
@@ -628,8 +637,15 @@ int fexecve(int fd, char *const argv[], char *const envp[])
     return -1;
   }
 
+  if (access(path, R_OK | X_OK)) {
+    if (arg_debug)
+      printf("Child process cannot execute '%s' as this binary cannot be accessed, aborting\n", path);
+    free(path);
+    // we keep the errno from access
+    return -1;
+  }
+
   typeof(execve) *original_execve = dlsym(RTLD_NEXT, "execve");
-  typeof(fexecve) *original_fexecve = dlsym(RTLD_NEXT, "fexecve");
   if (arg_debug)
     printf("Child process is attempting to execute (fexecve) file descriptor '%s' (%d)\n", path, fd);
 
@@ -662,16 +678,7 @@ int fexecve(int fd, char *const argv[], char *const envp[])
   if (allowed_exec) {
     if (arg_debug)
       printf("%s", "Child process is allowed to proceed by the sandbox\n");
-        
-    /* We still execute with 'file' in the rare situation where the file descriptor has
-     * changed since we read the fd info, because we care most about semantic equivalence
-     * with unpreloaded programs. However we want to use allowed_exec if it has been
-     * modified compared to the original path given to the filter function.
-     */
-    if (strcmp(path, allowed_exec) == 0)
-      ret_value = (*original_fexecve)(fd, allowed_argv, envp);
-    else
-      ret_value = (*original_execve)(allowed_exec, allowed_argv, envp);
+    ret_value = (*original_execve)(allowed_exec, allowed_argv, envp);
   } else {
     errno = EACCES;
     ret_value = -1;
