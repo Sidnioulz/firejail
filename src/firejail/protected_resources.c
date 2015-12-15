@@ -217,9 +217,16 @@ char *get_protected_files_for_client (int blacklist) {
      * parse_get_next_separator injects a '\0' instead of the separator
      */
 
+    char *realpath = exechelp_coreutils_realpath(buf);
+    if (!realpath) {
+      if (arg_debug)
+        fprintf(stderr, "Error: line %d is probably malformed, the first part of the line cannot be converted into a valid UNIX path\n", lineno);
+      return NULL;
+    }
+
     // if blacklisting, we can already do this now
     if (blacklist) {
-      fs_blacklist_file(buf);
+      fs_blacklist_file(realpath);
     }
 
 
@@ -252,10 +259,12 @@ char *get_protected_files_for_client (int blacklist) {
     if (found)
       continue;
 
-    int written = result ? asprintf(&result, "%s:%s", result, buf)
-                         : asprintf(&result, "%s", buf);
+    int written = result ? asprintf(&result, "%s:%s", result, realpath)
+                         : asprintf(&result, "%s", realpath);
     if (written == -1)
       errExit("asprintf");
+
+    free(realpath);
 	}
 
   if (arg_debug)

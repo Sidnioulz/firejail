@@ -755,7 +755,14 @@ int main(int argc, char **argv) {
 				fprintf(stderr, "Error: a white-list of applications was already given\n");
 				exit(1);
 			}
-			arg_whitelist_apps = strdup(argv[i] + 17);
+
+			char *s = argv[i] + 17;
+			if (s[0] == '"') {
+			  char *e = strchr (++s, '"');
+		    if (e)
+		      e[0] = '\0';
+			}
+			arg_whitelist_apps = strdup(s);
 			if (!arg_whitelist_apps)
 				errExit("strdup");
 		}
@@ -764,7 +771,14 @@ int main(int argc, char **argv) {
 				fprintf(stderr, "Error: a white-list of applications was already given\n");
 				exit(1);
 			}
-			arg_whitelist_files = strdup(argv[i] + 18);
+
+			char *s = argv[i] + 18;
+			if (s[0] == '"') {
+			  char *e = strchr (++s, '"');
+		    if (e)
+		      e[0] = '\0';
+			}
+			arg_whitelist_files = strdup(s);
 			if (!arg_whitelist_files)
 				errExit("strdup");
 		}

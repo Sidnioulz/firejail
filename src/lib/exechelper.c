@@ -1056,8 +1056,16 @@ int protected_files_parse (FILE **fp, int *lineno, char **path, char **profiles)
 	    return -2;
     }
 
-    // extract binary name and profile list
-    *path = strdup(buf);
+    // get the real path for the first item (file name)
+    char *realpath = exechelp_coreutils_realpath(buf);
+    if (!realpath) {
+      if (arg_debug)
+        fprintf(stderr, "Error: line %d is probably malformed, the first part of the line cannot be converted into a valid UNIX path\n", *lineno);
+      return -2;
+    }
+
+    // extract file name and profile list
+    *path = realpath;
     *profiles = strdup(sep);
   }
   // we're done processing the file
@@ -1297,7 +1305,14 @@ ExecHelpList *protected_files_get_handlers_for_file (const char *file) {
       continue;
     }
 
-    if (strcmp (buf, file) == 0) {
+    char *realpath = exechelp_coreutils_realpath(buf);
+    if (!realpath) {
+      if (arg_debug)
+        fprintf(stderr, "Error: line %d is probably malformed, the first part of the line cannot be converted into a valid UNIX path\n", lineno);
+      return NULL;
+    }
+
+    if (strcmp (realpath, file) == 0) {
       found = 1;
 
       // split the remaining string starting from past the separator
@@ -1306,6 +1321,7 @@ ExecHelpList *protected_files_get_handlers_for_file (const char *file) {
         current = ptr;
         if (exechelp_parse_get_next_separator(current, &ptr, 1) == -1) {
           fprintf(stderr, "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>///<profile name>:<path to handler>,...\n", lineno);
+          free(realpath);
 	        break;
         }
 
@@ -1313,6 +1329,7 @@ ExecHelpList *protected_files_get_handlers_for_file (const char *file) {
         char *path = strchr(current, ':');
         if (!path) {
           fprintf(stderr, "Error: line %d is malformed, should be of the form: <file>\\0<profile name>:<path to handler>///<profile name>:<path to handler>\n", lineno);
+          free(realpath);
           continue;
         }
         *path = '\0';
@@ -1326,6 +1343,7 @@ ExecHelpList *protected_files_get_handlers_for_file (const char *file) {
         if (!h) {
           free(profile);
           free(path);
+          free(realpath);
           fprintf(stderr, "Error: could not allocate a structure to hold the profiles found for client\n");
           continue;
         } else {
@@ -1333,6 +1351,8 @@ ExecHelpList *protected_files_get_handlers_for_file (const char *file) {
         }
       }
     }
+
+    free(realpath);
 	}
 
   fclose(fp);
