@@ -581,6 +581,8 @@ static int client_check_has_protected_files(fireexecd_client_t       *cli,
     // get the canonical path of the current argument, if any
     char *real = exechelp_coreutils_realpath(argv[i]);
 
+    //FIXME ignore whitelisted files here?
+
     char *prefix = NULL;
     if (exechelp_file_list_contains_path(managed, real, &prefix)) {
       has_protected_files++;
