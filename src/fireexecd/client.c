@@ -259,7 +259,6 @@ static void *client_identify_and_handle_real(void *user_data) {
 
   // 10 seconds elapsed without authenticating client...
   if(counter == _CLIENT_AUTH_COUNTER_LIMIT_200MS) {
-    //TODO log: there was an unauthorised attempt to register
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m client attempted to register but could not be confirmed to be a firejail launcher in the past %d seconds, aborting\n", cli->pid, _CLIENT_AUTH_COUNTER_LIMIT_SECS);
     client_list_remove(cli);
     cli->status = ERROR;

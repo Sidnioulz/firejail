@@ -164,17 +164,25 @@ static void client_dialog_run(fireexecd_client_t *cli,
   int ret = exechelp_dialog_run(EH_DIALOG(dialog));
   exechelp_dialog_destroy(EH_DIALOG(dialog));
 
+  int execution_result = 0;
   if (ret == EH_RESPONSE_SANDBOXED_DEFAULT) {
-    int ret = client_execute_sandboxed(cli, command, argv, argc, NULL, NULL, TRUE, TRUE, files_to_whitelist);
+    DBGOUT("[%d]\tINFO:  Dialog response: execute sandboxed\n", cli->pid);
+    execution_result = client_execute_sandboxed(cli, command, argv, argc, NULL, NULL, TRUE, TRUE, files_to_whitelist);
   } else if (ret == EH_RESPONSE_SANDBOXED_ORIGINAL) {
-    int ret = client_execute_sandboxed(cli, command, argv, argc, cli->profile, cli->name, TRUE, TRUE, files_to_whitelist);
+    DBGOUT("[%d]\tINFO:  Dialog response: execute back in original sandbox\n", cli->pid);
+    execution_result = client_execute_sandboxed(cli, command, argv, argc, cli->profile, cli->name, TRUE, TRUE, files_to_whitelist);
   } else if (ret == EH_RESPONSE_SANDBOXED_BACKUP_HANDLER) {
+    DBGOUT("[%d]\tINFO:  Dialog response: execute with default handler for protected files\n", cli->pid);
     argv[0] = strdup(valid_handler->handler_path);
-    int ret = client_execute_sandboxed(cli, valid_handler->handler_path, argv, argc, valid_handler->profile_name, NULL, TRUE, TRUE, files_to_whitelist);
+    execution_result = client_execute_sandboxed(cli, valid_handler->handler_path, argv, argc, valid_handler->profile_name, NULL, TRUE, TRUE, files_to_whitelist);
   } else if (ret == EH_RESPONSE_UNSANDBOXED) {
-    int ret = client_execute_unsandboxed(cli, command, argv);
+    DBGOUT("[%d]\tINFO:  Dialog response: execute unsandboxed\n", cli->pid);
+    execution_result = client_execute_unsandboxed(cli, command, argv);
   }
 
+  // we should never reach this point
+  if (execution_result)
+    DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m Dialog response obtained (%d) but no command was executed afterwards, an error occurred in client_execute_*sandboxed\n", cli->pid, ret);
 #endif
   DBGLEAVE(cli?cli->pid:-1, "client_dialog_run");
 }
@@ -186,6 +194,7 @@ void client_dialog_run_without_reason(fireexecd_client_t *cli,
                                       const size_t argc,
                                       char **files_to_whitelist) {
   DBGENTER(cli?cli->pid:-1, "client_dialog_run_without_reason");
+  DBGOUT("[%d]\tINFO:  Spawning user dialog because the reason for a delegated call couldn't be identified (%s calling %s, %lu args)\n", cli->pid, caller_command, command, argc);
   client_dialog_run(cli, caller_command, command, argv, argc, NULL, files_to_whitelist,
     "The reason why the command was blocked could not be determined.\n"
     "This could be caused by an inconsistency in the security policy or a bug in the sandbox.\n",
@@ -203,6 +212,7 @@ void client_dialog_run_incompatible(fireexecd_client_t *cli,
                                     ExecHelpProtectedFileHandler *backup_command,
                                     ExecHelpProtectedFileHandler *valid_handler) {
   DBGENTER(cli?cli->pid:-1, "client_dialog_run_without_reason");
+  DBGOUT("[%d]\tINFO:  Spawning user dialog because the command/profile in use aren't allowed to manipulate some of the protected files (%s calling %s, %lu args)\n", cli->pid, caller_command, command, argc);
   client_dialog_run(cli, caller_command, command, argv, argc, forbidden_files, files_to_whitelist,
     "The sandboxed app attempted to open one or more protected files with an"
     "incompatible application. Only applications in the protected file's policy"

@@ -278,6 +278,7 @@ static int procevent_monitor(const int sock, pid_t mypid) {
 				cmd = pid_proc_cmdline(pid);
 			}
 			if (add_new) {
+        DBGOUT("[%d]\tINFO: NEW SANDBOX detected by process event connector: %s\n", pid, cmd);
 			  client_identities_list_insert(pid);
 				if (!cmd)
 					sprintf(lineptr, " NEW SANDBOX\n");
@@ -286,6 +287,7 @@ static int procevent_monitor(const int sock, pid_t mypid) {
 				lineptr += strlen(lineptr);
 			}
 			else if (proc_ev->what == PROC_EVENT_EXIT && pids[pid].level == 1) {
+        DBGOUT("[%d]\tINFO: EXIT SANDBOX detected by process event connector\n", pid);
 				sprintf(lineptr, " EXIT SANDBOX\n");
 				lineptr += strlen(lineptr);
 				if (mypid == pid)

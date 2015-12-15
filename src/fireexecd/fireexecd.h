@@ -20,73 +20,17 @@
 #ifndef FIREEXECD_H
 #define FIREEXECD_H
 #define _GNU_SOURCE
-#include <ctype.h>
 #include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
-#include <time.h>
 #include "../include/exechelper.h"
+#include "../include/exechelper-logger.h"
 #include "../include/pid.h"
 #include "../include/common.h"
 
 extern int arg_debug;
-struct timeval dbg_tv;
-time_t         dbg_t;
-struct tm      dbg_tm;
-char           dbg_line[200];
-
-#define DBGOUT(fmt, ...) \
- do { \
-  (void)gettimeofday(&dbg_tv,NULL); \
-  (void)time(&dbg_t); \
-  (void)localtime_r(&dbg_t, &dbg_tm); \
-  fprintf(stdout, "%2.2d:%2.2d:%2.2d ", dbg_tm.tm_hour, dbg_tm.tm_min, dbg_tm.tm_sec); \
-  fprintf(stdout, fmt, ##__VA_ARGS__); \
-  fflush(stdout); \
-} while (0)
-
-#define DBGERR(fmt, ...) \
- do { \
-  (void)gettimeofday(&dbg_tv,NULL); \
-  (void)time(&dbg_t); \
-  (void)localtime_r(&dbg_t, &dbg_tm); \
-  fprintf(stderr, "%2.2d:%2.2d:%2.2d ", dbg_tm.tm_hour, dbg_tm.tm_min, dbg_tm.tm_sec); \
-  fprintf(stderr, fmt, ##__VA_ARGS__); \
-  fflush(stderr); \
-} while (0)
-
-#define DBGENTER(id, name) \
- do { \
-  if(arg_debug >= 2) { \
-    (void)gettimeofday(&dbg_tv,NULL); \
-    (void)time(&dbg_t); \
-    (void)localtime_r(&dbg_t, &dbg_tm); \
-    fprintf(stdout, "\e[0;30m%2.2d:%2.2d:%2.2d ", dbg_tm.tm_hour, dbg_tm.tm_min, dbg_tm.tm_sec); \
-    fprintf(stdout, "\e[0;30m[%d]\t(entering %s)\e[0;0m\n", id, name); \
-    fflush(stdout); \
-  }\
-} while (0)
-
-#define DBGLEAVE(id, name) \
- do { \
-  if(arg_debug >= 2) { \
-    (void)gettimeofday(&dbg_tv,NULL); \
-    (void)time(&dbg_t); \
-    (void)localtime_r(&dbg_t, &dbg_tm); \
-    fprintf(stdout, "\e[0;30m%2.2d:%2.2d:%2.2d ", dbg_tm.tm_hour, dbg_tm.tm_min, dbg_tm.tm_sec); \
-    fprintf(stdout, "\e[0;30m[%d]\t(leaving %s)\e[0;0m\n", id, name); \
-    fflush(stdout); \
-  }\
-} while (0)
-
-// clear screen
-static inline void fireexecd_clrscr(void) {
-	printf("\033[2J\033[1;1H");
-	fflush(0);
-}
 
 typedef enum _client_status_t {
   UNDEFINED=0,

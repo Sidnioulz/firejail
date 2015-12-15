@@ -53,7 +53,6 @@ static int command_execute(fireexecd_client_t *cli, const char *command, char *a
     DBGLEAVE(cli?cli->pid:-1, "command_execute");
     return -1;
   } else if (id == 0) {
-    // TODO permanently log
     if (execvpe(command, argv, environ) == -1) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to execute the '%s' command (error: %s)\n", cli->pid, command, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "command_execute");
@@ -74,9 +73,8 @@ int client_execute_sandboxed(fireexecd_client_t *cli,
                              int has_protected_files,
                              char **files_to_whitelist) {
   DBGENTER(cli?cli->pid:-1, "client_execute_sandboxed");
-  //TODO LOG
 
-  DBGOUT("[%d]\tINFO:  Command '%s' will be executed in a sandbox...\n", cli?cli->pid:-1, command);
+  DBGOUT("[%d]\tINFO:  Command '%s' will be executed in a sandbox with profile '%s' and name '%s'\n", cli?cli->pid:-1, command, profile, name);
   size_t size = (argc+2 /* original argv size */ + 30 /* firejail and some options */);
   char **sandboxargv = malloc(sizeof(char *) * size);
   size_t index=0;
@@ -145,9 +143,7 @@ int client_execute_sandboxed(fireexecd_client_t *cli,
   sandboxargv[index] = NULL;
 
   // Debugging
-  if (arg_debug)
-    DBGOUT("[%d]\tINFO:  Now executing command '%s' in sandbox with profile '%s'...\n", cli->pid, command, profile);
-  if (arg_debug >= 2) {
+  if (arg_debug) {
     int z;
     for (z=0; sandboxargv[z]; z++)
       DBGOUT("[%d]\tINFO:  \targv[%d]: '%s'\n", cli->pid, z, sandboxargv[z]);
@@ -164,9 +160,15 @@ int client_execute_unsandboxed(fireexecd_client_t *cli,
                                const char *command,
                                char *argv[]) {
   DBGENTER(cli?cli->pid:-1, "client_execute_unsandboxed");
-  //TODO LOG
 
-  DBGOUT("[%d]\tINFO:  Command '%s' will be executed outside any sandbox...\n", cli?cli->pid:-1, command);
+  DBGOUT("[%d]\tINFO:  Command '%s' will be executed unsandboxed...\n", cli?cli->pid:-1, command);
+  // Debugging
+  if (arg_debug) {
+    int z;
+    for (z=0; argv[z]; z++)
+      DBGOUT("[%d]\tINFO:  \targv[%d]: '%s'\n", cli->pid, z, argv[z]);
+  }
+
   int ret = command_execute(cli, command, argv);
 
   DBGLEAVE(cli?cli->pid:-1, "client_execute_sandboxed");
@@ -793,12 +795,7 @@ static void command_process_real(fireexecd_client_t *cli,
                              is_protected_app,
                              has_protected_files, files_to_whitelist);
   } else {
-    //TODO dbg that we run unsandboxed
-
-    int z;
-    for (z=0; argv[z]; z++)
-      printf("\t%s****\n", argv[z]);
-    command_execute(cli, command, argv);
+    client_execute_unsandboxed(cli, command, argv);
   }
 
   string_list_free(&files_to_whitelist);

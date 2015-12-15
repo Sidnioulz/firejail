@@ -27,7 +27,6 @@
 #include <unistd.h>
 
 int regsocket;
-int running = 1;
 
 static void init_registration_socket(void) {
   DBGENTER(0, "init_registration_socket");
@@ -122,7 +121,7 @@ static void accept_registrations(void) {
   char msg[EXECHELP_REGISTRATION_MSGLEN + 1];
   msg[EXECHELP_REGISTRATION_MSGLEN] = '\0';
 
-  while(running) {
+  while(1) {
     t = sizeof(remote);
     if ((clisocket = accept(regsocket, (struct sockaddr *)&remote, &t)) == -1) {
       DBGERR("[n/a]\t\e[01;40;101mERROR:\e[0;0m failed to accept a new connection (error: %s)\n", strerror(errno));

@@ -44,7 +44,12 @@ static void my_handler(int s){
 
 	if (terminal_set)
 		tcsetattr(0, TCSANOW, &tlocal);
-	exit(0); 
+
+  // gracefully shut down our log
+  exechelp_log_close();
+  DBGOUT("[0]\tINFO:  Fireexecd exiting\n");
+  
+	exit(0);
 }
 
 // find the first child process for the specified pid
@@ -150,11 +155,10 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
+  DBGOUT("[0]\tINFO:  Fireexecd now running\n");
   if (pthread_create(&regthread, NULL, registration_run, NULL))
     errExit("pthread_create");  
 	
 	procevent(0); // never to return
-		
-  pthread_exit(NULL);
 	return 0;
 }
