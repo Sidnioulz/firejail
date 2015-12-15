@@ -11,7 +11,6 @@ seccomp
 netfilter
 noroot
 net none
-helper
 blacklist ${HOME}/.config/
 blacklist ${HOME}/.cache/
 blacklist ${HOME}/.local/share/

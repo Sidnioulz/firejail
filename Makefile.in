@@ -102,6 +102,7 @@ install: all
 	install -c -m 0644 etc/deluge.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/qbittorrent.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/generic.profile $(DESTDIR)/etc/firejail/.
+	install -c -m 0644 etc/restricted.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/pidgin.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/xchat.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/empathy.profile $(DESTDIR)/etc/firejail/.
@@ -125,7 +126,7 @@ install: all
 	# libexechelperutils
 	strip src/lib/libexechelperutils.so
 	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/
-	install -c -m 0755 src/lib/libexechelperutils.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
+	install -c -m 0755 src/lib/libexechelperutils.so $(DESTDIR)/$(PREFIX)/lib/.
 	mkdir -p $(DESTDIR)/$(PREFIX)/include/firejail/
 	install -c -m 0644 src/include/common.h $(DESTDIR)/$(PREFIX)/include/firejail/.
 	install -c -m 0644 src/include/exechelper-datatypes.h $(DESTDIR)/$(PREFIX)/include/firejail/.
@@ -210,6 +211,7 @@ uninstall:
 	rm -fr $(DESTDIR)/$(PREFIX)/lib/firejail
 	rm -fr $(DESTDIR)/$(PREFIX)/include/firejail
 	rm -fr $(DESTDIR)/$(PREFIX)/share/doc/firejail
+	rm -f $(DESTDIR)/$(PREFIX)/lib/libexechelperutils.so
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firejail.1*
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firemon.1*
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/fireexecd.1*
