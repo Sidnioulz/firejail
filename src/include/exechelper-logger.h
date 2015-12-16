@@ -33,7 +33,6 @@ ssize_t exechelp_logerr(const char *id, const char *fmt, va_list args);
 ssize_t exechelp_logerrv(const char *id, const char *fmt, ...);
 void exechelp_perror(const char *id, const char *str);
 void exechelp_log_close(void);
-void exechelp_log_reset_stderr(const char *id);
 
 extern int arg_debug;
 struct timeval dbg_tv;

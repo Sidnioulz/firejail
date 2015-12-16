@@ -87,37 +87,6 @@ static int exechelp_log_make_dir(void) {
 
 static void exechelp_log_cleanup();
 
-void exechelp_log_reset_stderr(const char *id) {
-  exechelp_log_make_dir();
-
-  char        date[100] = {0};
-  const char *env       = getenv("HOME");
-  char       *path      = NULL;
-  time_t      t         = time(NULL);
-  struct tm   ttm;
-
-  if (!env)
-    return;
-
-  localtime_r(&t, &ttm);
-  if (!strftime(date, sizeof(date), "%Y-%m-%d_%H%M%S", &ttm))
-    date[0] = '\0';
-
-  if (id) {
-    if (asprintf(&path, "%s/.local/share/firejail/%s_%s_%d.log", env, id, date, getpid()) == -1)
-      return;
-  } else {
-    if (asprintf(&path, "%s/.local/share/firejail/%s_%d.log", env, date, getpid()) == -1)
-      return;
-  }
-
-  if (freopen(path, "a", stderr) != NULL) {
-    int ignore = chown(path, getuid(), getgid());
-  }
-
-  free(path);
-}
-
 static int exechelp_log_get_handle(const char *id, int reset) {
   static int fd = -1;
 
