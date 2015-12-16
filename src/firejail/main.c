@@ -394,6 +394,8 @@ int main(int argc, char **argv) {
 	int custom_profile = 0;	// custom profile loaded
 	int arg_noprofile = 0; // use generic.profile if none other found/specified
 
+  exechelp_log_reset_stderr("firejail");
+
   exechelp_logv("firejail", "Entering firejail\n");
 	for (i = 0; i < argc; i++) {
 		if (argv[i] == NULL)
