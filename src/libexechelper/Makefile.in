@@ -20,11 +20,11 @@ all: libexechelper.so libexechelperdecorations.so
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
 libexechelper.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o ../lib/exechelper-logger.o
-	$(CC) -shared -fPIC -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-logger.o ../lib/common.o $(CFLAGS) $(LDFLAGS)
+	$(CC) -shared -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-logger.o ../lib/common.o $(CFLAGS) $(LDFLAGS)
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
 libexechelperdecorations.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o
-	$(CC) -shared -fPIC -o libexechelperdecorations.so libexechelperdecorations.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS) $(LDFLAGS)
+	$(CC) -shared -o libexechelperdecorations.so libexechelperdecorations.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS) $(LDFLAGS)
 
 test: $(OBJS)
 	$(CC) -lrt -o exec-helper-test test.c $(CFLAGS)
