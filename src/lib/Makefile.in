@@ -16,7 +16,7 @@ all: $(OBJS) libexechelperutils.so
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 libexechelperutils.so: $(OBJS)
-	$(CC) $(LDFLAGS) -shared -fPIC -o libexechelperutils.so $(OBJS) $(CFLAGS)
+	$(CC) -shared -fPIC -o libexechelperutils.so $(OBJS) $(CFLAGS) $(LDFLAGS)
 
 clean:; rm -f $(OBJS)
 
