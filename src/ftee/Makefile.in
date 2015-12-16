@@ -15,8 +15,8 @@ LDFLAGS += -pie -Wl,-z,relro -Wl,-z,now -lpthread
 %.o : %.c $(H_FILE_LIST)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
-ftee: $(OBJS)
-	$(CC)  $(LDFLAGS) -o $@ $(OBJS)
+ftee: $(OBJS) ../lib/exechelper-logger.o 
+	$(CC) -o $@ $(OBJS) ../lib/exechelper-logger.o $(LDFLAGS)
 
 clean:; rm -f *.o ftee
 

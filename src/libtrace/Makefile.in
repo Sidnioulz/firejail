@@ -17,7 +17,7 @@ all: libtrace.so
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
 libtrace.so: $(OBJS)
-	$(CC) $(LDFLAGS) -shared -fPIC -z relro -o $@ $(OBJS) -ldl
+	$(CC) -shared -fPIC -z relro -o $@ $(OBJS) -ldl $(LDFLAGS)
 
 
 clean:; rm -f $(OBJS) libtrace.so
