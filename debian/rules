@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@ --parallel --with autotools-dev
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod 4755 debian/firejail/usr/bin/firejail
+	chmod 4755 debian/firejail/usr/bin/fireexecd
+
+override_dh_installchangelogs:
+	dh_installchangelogs RELNOTES upstream
+
+override_dh_auto_install:
+	dh_auto_install
+	# documentation will be installed by debhelper
+	rm --verbose -rf debian/firejail/usr/share/doc/firejail

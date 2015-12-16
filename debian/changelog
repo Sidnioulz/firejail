@@ -1,0 +1,32 @@
+firejail (0.9.28-1) unstable; urgency=low
+
+  * New upstream release.
+    - Common include for blacklisted directories (Closes: #789164)
+    - Improved support for other architectures (Closes: #789317)
+  * Enabled all Linux architectures again.
+  * Removed unneeded debian/firejail.bash-completion file.
+
+ -- Reiner Herrmann <reiner@reiner-h.de>  Wed, 05 Aug 2015 23:13:40 +0200
+
+firejail (0.9.26-1) unstable; urgency=low
+
+  * New upstream release.
+  * Enabled all hardening options.
+  * Amended reproducibility patch to use normalized locale.
+  * Dropped usage of outdated bash-completion debhelper.
+  * Limited architectures to supported ones (Closes: #789163).
+
+ -- Reiner Herrmann <reiner@reiner-h.de>  Thu, 18 Jun 2015 19:36:29 +0200
+
+firejail (0.9.24-1) unstable; urgency=low
+
+  * New upstream release.
+  * Dropped patches applied upstream.
+
+ -- Reiner Herrmann <reiner@reiner-h.de>  Mon, 06 Apr 2015 12:56:57 +0200
+
+firejail (0.9.22-1) unstable; urgency=low
+
+  * Initial release (Closes: #777671)
+
+ -- Reiner Herrmann <reiner@reiner-h.de>  Sun, 15 Mar 2015 12:51:24 +0100

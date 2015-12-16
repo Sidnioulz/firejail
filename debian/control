@@ -1,0 +1,18 @@
+Source: firejail
+Section: utils
+Priority: optional
+Maintainer: Reiner Herrmann <reiner@reiner-h.de>
+Build-Depends: debhelper (>= 9), autotools-dev
+Standards-Version: 3.9.6
+Homepage: http://firejail.sourceforge.net
+
+Package: firejail
+Architecture: linux-any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: sandbox to restrict the application environment
+ Firejail is a SUID security sandbox program that reduces the risk of
+ security breaches by restricting the running environment of untrusted
+ applications using Linux namespaces and seccomp-bpf.  It allows a
+ process and all its descendants to have their own private view of the
+ globally shared kernel resources, such as the network stack, process
+ table, mount table.
