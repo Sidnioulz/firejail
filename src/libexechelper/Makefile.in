@@ -2,13 +2,16 @@ PREFIX=@prefix@
 VERSION=@PACKAGE_VERSION@
 NAME=@PACKAGE_NAME@
 HAVE_FATAL_WARNINGS=@HAVE_FATAL_WARNINGS@
+X11_CFLAGS=@X11_CFLAGS@
+X11_LIBS=@X11_LIBS@
+HAVE_X11=@HAVE_X11@
 
 H_FILE_LIST       = $(wildcard *.[h])
 C_FILE_LIST       = $(wildcard *.c)
 OBJS = $(C_FILE_LIST:.c=.o)
 BINOBJS =  $(foreach file, $(OBJS), $file)
-CFLAGS += -ggdb $(HAVE_FATAL_WARNINGS) -O0 -g -DVERSION='"$(VERSION)"' -fstack-protector-all -D_FORTIFY_SOURCE=2 -fPIC -Wformat -Wformat-security -Wall -DLIBEXECHELPER_BUILD -std=gnu11
-LDFLAGS += -ldl -pthread
+CFLAGS += $(HAVE_FATAL_WARNINGS) -O0 -g $(X11_CFLAGS) $(HAVE_X11) -DVERSION='"$(VERSION)"' -fstack-protector-all -D_FORTIFY_SOURCE=2 -fPIC -Wformat -Wformat-security -Wall -DLIBEXECHELPER_BUILD -std=gnu11
+LDFLAGS += -ldl -pthread $(X11_LIBS)
 
 all: libexechelper.so libexechelperdecorations.so
 
@@ -17,11 +20,11 @@ all: libexechelper.so libexechelperdecorations.so
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
 libexechelper.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o ../lib/exechelper-logger.o
-	$(CC) $(LDFLAGS) -shared -fPIC -ldl -lpthread -lX11 -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-logger.o ../lib/common.o $(CFLAGS) $(LDFLAGS)
+	$(CC) -shared -fPIC -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-logger.o ../lib/common.o $(CFLAGS) $(LDFLAGS)
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
 libexechelperdecorations.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o
-	$(CC) $(LDFLAGS) -shared -fPIC -ldl -lpthread -lX11 -o libexechelperdecorations.so libexechelperdecorations.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS) $(LDFLAGS)
+	$(CC) -shared -fPIC -o libexechelperdecorations.so libexechelperdecorations.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS) $(LDFLAGS)
 
 test: $(OBJS)
 	$(CC) -lrt -o exec-helper-test test.c $(CFLAGS)
