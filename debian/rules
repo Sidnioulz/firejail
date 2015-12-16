@@ -20,5 +20,5 @@ override_dh_auto_install:
 	# documentation will be installed by debhelper
 	rm --verbose -rf debian/firejail/usr/share/doc/firejail
 
-override_dh_md5sum:
-	(cd debian/firejail >/dev/null ; find . -type f -regex './etc/firejail/applinks.d/.*' ! -regex './DEBIAN/.*' -printf '%P\0' | LC_ALL=C sort -z | xargs -r0 md5sum > DEBIAN/md5sums) >/dev/null
+override_dh_md5sums: ;
+#	(cd debian/firejail >/dev/null ; find . -type f -regex './etc/firejail/applinks.d/.*' ! -regex './DEBIAN/.*' -printf '%P\0' | LC_ALL=C sort -z | xargs -r0 md5sum > DEBIAN/md5sums) >/dev/null
