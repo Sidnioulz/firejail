@@ -11,6 +11,10 @@ override_dh_fixperms:
 	dh_fixperms
 	chmod 4755 debian/firejail/usr/bin/firejail
 	chmod 4755 debian/firejail/usr/bin/fireexecd
+	chmod 0755 debian/firejail/usr/lib/libexechelperutils.so
+	chmod 0755 debian/firejail/usr/lib/firejail/libexechelper.so
+	chmod 0755 debian/firejail/usr/lib/firejail/libexechelperdecorations.so
+	chmod 0755 debian/firejail/usr/lib/firejail/libtrace.so
 
 override_dh_installchangelogs:
 	dh_installchangelogs RELNOTES upstream
