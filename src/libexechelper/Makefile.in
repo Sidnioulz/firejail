@@ -10,8 +10,8 @@ H_FILE_LIST       = $(wildcard *.[h])
 C_FILE_LIST       = $(wildcard *.c)
 OBJS = $(C_FILE_LIST:.c=.o)
 BINOBJS =  $(foreach file, $(OBJS), $file)
-CFLAGS += $(HAVE_FATAL_WARNINGS) -O0 -g $(X11_CFLAGS) $(HAVE_X11) -DVERSION='"$(VERSION)"' -fstack-protector-all -D_FORTIFY_SOURCE=2 -fPIC -Wformat -Wformat-security -Wall -DLIBEXECHELPER_BUILD -std=gnu11
-LDFLAGS += -ldl -pthread $(X11_LIBS)
+CFLAGS = $(HAVE_FATAL_WARNINGS) -O0 -g $(X11_CFLAGS) $(HAVE_X11) -DVERSION='"$(VERSION)"' -fstack-protector-all -D_FORTIFY_SOURCE=2 -fPIC -Wformat -Wformat-security -Wall -DLIBEXECHELPER_BUILD -std=gnu11
+LDFLAGS = -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -ldl -pthread $(X11_LIBS)
 
 all: libexechelper.so libexechelperdecorations.so
 
