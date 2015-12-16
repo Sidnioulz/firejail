@@ -130,6 +130,7 @@ install: all
 	mkdir -p $(DESTDIR)/$(PREFIX)/include/firejail/
 	install -c -m 0644 src/include/common.h $(DESTDIR)/$(PREFIX)/include/firejail/.
 	install -c -m 0644 src/include/exechelper-datatypes.h $(DESTDIR)/$(PREFIX)/include/firejail/.
+	install -c -m 0644 src/include/exechelper-logger.h $(DESTDIR)/$(PREFIX)/include/firejail/.
 	install -c -m 0644 src/include/exechelper.h $(DESTDIR)/$(PREFIX)/include/firejail/.
 	install -c -m 0644 src/include/libnetlink.h $(DESTDIR)/$(PREFIX)/include/firejail/.
 	install -c -m 0644 src/include/pid.h $(DESTDIR)/$(PREFIX)/include/firejail/.
