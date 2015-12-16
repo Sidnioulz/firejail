@@ -20,6 +20,7 @@
 
 #include "../include/common.h"
 #include "../include/exechelper.h"
+#include "../include/exechelper-logger.h"
 #include <dirent.h>
 #include <errno.h>
 #include <limits.h>

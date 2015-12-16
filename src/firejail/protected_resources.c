@@ -76,7 +76,7 @@ char *get_protected_apps_for_client (void) {
   }
 
 	if (fp == NULL) {
-		fprintf(stderr, "Warning: could not find any file listing protected apps\n");
+		exechelp_logerrv("firejail", "Warning: could not find any file listing protected apps\n");
 	  return NULL;
 	}
 
@@ -98,7 +98,7 @@ char *get_protected_apps_for_client (void) {
 
     // check for overflows
     if (strlen(buf) == EXECHELP_POLICY_LINE_MAX_READ) {
-      fprintf(stderr, "Error: line %d of protected-apps.policy is too long, it should be no longer than %d characters\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
+      exechelp_logerrv("firejail", "Error: line %d of protected-apps.policy is too long, it should be no longer than %d characters\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
 	    return NULL;
     }
 
@@ -109,7 +109,7 @@ char *get_protected_apps_for_client (void) {
     char *sep = NULL;
     if (!exechelp_parse_get_next_separator(buf, &sep, 1)) {
       if (arg_debug)
-        fprintf(stderr, "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>,<profile name>:<path to handler>,...\n", lineno);
+        exechelp_logerrv("firejail", "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>,<profile name>:<path to handler>,...\n", lineno);
 	    return NULL;
     }
 
@@ -181,7 +181,7 @@ char *get_protected_files_for_client (int blacklist) {
   }
 
 	if (fp == NULL) {
-		fprintf(stderr, "Warning: could not find any file listing protected files\n");
+		exechelp_logerrv("firejail", "Warning: could not find any file listing protected files\n");
 	  return NULL;
 	}
 
@@ -198,7 +198,7 @@ char *get_protected_files_for_client (int blacklist) {
 
     // check for overflows
     if (strlen(buf) == EXECHELP_POLICY_LINE_MAX_READ) {
-      fprintf(stderr, "Error: line %d of protected-files.policy is too long, it should be no longer than %d characters\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
+      exechelp_logerrv("firejail", "Error: line %d of protected-files.policy is too long, it should be no longer than %d characters\n", lineno, EXECHELP_POLICY_LINE_MAX_READ);
 	    return NULL;
     }
 
@@ -209,7 +209,7 @@ char *get_protected_files_for_client (int blacklist) {
     char *sep = NULL;
     if (!exechelp_parse_get_next_separator(buf, &sep, 1)) {
       if (arg_debug)
-        fprintf(stderr, "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>,<profile name>:<path to handler>,...\n", lineno);
+        exechelp_logerrv("firejail", "Error: line %d is malformed, should be of the form: <path to file>///<profile name>:<path to handler>,<profile name>:<path to handler>,...\n", lineno);
 	    return NULL;
     }
 
@@ -220,7 +220,7 @@ char *get_protected_files_for_client (int blacklist) {
     char *realpath = exechelp_coreutils_realpath(buf);
     if (!realpath) {
       if (arg_debug)
-        fprintf(stderr, "Error: line %d is probably malformed, the first part of the line cannot be converted into a valid UNIX path\n", lineno);
+        exechelp_logerrv("firejail", "Error: line %d is probably malformed, the first part of the line cannot be converted into a valid UNIX path\n", lineno);
       return NULL;
     }
 
@@ -241,7 +241,7 @@ char *get_protected_files_for_client (int blacklist) {
       char *path = strchr(prev, ':');
 
       if (!path) {
-        fprintf(stderr, "Error: line %d is malformed, should be of the form: <file>\\0<profile name>:<path to handler>,<profile name>:<path to handler>\n", lineno);
+        exechelp_logerrv("firejail", "Error: line %d is malformed, should be of the form: <file>\\0<profile name>:<path to handler>,<profile name>:<path to handler>\n", lineno);
         return NULL;
       }
 

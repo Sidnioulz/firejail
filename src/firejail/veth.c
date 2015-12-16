@@ -69,7 +69,7 @@ int net_create_veth(const char *dev, const char *nsdev, unsigned pid) {
 	assert(pid);
 
 	if (rtnl_open(&rth, 0) < 0) {
-		fprintf(stderr, "cannot open netlink\n");
+		exechelp_logerrv("firejail", "cannot open netlink\n");
 		exit(1);
 	}
 
@@ -125,7 +125,7 @@ int net_create_macvlan(const char *dev, const char *parent, unsigned pid) {
 	assert(parent);
 
 	if (rtnl_open(&rth, 0) < 0) {
-		fprintf(stderr, "cannot open netlink\n");
+		exechelp_logerrv("firejail", "cannot open netlink\n");
 		exit(1);
 	}
 

@@ -18,6 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "../include/common.h"
+#include "../include/exechelper-logger.h"
 #include "../include/pid.h"
 #include <string.h>
 #include <sys/types.h>
@@ -36,7 +37,7 @@ void pid_getmem(unsigned pid, unsigned *rss, unsigned *shared) {
 	// open stat file
 	char *file;
 	if (asprintf(&file, "/proc/%u/statm", pid) == -1) {
-		perror("asprintf");
+		exechelp_perror("firejail", "asprintf");
 		exit(1);
 	}
 	FILE *fp = fopen(file, "r");
@@ -61,7 +62,7 @@ void pid_get_cpu_time(unsigned pid, unsigned *utime, unsigned *stime) {
 	// open stat file
 	char *file;
 	if (asprintf(&file, "/proc/%u/stat", pid) == -1) {
-		perror("asprintf");
+		exechelp_perror("firejail", "asprintf");
 		exit(1);
 	}
 	FILE *fp = fopen(file, "r");
@@ -95,7 +96,7 @@ unsigned long long pid_get_start_time(unsigned pid) {
 	// open stat file
 	char *file;
 	if (asprintf(&file, "/proc/%u/stat", pid) == -1) {
-		perror("asprintf");
+		exechelp_perror("firejail", "asprintf");
 		exit(1);
 	}
 	FILE *fp = fopen(file, "r");
@@ -140,7 +141,7 @@ uid_t pid_get_uid(pid_t pid) {
 	// open stat file
 	char *file;
 	if (asprintf(&file, "/proc/%u/status", pid) == -1) {
-		perror("asprintf");
+		exechelp_perror("firejail", "asprintf");
 		exit(1);
 	}
 	FILE *fp = fopen(file, "r");
@@ -313,7 +314,7 @@ void pid_read(pid_t mon_pid) {
 		// open stat file
 		char *file;
 		if (asprintf(&file, "/proc/%u/status", pid) == -1) {
-			perror("asprintf");
+			exechelp_perror("firejail", "asprintf");
 			exit(1);
 		}
 		FILE *fp = fopen(file, "r");
@@ -360,7 +361,7 @@ void pid_read(pid_t mon_pid) {
 					ptr++;
 				}
 				if (*ptr == '\0') {
-					fprintf(stderr, "Error: cannot read /proc file\n");
+					exechelp_logerrv("firejail", "Error: cannot read /proc file\n");
 					exit(1);
 				}
 				unsigned parent = atoi(ptr);

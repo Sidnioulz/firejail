@@ -37,6 +37,7 @@
 
 #include "../include/common.h"
 #include "../include/exechelper.h"
+#include "../include/exechelper-logger.h"
 
 int arg_debug = DEBUGLVL;
 pthread_mutex_t commandmutex = PTHREAD_MUTEX_INITIALIZER;
@@ -61,6 +62,43 @@ void load(void) {
   if (arg_debug >= 2)
     printf("DEBUG: starting Firejail's execution helper in debug mode.\n");
 }
+
+int fprintf(FILE *stream, const char *format, ...) {
+  static typeof(fprintf) *original_fprintf = NULL;
+  if (!original_fprintf)
+    original_fprintf = dlsym(RTLD_NEXT, "fprintf");
+
+  va_list args;
+  va_start(args, format);
+
+  if (stream == stderr)
+    exechelp_log("firejail-client", format, args);
+
+  int ret = -1;
+  if (original_fprintf)
+    ret = original_fprintf(stream, format, args);
+
+  va_end(args);
+  return ret;
+}
+
+// GCC optimizes fprintf to fwrite
+// to make original program use fprintf exactly, compile the program (not this library) with -fno-builtin-fprintf
+size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
+  static typeof(fwrite) *original_fwrite = NULL;
+  if (!original_fwrite)
+    original_fwrite = dlsym(RTLD_NEXT, "fwrite");
+
+  if (stream == stderr)
+    exechelp_logv("firejail-client", "%s", (const char *)ptr);
+
+  size_t ret = -1;
+  if (original_fwrite)
+    original_fwrite(ptr, size, nmemb, stream);
+
+  return ret;
+}
+
 
 
 #define _SERVER_SOCKET_COUNTER_LIMIT_SECS   10

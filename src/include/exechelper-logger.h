@@ -29,6 +29,9 @@
 
 ssize_t exechelp_log(const char *id, const char *fmt, va_list args);
 ssize_t exechelp_logv(const char *id, const char *fmt, ...);
+ssize_t exechelp_logerr(const char *id, const char *fmt, va_list args);
+ssize_t exechelp_logerrv(const char *id, const char *fmt, ...);
+void exechelp_perror(const char *id, const char *str);
 void exechelp_log_close(void);
 
 extern int arg_debug;

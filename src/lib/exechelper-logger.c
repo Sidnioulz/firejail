@@ -113,10 +113,10 @@ static int exechelp_log_get_handle(const char *id, int reset) {
       date[0] = '\0';
 
     if (id) {
-      if (asprintf(&path, "%s/.local/share/firejail/%s_%s_%d.log", env, id, date, getpid()) == -1)
+      if (asprintf(&path, "%s/.local/share/firejail/%s_%d_%s.log", env, id, getpid(), date) == -1)
         return -1;
     } else {
-      if (asprintf(&path, "%s/.local/share/firejail/%s_%d.log", env, date, getpid()) == -1)
+      if (asprintf(&path, "%s/.local/share/firejail/%d_%s.log", env, getpid(), date) == -1)
         return -1;
     }
 
@@ -140,7 +140,7 @@ static void exechelp_log_cleanup()
 }
 
 ssize_t exechelp_log(const char *id, const char *fmt, va_list args) {
-pthread_mutex_lock(&log_mutex);
+  pthread_mutex_lock(&log_mutex);
   ssize_t  ret = 0;
   char    *buf;
   char    *buf2;
@@ -155,7 +155,6 @@ pthread_mutex_lock(&log_mutex);
     pthread_mutex_unlock(&log_mutex);
     return -1;
   }
-
 
   if (id) {
     if (asprintf(&buf2, "[%s] %s", id, buf) == -1) {
@@ -184,6 +183,30 @@ ssize_t exechelp_logv(const char *id, const char *fmt, ...) {
   ssize_t ret = exechelp_log(id, fmt, args);
   va_end(args);
   return ret;
+}
+
+ssize_t exechelp_logerr(const char *id, const char *fmt, va_list args) {
+  vfprintf(stderr, fmt, args);
+  return exechelp_log(id, fmt, args);
+}
+
+ssize_t exechelp_logerrv(const char *id, const char *fmt, ...) {
+  va_list args;
+
+  va_start(args, fmt);
+  ssize_t ret = exechelp_log(id, fmt, args);
+  va_end(args);
+
+  va_start(args, fmt);
+  vfprintf(stderr, fmt, args);
+  va_end(args);
+
+  return ret;
+}
+
+void exechelp_perror(const char *id, const char *msg) {
+  exechelp_logv(id, "Error: %s: %s", msg, strerror(errno));
+  perror(msg);
 }
 
 void exechelp_log_close(void) {

@@ -54,7 +54,8 @@ int check_kernel_procs(void) {
 		// open file
 		FILE *fp = fopen(fname, "r");
 		if (!fp) {
-			fprintf(stderr, "Warning: cannot open %s\n", fname);
+			exechelp_logerrv("firejail", "Warning: cannot open %s\n", fname);
+			exechelp_logv("firejail", "Warning: cannot open %s\n", fname);
 			free(fname);
 			continue;
 		}
@@ -62,7 +63,8 @@ int check_kernel_procs(void) {
 		// read file
 		char buf[100];
 		if (fgets(buf, 10, fp) == NULL) {
-			fprintf(stderr, "Warning: cannot read %s\n", fname);
+			exechelp_logerrv("firejail", "Warning: cannot read %s\n", fname);
+			exechelp_logv("firejail", "Warning: cannot read %s\n", fname);
 			fclose(fp);
 			free(fname);
 			continue;
@@ -138,7 +140,7 @@ void run_no_sandbox(int argc, char **argv) {
 	}
 	
 	// start the program in /bin/sh
-	fprintf(stderr, "Warning: an existing sandbox was detected. "
+	exechelp_logerrv("firejail", "Warning: an existing sandbox was detected. "
 		"%s will run without any additional sandboxing features in a /bin/sh shell\n", command);
 	rv = system(command);
 	(void) rv;

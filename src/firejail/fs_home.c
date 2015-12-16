@@ -124,7 +124,7 @@ static int store_xauthority(void) {
 	if (stat(src, &s) == 0) {	
 		int rv = copy_file(src, dest);
 		if (rv) {
-			fprintf(stderr, "Warning: cannot transfer .Xauthority in private home directory\n");
+			exechelp_logerrv("firejail", "Warning: cannot transfer .Xauthority in private home directory\n");
 			return 0;
 		}
 		return 1; // file copied
@@ -145,7 +145,7 @@ static void copy_xauthority(void) {
 		errExit("asprintf");
 	int rv = copy_file(src, dest);
 	if (rv)
-		fprintf(stderr, "Warning: cannot transfer .Xauthority in private home directory\n");
+		exechelp_logerrv("firejail", "Warning: cannot transfer .Xauthority in private home directory\n");
 
 	// set permissions and ownership
 	if (chown(dest, getuid(), getgid()) < 0)
@@ -175,7 +175,7 @@ void fs_private_homedir(void) {
 	gid_t g = getgid();
 	struct stat s;
 	if (stat(homedir, &s) == -1) {
-		fprintf(stderr, "Error: cannot find user home directory\n");
+		exechelp_logerrv("firejail", "Error: cannot find user home directory\n");
 		exit(1);
 	}
 	
@@ -272,7 +272,7 @@ static void check_dir_or_file(const char *name) {
 	struct stat s;
 	char *fname = expand_home(name, cfg.homedir);
 	if (!fname) {
-		fprintf(stderr, "Error: file %s not found.\n", name);
+		exechelp_logerrv("firejail", "Error: file %s not found.\n", name);
 		exit(1);
 	}
 	if (fname[0] != '/') {
@@ -286,7 +286,7 @@ static void check_dir_or_file(const char *name) {
 	if (arg_debug)
 		printf("Checking %s\n", fname);		
 	if (stat(fname, &s) == -1) {
-		fprintf(stderr, "Error: file %s not found.\n", fname);
+		exechelp_logerrv("firejail", "Error: file %s not found.\n", fname);
 		exit(1);
 	}
 	
@@ -294,7 +294,7 @@ static void check_dir_or_file(const char *name) {
 	uid_t uid = getuid();
 	gid_t gid = getgid();
 	if (s.st_uid != uid || s.st_gid != gid) {
-		fprintf(stderr, "Error: only files or directories created by the current user are allowed.\n");
+		exechelp_logerrv("firejail", "Error: only files or directories created by the current user are allowed.\n");
 		exit(1);
 	}
 
@@ -309,14 +309,14 @@ static void check_dir_or_file(const char *name) {
 		return;
 	}
 	
-	fprintf(stderr, "Error: invalid file type, %s.\n", fname);
+	exechelp_logerrv("firejail", "Error: invalid file type, %s.\n", fname);
 	exit(1);
 }
 
 // check directory list specified by user (--private-home option) - exit if it fails
 void fs_check_home_list(void) {
 	if (strstr(cfg.home_private_keep, "..")) {
-		fprintf(stderr, "Error: invalid private-home list\n");
+		exechelp_logerrv("firejail", "Error: invalid private-home list\n");
 		exit(1);
 	}
 	
@@ -343,7 +343,7 @@ void fs_check_private_dir(void) {
 	 || !is_dir(cfg.home_private)
 	 || is_link(cfg.home_private)
 	 || strstr(cfg.home_private, "..")) {
-		fprintf(stderr, "Error: invalid private directory\n");
+		exechelp_logerrv("firejail", "Error: invalid private directory\n");
 		exit(1);
 	}
 
@@ -351,14 +351,14 @@ void fs_check_private_dir(void) {
 	struct stat s2;
 	int rv = stat(cfg.home_private, &s2);
 	if (rv < 0) {
-		fprintf(stderr, "Error: cannot find %s directory\n", cfg.home_private);
+		exechelp_logerrv("firejail", "Error: cannot find %s directory\n", cfg.home_private);
 		exit(1);
 	}
 
 	struct stat s1;
 	rv = stat(cfg.homedir, &s1);
 	if (rv < 0) {
-		fprintf(stderr, "Error: cannot find %s directory, full path name required\n", cfg.homedir);
+		exechelp_logerrv("firejail", "Error: cannot find %s directory, full path name required\n", cfg.homedir);
 		exit(1);
 	}
 	if (s1.st_uid != s2.st_uid) {
@@ -385,7 +385,7 @@ static void duplicate(char *name) {
 	
 	char *fname = expand_home(name, cfg.homedir);
 	if (!fname) {
-		fprintf(stderr, "Error: file %s not found.\n", name);
+		exechelp_logerrv("firejail", "Error: file %s not found.\n", name);
 		exit(1);
 	}
 	if (fname[0] != '/') {
@@ -426,7 +426,7 @@ void fs_private_home_list(void) {
 	gid_t g = getgid();
 	struct stat s;
 	if (stat(homedir, &s) == -1) {
-		fprintf(stderr, "Error: cannot find user home directory\n");
+		exechelp_logerrv("firejail", "Error: cannot find user home directory\n");
 		exit(1);
 	}
 

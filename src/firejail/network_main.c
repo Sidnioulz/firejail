@@ -51,13 +51,13 @@ void net_configure_bridge(Bridge *br, char *dev_name) {
 			br->devsandbox = newname;
 		}			
 		else {
-			fprintf(stderr, "Error: cannot find network device %s\n", br->dev);
+			exechelp_logerrv("firejail", "Error: cannot find network device %s\n", br->dev);
 			exit(1);
 		}
 	}
 
 	if (net_get_if_addr(br->dev, &br->ip, &br->mask, br->mac)) {
-		fprintf(stderr, "Error: interface %s is not configured\n", br->dev);
+		exechelp_logerrv("firejail", "Error: interface %s is not configured\n", br->dev);
 		exit(1);
 	}
 	if (arg_debug) {
@@ -72,7 +72,7 @@ void net_configure_bridge(Bridge *br, char *dev_name) {
 	uint32_t range = ~br->mask + 1;		  // the number of potential addresses
 	// this software is not supported for /31 networks
 	if (range < 4) {
-		fprintf(stderr, "Error: the software is not supported for /31 networks\n");
+		exechelp_logerrv("firejail", "Error: the software is not supported for /31 networks\n");
 		exit(1);
 	}
 	br->configured = 1;
@@ -90,12 +90,12 @@ void net_configure_sandbox_ip(Bridge *br) {
 		// check network range
 		char *rv = in_netrange(br->ipsandbox, br->ip, br->mask);
 		if (rv) {
-			fprintf(stderr, "%s", rv);
+			exechelp_logerrv("firejail", "%s", rv);
 			exit(1);
 		}
 		// send an ARP request and check if there is anybody on this IP address
 		if (arp_check(br->dev, br->ipsandbox, br->ip)) {
-			fprintf(stderr, "Error: IP address %d.%d.%d.%d is already in use\n", PRINT_IP(br->ipsandbox));
+			exechelp_logerrv("firejail", "Error: IP address %d.%d.%d.%d is already in use\n", PRINT_IP(br->ipsandbox));
 			exit(1);
 		}
 	}
@@ -160,7 +160,7 @@ void check_default_gw(uint32_t defaultgw) {
 			return;
 	}
 
-	fprintf(stderr, "Error: default gateway %d.%d.%d.%d is not in the range of any network\n", PRINT_IP(defaultgw));
+	exechelp_logerrv("firejail", "Error: default gateway %d.%d.%d.%d is not in the range of any network\n", PRINT_IP(defaultgw));
 	exit(1);
 }
 
@@ -177,7 +177,7 @@ void net_check_cfg(void) {
 
 	// --defaultgw requires a network
 	if (cfg.defaultgw && net_configured == 0) {
-		fprintf(stderr, "Error: option --defaultgw requires at least one network to be configured\n");
+		exechelp_logerrv("firejail", "Error: option --defaultgw requires at least one network to be configured\n");
 		exit(1);
 	}
 
@@ -186,7 +186,7 @@ void net_check_cfg(void) {
 
 	// --net=none
 	if (arg_nonetwork && net_configured) {
-		fprintf(stderr, "Error: --net and --net=none are mutually exclusive\n");
+		exechelp_logerrv("firejail", "Error: --net and --net=none are mutually exclusive\n");
 		exit(1);
 	}
 
@@ -214,12 +214,12 @@ void net_check_cfg(void) {
 
 void net_dns_print_name(const char *name) {
 	if (!name || strlen(name) == 0) {
-		fprintf(stderr, "Error: invalid sandbox name\n");
+		exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
 		exit(1);
 	}
 	pid_t pid;
 	if (name2pid(name, &pid)) {
-		fprintf(stderr, "Error: cannot find sandbox %s\n", name);
+		exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", name);
 		exit(1);
 	}
 
@@ -254,7 +254,7 @@ void net_dns_print(pid_t pid) {
 	// access /etc/resolv.conf
 	FILE *fp = fopen(fname, "r");
 	if (!fp) {
-		fprintf(stderr, "Error: cannot access /etc/resolv.conf\n");
+		exechelp_logerrv("firejail", "Error: cannot access /etc/resolv.conf\n");
 		exit(1);
 	}
 	

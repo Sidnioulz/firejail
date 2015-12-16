@@ -4892,7 +4892,7 @@ static int syscall_find_name(const char *name) {
 int syscall_check_list(const char *slist, void (*callback)(int)) {
 	// don't allow empty lists
 	if (slist == NULL || *slist == '\0') {
-		fprintf(stderr, "Error: empty syscall lists are not allowed\n");
+		exechelp_logerrv("firejail", "Error: empty syscall lists are not allowed\n");
 		return -1;
 	}
 
@@ -4910,7 +4910,7 @@ int syscall_check_list(const char *slist, void (*callback)(int)) {
 			*ptr = '\0';
 			int nr = syscall_find_name(start);
 			if (nr == -1)
-				fprintf(stderr, "Warning: syscall %s not found\n", start);
+				exechelp_logerrv("firejail", "Warning: syscall %s not found\n", start);
 			else if (callback != NULL)
 				callback(nr);
 				
@@ -4921,7 +4921,7 @@ int syscall_check_list(const char *slist, void (*callback)(int)) {
 	if (*start != '\0') {
 		int nr = syscall_find_name(start);
 		if (nr == -1)
-			fprintf(stderr, "Warning: syscall %s not found\n", start);
+			exechelp_logerrv("firejail", "Warning: syscall %s not found\n", start);
 		else if (callback != NULL)
 			callback(nr);
 	}

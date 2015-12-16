@@ -146,7 +146,7 @@ void fs_var_log(void) {
 			errExit("chmod");
 	}
 	else
-		fprintf(stderr, "Warning: cannot mount tmpfs in top of /var/log\n");
+		exechelp_logerrv("firejail", "Warning: cannot mount tmpfs in top of /var/log\n");
 }
 
 void fs_var_lib(void) {
@@ -277,7 +277,7 @@ void fs_var_lock(void) {
 			free(lnk);
 		}
 		else {
-			fprintf(stderr, "Warning: /var/lock not mounted\n");
+			exechelp_logerrv("firejail", "Warning: /var/lock not mounted\n");
 			dbg_test_dir("/var/lock");
 		}
 	}
@@ -294,7 +294,7 @@ void fs_var_tmp(void) {
 		}
 	}
 	else {
-		fprintf(stderr, "Warning: /var/tmp not mounted\n");
+		exechelp_logerrv("firejail", "Warning: /var/tmp not mounted\n");
 		dbg_test_dir("/var/tmp");
 	}
 }
@@ -307,7 +307,7 @@ void fs_var_utmp(void) {
 	if (stat("/var/run/utmp", &s) == 0)
 		utmp_group = s.st_gid;
 	else {
-		fprintf(stderr, "Warning: cannot find /var/run/utmp\n");
+		exechelp_logerrv("firejail", "Warning: cannot find /var/run/utmp\n");
 		return;
 	}
 

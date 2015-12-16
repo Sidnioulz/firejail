@@ -15,8 +15,8 @@ LDFLAGS += -pie -Wl,-z,relro -Wl,-z,now
 %.o : %.c $(H_FILE_LIST)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
-firemon: $(OBJS) ../lib/common.o ../lib/pid.o
-	$(CC)  $(LDFLAGS) -o $@ $(OBJS) ../lib/common.o ../lib/pid.o $(LIBS)
+firemon: $(OBJS) ../lib/common.o ../lib/pid.o ../lib/exechelper-logger.o
+	$(CC)  $(LDFLAGS) -o $@ $(OBJS) ../lib/common.o ../lib/pid.o ../lib/exechelper-logger.o $(LIBS)
 
 clean:; rm -f *.o firemon
 

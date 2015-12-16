@@ -58,7 +58,7 @@ void save_nogroups(void) {
 			errExit("chown");
 	}
 	else {
-		fprintf(stderr, "Error: cannot save nogroups state\n");
+		exechelp_logerrv("firejail", "Error: cannot save nogroups state\n");
 		free(fname);
 		exit(1);
 	}
@@ -77,7 +77,7 @@ static void sandbox_if_up(Bridge *br) {
 	if (br->arg_ip_none == 1);	// do nothing
 	else if (br->arg_ip_none == 0 && br->macvlan == 0) {
 		if (br->ipsandbox == br->ip) {
-			fprintf(stderr, "Error: %d.%d.%d.%d is interface %s address.\n", PRINT_IP(br->ipsandbox), br->dev);
+			exechelp_logerrv("firejail", "Error: %d.%d.%d.%d is interface %s address.\n", PRINT_IP(br->ipsandbox), br->dev);
 			exit(1);
 		}
 		
@@ -95,13 +95,13 @@ static void sandbox_if_up(Bridge *br) {
 			br->ipsandbox = arp_assign(dev, br); //br->ip, br->mask);
 		else {
 			if (br->ipsandbox == br->ip) {
-				fprintf(stderr, "Error: %d.%d.%d.%d is interface %s address.\n", PRINT_IP(br->ipsandbox), br->dev);
+				exechelp_logerrv("firejail", "Error: %d.%d.%d.%d is interface %s address.\n", PRINT_IP(br->ipsandbox), br->dev);
 				exit(1);
 			}
 			
 			uint32_t rv = arp_check(dev, br->ipsandbox, br->ip);
 			if (rv) {
-				fprintf(stderr, "Error: the address %d.%d.%d.%d is already in use.\n", PRINT_IP(br->ipsandbox));
+				exechelp_logerrv("firejail", "Error: the address %d.%d.%d.%d is already in use.\n", PRINT_IP(br->ipsandbox));
 				exit(1);
 			}
 		}
@@ -126,7 +126,7 @@ static void chk_chroot(void) {
 			return;
 	}
 	
-	fprintf(stderr, "Error: cannot mount filesystem as slave\n");
+	exechelp_logerrv("firejail", "Error: cannot mount filesystem as slave\n");
 	exit(1);
 }
 
@@ -200,7 +200,7 @@ int sandbox(void* sandbox_arg) {
 			
 			// disable all capabilities
 			if (arg_caps_default_filter || arg_caps_list)
-				fprintf(stderr, "Warning: all capabilities disabled for a regular user during chroot\n");
+				exechelp_logerrv("firejail", "Warning: all capabilities disabled for a regular user during chroot\n");
 			arg_caps_drop_all = 1;
 			
 			// drop all supplementary groups; /etc/group file inside chroot
@@ -315,7 +315,7 @@ int sandbox(void* sandbox_arg) {
 		if (cfg.defaultgw) {
 			// set the default route
 			if (net_add_route(0, 0, cfg.defaultgw))
-				fprintf(stderr, "Warning: cannot configure default route\n");
+				exechelp_logerrv("firejail", "Warning: cannot configure default route\n");
 		}
 			
 		if (arg_debug)
@@ -437,8 +437,8 @@ int sandbox(void* sandbox_arg) {
 	if (arg_noroot) {
 		int rv = unshare(CLONE_NEWUSER);
 		if (rv == -1) {
-			fprintf(stderr, "Error: cannot mount a new user namespace\n");
-			perror("unshare");
+			exechelp_logerrv("firejail", "Error: cannot mount a new user namespace\n");
+			exechelp_perror("firejail", "unshare");
 			drop_privs(arg_nogroups);
 		}
 	}
@@ -532,6 +532,6 @@ int sandbox(void* sandbox_arg) {
 	}
 	
 
-	perror("execvp");
+	exechelp_perror("firejail", "execvp");
 	return 0;
 }

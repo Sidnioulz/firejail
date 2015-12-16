@@ -45,7 +45,7 @@ void fs_build_firejail_dir(void) {
 	}
 	else { // check /tmp/firejail directory belongs to root end exit if doesn't!
 		if (s.st_uid != 0 || s.st_gid != 0) {
-			fprintf(stderr, "Error: non-root %s directory, exiting...\n", FIREJAIL_DIR);
+			exechelp_logerrv("firejail", "Error: non-root %s directory, exiting...\n", FIREJAIL_DIR);
 			exit(1);
 		}
 	}
@@ -174,8 +174,9 @@ static void disable_file(OPERATION op, const char *filename, const char *emptydi
 		// some distros put all executables under /usr/bin and make /bin a symbolic link
 		if ((strcmp(fname, "/bin") == 0 || strcmp(fname, "/usr/bin") == 0) &&
 		      is_link(filename) &&
-		      S_ISDIR(s.st_mode))
-			fprintf(stderr, "Warning: %s directory link was not blacklisted\n", filename);
+		      S_ISDIR(s.st_mode)) {
+			exechelp_logerrv("firejail", "Warning: %s directory link was not blacklisted\n", filename);
+		}
 			
 		else {
 			if (arg_debug)
@@ -226,7 +227,7 @@ static void globbing(OPERATION op, const char *pattern, const char *noblacklist[
 	// GLOB_NOCHECK makes that okay.
 	int globerr = glob(pattern, GLOB_NOCHECK | GLOB_NOSORT, NULL, &globbuf);
 	if (globerr) {
-		fprintf(stderr, "Error: failed to glob pattern %s\n", pattern);
+		exechelp_logerrv("firejail", "Error: failed to glob pattern %s\n", pattern);
 		exit(1);
 	}
 
@@ -245,7 +246,7 @@ static void globbing(OPERATION op, const char *pattern, const char *noblacklist[
 				break;
 			}
 			else {
-				fprintf(stderr, "Error: failed to compare path %s with pattern %s\n", path, noblacklist[j]);
+				exechelp_logerrv("firejail", "Error: failed to compare path %s with pattern %s\n", path, noblacklist[j]);
 				exit(1);
 			}
 		}
@@ -279,18 +280,18 @@ void fs_blacklist(const char *homedir) {
 			char *dname1 = entry->data + 5;
 			char *dname2 = split_comma(dname1);
 			if (dname2 == NULL) {
-				fprintf(stderr, "Error: second directory missing in bind command\n");
+				exechelp_logerrv("firejail", "Error: second directory missing in bind command\n");
 				entry = entry->next;
 				continue;
 			}
 			struct stat s;
 			if (stat(dname1, &s) == -1) {
-				fprintf(stderr, "Error: cannot find directories for bind command\n");
+				exechelp_logerrv("firejail", "Error: cannot find directories for bind command\n");
 				entry = entry->next;
 				continue;
 			}
 			if (stat(dname2, &s) == -1) {
-				fprintf(stderr, "Error: cannot find directories for bind command\n");
+				exechelp_logerrv("firejail", "Error: cannot find directories for bind command\n");
 				entry = entry->next;
 				continue;
 			}
@@ -338,7 +339,7 @@ void fs_blacklist(const char *homedir) {
 			op = MOUNT_TMPFS;
 		}			
 		else {
-			fprintf(stderr, "Error: invalid profile line %s\n", entry->data);
+			exechelp_logerrv("firejail", "Error: invalid profile line %s\n", entry->data);
 			entry = entry->next;
 			continue;
 		}
@@ -414,7 +415,7 @@ void fs_rdonly_noexit(const char *dir) {
 		if (mount(NULL, dir, NULL, MS_BIND|MS_REMOUNT|MS_RDONLY|MS_REC, NULL) < 0)
 			merr = 1;
 		if (merr)
-			fprintf(stderr, "Warning: cannot mount %s read-only\n", dir); 
+			exechelp_logerrv("firejail", "Warning: cannot mount %s read-only\n", dir); 
 	}
 }
 
@@ -438,10 +439,12 @@ void fs_proc_sys_dev_boot(void) {
 	/* Mount a version of /sys that describes the network namespace */
 	if (arg_debug)
 		printf("Remounting /sys directory\n");
-	if (umount2("/sys", MNT_DETACH) < 0) 
-		fprintf(stderr, "Warning: failed to unmount /sys\n");
-	if (mount("sysfs", "/sys", "sysfs", MS_RDONLY|MS_NOSUID|MS_NOEXEC|MS_NODEV|MS_REC, NULL) < 0)
-		fprintf(stderr, "Warning: failed to mount /sys\n");
+	if (umount2("/sys", MNT_DETACH) < 0) {
+		exechelp_logerrv("firejail", "Warning: failed to unmount /sys\n");
+	}
+	if (mount("sysfs", "/sys", "sysfs", MS_RDONLY|MS_NOSUID|MS_NOEXEC|MS_NODEV|MS_REC, NULL) < 0) {
+		exechelp_logerrv("firejail", "Warning: failed to mount /sys\n");
+	}
 
 //	if (mount("sysfs", "/sys", "sysfs", MS_RDONLY|MS_NOSUID|MS_NOEXEC|MS_NODEV|MS_REC, NULL) < 0)
 //		errExit("mounting /sys");
@@ -604,7 +607,7 @@ void fs_overlayfs(void) {
 	int major;
 	int minor;
 	if (2 != sscanf(u.release, "%d.%d", &major, &minor)) {
-		fprintf(stderr, "Error: cannot extract Linux kernel version: %s\n", u.version);
+		exechelp_logerrv("firejail", "Error: cannot extract Linux kernel version: %s\n", u.version);
 		exit(1);
 	}
 	
@@ -612,7 +615,7 @@ void fs_overlayfs(void) {
 		printf("Linux kernel version %d.%d\n", major, minor);
 	int oldkernel = 0;
 	if (major < 3) {
-		fprintf(stderr, "Error: minimum kernel version required 3.x\n");
+		exechelp_logerrv("firejail", "Error: minimum kernel version required 3.x\n");
 		exit(1);
 	}
 	if (major == 3 && minor < 18)
@@ -636,7 +639,7 @@ void fs_overlayfs(void) {
 		// set base for working and diff directories
 		basedir = cfg.overlay_dir;
 		if (mkdir(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
-			fprintf(stderr, "Error: cannot create overlay directory\n");
+			exechelp_logerrv("firejail", "Error: cannot create overlay directory\n");
 			exit(1);
 		}
 	}
@@ -667,7 +670,7 @@ void fs_overlayfs(void) {
 	char *option;
 	if (oldkernel) { // old Ubuntu/OpenSUSE kernels
 		if (arg_overlay_keep) {
-			fprintf(stderr, "Error: option --overlay= not available for kernels older than 3.18\n");
+			exechelp_logerrv("firejail", "Error: option --overlay= not available for kernels older than 3.18\n");
 			exit(1);
 		}
 		if (asprintf(&option, "lowerdir=/,upperdir=%s", odiff) == -1)
@@ -729,7 +732,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/dev", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		fprintf(stderr, "Error: cannot find /dev in chroot directory\n");
+		exechelp_logerrv("firejail", "Error: cannot find /dev in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -738,7 +741,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/var/tmp", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		fprintf(stderr, "Error: cannot find /var/tmp in chroot directory\n");
+		exechelp_logerrv("firejail", "Error: cannot find /var/tmp in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -747,7 +750,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/proc", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		fprintf(stderr, "Error: cannot find /proc in chroot directory\n");
+		exechelp_logerrv("firejail", "Error: cannot find /proc in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -756,7 +759,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/tmp", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		fprintf(stderr, "Error: cannot find /tmp in chroot directory\n");
+		exechelp_logerrv("firejail", "Error: cannot find /tmp in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -765,7 +768,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/bin/bash", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		fprintf(stderr, "Error: cannot find /bin/bash in chroot directory\n");
+		exechelp_logerrv("firejail", "Error: cannot find /bin/bash in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -810,8 +813,9 @@ void fs_chroot(const char *rootdir) {
 		errExit("asprintf");
 	if (arg_debug)
 		printf("Updating /etc/resolv.conf in %s\n", fname);
-	if (copy_file("/etc/resolv.conf", fname) == -1)
-		fprintf(stderr, "Warning: /etc/resolv.conf not initialized\n");
+	if (copy_file("/etc/resolv.conf", fname) == -1) {
+		exechelp_logerrv("firejail", "Warning: /etc/resolv.conf not initialized\n");
+	}
 		
 	// chroot into the new directory
 	if (arg_debug)

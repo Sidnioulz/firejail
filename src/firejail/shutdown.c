@@ -25,13 +25,13 @@
 
 void shut_name(const char *name) {
 	if (!name || strlen(name) == 0) {
-		fprintf(stderr, "Error: invalid sandbox name\n");
+		exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
 		exit(1);
 	}
 	
 	pid_t pid;
 	if (name2pid(name, &pid)) {
-		fprintf(stderr, "Error: cannot find sandbox %s\n", name);
+		exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", name);
 		exit(1);
 	}
 
@@ -67,7 +67,7 @@ void shut(pid_t pid) {
 		if (stat(dir, &s) < 0)
 			errExit("stat");
 		if (s.st_uid != uid) {
-			fprintf(stderr, "Error: permission is denied to shutdown a sandbox created by a different user.\n");
+			exechelp_logerrv("firejail", "Error: permission is denied to shutdown a sandbox created by a different user.\n");
 			exit(1);
 		}
 	}
@@ -80,7 +80,7 @@ void shut(pid_t pid) {
 	// try to open stat file
 	char *file;
 	if (asprintf(&file, "/proc/%u/status", pid) == -1) {
-		perror("asprintf");
+		exechelp_perror("firejail", "asprintf");
 		exit(1);
 	}
 	FILE *fp = fopen(file, "r");

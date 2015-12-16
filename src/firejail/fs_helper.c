@@ -328,6 +328,7 @@ static int fs_helper_overlay_etc(void) {
 	int minor;
 	if (2 != sscanf(u.release, "%d.%d", &major, &minor)) {
 		fprintf(stderr, "Error: cannot extract Linux kernel version: %s\n", u.version);
+		exechelp_logv("firejail", "cannot extract Linux kernel version: %s\n", u.version);
 		errExit("kernel version");
 	}
 	
@@ -336,6 +337,7 @@ static int fs_helper_overlay_etc(void) {
 	int oldkernel = 0;
 	if (major < 3) {
 		fprintf(stderr, "Error: minimum kernel version required 3.x\n");
+		exechelp_logv("firejail", "minimum kernel version required 3.x\n");
 		errExit("kernel version");
 	}
 	if (major == 3 && minor < 18)
@@ -430,6 +432,7 @@ void fs_helper_mount_self_dir(void) {
 	struct stat s;
 	if (stat(SELF_DIR, &s) == -1) {
 		fprintf(stderr, "Error: cannot find %s directory\n", SELF_DIR);
+		exechelp_logv("firejail", "cannot find %s directory\n", SELF_DIR);
 		exit(1);
 	}
 
@@ -476,6 +479,7 @@ void fs_helper_mount_self_dir(void) {
 		  printf("Mount-bind %s on top of /etc/firejail/self\n", SELF_DIR);
 	  if (mount(SELF_DIR, "/etc/firejail/self", NULL, MS_BIND|MS_REC, NULL) < 0) {
 	    fprintf(stderr, "Error: could not mount-bind %s on top of /etc/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
+	    exechelp_logv("firejail", "could not mount-bind %s on top of /etc/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
 	  }
   }
 }

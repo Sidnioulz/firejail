@@ -38,7 +38,7 @@ void fs_hostname(const char *hostname) {
 			errExit("asprintf");
 		FILE *fp = fopen(fhost, "w");
 		if (!fp) {
-			fprintf(stderr, "Error: cannot create %s\n", fhost);
+			exechelp_logerrv("firejail", "Error: cannot create %s\n", fhost);
 			free(fhost);
 			exit(1);
 		}
@@ -68,13 +68,13 @@ void fs_hostname(const char *hostname) {
 		/* coverity[toctou] */
 		FILE *fp1 = fopen("/etc/hosts", "r");
 		if (!fp1) {
-			fprintf(stderr, "Error: cannot open /etc/hosts\n");
+			exechelp_logerrv("firejail", "Error: cannot open /etc/hosts\n");
 			free(fhost);
 			exit(1);
 		}
 		FILE *fp2 = fopen(fhost, "w");
 		if (!fp2) {
-			fprintf(stderr, "Error: cannot create %s\n", fhost);
+			exechelp_logerrv("firejail", "Error: cannot create %s\n", fhost);
 			free(fhost);
 			exit(1);
 		}
@@ -124,7 +124,7 @@ void fs_resolvconf(void) {
 			errExit("asprintf");
 		FILE *fp = fopen(fname, "w");
 		if (!fp) {
-			fprintf(stderr, "Error: cannot create %s\n", fname);
+			exechelp_logerrv("firejail", "Error: cannot create %s\n", fname);
 			free(fname);
 			exit(1);
 		}
@@ -149,7 +149,7 @@ void fs_resolvconf(void) {
 		free(fname);
 	}
 	else {
-		fprintf(stderr, "Error: cannot set DNS servers, /etc/resolv.conf file is missing\n");
+		exechelp_logerrv("firejail", "Error: cannot set DNS servers, /etc/resolv.conf file is missing\n");
 		exit(1);
 	}
 }

@@ -15,8 +15,8 @@ all: libexechelper.so libexechelperdecorations.so
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so
-libexechelper.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o
-	$(CC) $(LDFLAGS) -shared -fPIC -ldl -lpthread -lX11 -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o $(CFLAGS)
+libexechelper.so: $(OBJS) ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/common.o ../lib/exechelper-logger.o
+	$(CC) $(LDFLAGS) -shared -fPIC -ldl -lpthread -lX11 -o libexechelper.so libexechelper.c ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-logger.o ../lib/common.o $(CFLAGS)
 
 
 # gcc -shared -fPIC -ldl traceopen.c -o traceopen.so

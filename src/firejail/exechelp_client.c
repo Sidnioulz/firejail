@@ -176,7 +176,7 @@ void exechelp_set_socket_env_from_pid(pid_t pid) {
 
   while(!found) {
     if (readdir_r(dir, entry, &result)) {
-      fprintf(stderr, "Error when reading runtime directory %s to find child process's socket: %s\n", socketdir, strerror(errno));
+      exechelp_logerrv("firejail", "Error when reading runtime directory %s to find child process's socket: %s\n", socketdir, strerror(errno));
       continue;
     }
 
@@ -198,7 +198,7 @@ void exechelp_set_socket_env_from_pid(pid_t pid) {
     exechelp_set_socket_env_manually(socketpath);
     free(socketpath);
   } else {
-    fprintf(stderr, "Could not find any socket in child process's runtime directory, aborting\n");
+    exechelp_logerrv("firejail", "Could not find any socket in child process's runtime directory, aborting\n");
     exit(-1);
   }
 }
@@ -213,7 +213,7 @@ void exechelp_set_socket_env_manually(char *cmdsocketpath) {
 
 void exechelp_register_socket(void) {
   if (!cmdsocketpath) {
-    fprintf(stderr, "Error: exechelp_register_socket called before its socket was initialised, check the firejail source code.\n");
+    exechelp_logerrv("firejail", "Error: exechelp_register_socket called before its socket was initialised, check the firejail source code.\n");
     exit (-1);
   }
 
@@ -227,7 +227,7 @@ void exechelp_register_socket(void) {
   strcpy(remote.sun_path, EXECHELP_REGISTRATION_SOCKET);
   socklen_t len = strlen(remote.sun_path) + sizeof(remote.sun_family);
   if (connect(s, (struct sockaddr *)&remote, len) == -1) {
-    fprintf(stderr, "Error: the --helper option was given but no execution helper daemon is running. Please run 'firexecd' prior to running client processes with the --helper option.\n");
+    exechelp_logerrv("firejail", "Error: the --helper option was given but no execution helper daemon is running. Please run 'firexecd' prior to running client processes with the --helper option.\n");
     errExit("connect"); 
   }
 
@@ -248,7 +248,7 @@ void exechelp_register_socket(void) {
       reply[received] = '\0';
       char *pol = NULL;
       if(strcmp("ACK", reply) != 0) {
-        fprintf(stderr, "Warning: the execution helper daemon did not allow us to proceed with sending commands for remote execution, setting a client policy that allows all executions internally.\n");
+        exechelp_logerrv("firejail", "Warning: the execution helper daemon did not allow us to proceed with sending commands for remote execution, setting a client policy that allows all executions internally.\n");
         if (asprintf(&pol, "%d", SANDBOX_ITSELF) == -1)
           errExit("asprintf");
       } else {
@@ -263,7 +263,7 @@ void exechelp_register_socket(void) {
       if (received < 0)
         errExit("recv");
       else {
-        fprintf(stderr, "Error: the execution helper daemon has closed the connection. Please verify 'firexecd' functions properly prior to running client processes with the --helper option.\n");
+        exechelp_logerrv("firejail", "Error: the execution helper daemon has closed the connection. Please verify 'firexecd' functions properly prior to running client processes with the --helper option.\n");
         exit(1);
       }
   }

@@ -53,14 +53,14 @@ void drop_privs(int nogroups) {
 		}
 
 		if (rv == -1) {
-			fprintf(stderr, "Warning: cannot extract supplementary group list, dropping them\n");
+			exechelp_logerrv("firejail", "Warning: cannot extract supplementary group list, dropping them\n");
 			if (setgroups(0, NULL) < 0)
 				errExit("setgroups");
 		}
 		else {
 			rv = setgroups(ngroups, groups);
 			if (rv) {
-				fprintf(stderr, "Warning: cannot set supplementary group list, dropping them\n");
+				exechelp_logerrv("firejail", "Warning: cannot set supplementary group list, dropping them\n");
 				if (setgroups(0, NULL) < 0)
 					errExit("setgroups");
 			}
@@ -137,14 +137,14 @@ int copy_file(const char *srcname, const char *destname) {
 	// open source
 	int src = open(srcname, O_RDONLY);
 	if (src < 0) {
-		fprintf(stderr, "Warning: cannot open %s, file not copied\n", srcname);
+		exechelp_logerrv("firejail", "Warning: cannot open %s, file not copied\n", srcname);
 		return -1;
 	}
 
 	// open destination
 	int dst = open(destname, O_CREAT|O_WRONLY|O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (dst < 0) {
-		fprintf(stderr, "Warning: cannot open %s, file not copied\n", destname);
+		exechelp_logerrv("firejail", "Warning: cannot open %s, file not copied\n", destname);
 		close(src);
 		return -1;
 	}
@@ -186,7 +186,7 @@ int is_dir(const char *fname) {
 	else {
 		char *tmp;
 		if (asprintf(&tmp, "%s/", fname) == -1) {
-			fprintf(stderr, "Error: cannot allocate memory, %s:%d\n", __FILE__, __LINE__);
+			exechelp_logerrv("firejail", "Error: cannot allocate memory, %s:%d\n", __FILE__, __LINE__);
 			errExit("asprintf");
 		}		
 		rv = stat(tmp, &s);
@@ -258,7 +258,7 @@ char *line_remove_spaces(const char *buf) {
 	}
 
 	// strip last blank character if any
-	if (*(ptr2 - 1) == ' ')
+	if (ptr2 > rv && *(ptr2 - 1) == ' ')
 		--ptr2;
 	*ptr2 = '\0';
 	//	if (arg_debug)
@@ -293,7 +293,7 @@ int find_child(pid_t parent, pid_t *child) {
 		// sleep 2 seconds and try again
 		sleep(2);
 		if (!(dir = opendir("/proc"))) {
-			fprintf(stderr, "Error: cannot open /proc directory\n");
+			exechelp_logerrv("firejail", "Error: cannot open /proc directory\n");
 			exit(1);
 		}
 	}
@@ -310,7 +310,7 @@ int find_child(pid_t parent, pid_t *child) {
 		// open stat file
 		char *file;
 		if (asprintf(&file, "/proc/%u/status", pid) == -1) {
-			perror("asprintf");
+			exechelp_perror("firejail", "asprintf");
 			exit(1);
 		}
 		FILE *fp = fopen(file, "r");
@@ -328,7 +328,7 @@ int find_child(pid_t parent, pid_t *child) {
 					ptr++;
 				}
 				if (*ptr == '\0') {
-					fprintf(stderr, "Error: cannot read /proc file\n");
+					exechelp_logerrv("firejail", "Error: cannot read /proc file\n");
 					exit(1);
 				}
 				if (parent == atoi(ptr))
@@ -363,7 +363,7 @@ void extract_command_name(const char *str) {
 	if (ptr) {
 		ptr++;
 		if (*ptr == '\0') {
-			fprintf(stderr, "Error: invalid command name\n");
+			exechelp_logerrv("firejail", "Error: invalid command name\n");
 			exit(1);
 		}
 
@@ -390,12 +390,12 @@ void update_map(char *mapping, char *map_file) {
 
 	fd = open(map_file, O_RDWR);
 	if (fd == -1) {
-		fprintf(stderr, "Error: cannot open %s: %s\n", map_file, strerror(errno));
+		exechelp_logerrv("firejail", "Error: cannot open %s: %s\n", map_file, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
 	if (write(fd, mapping, map_len) != (ssize_t)map_len) {
-		fprintf(stderr, "Error: cannot write to %s: %s\n", map_file, strerror(errno));
+		exechelp_logerrv("firejail", "Error: cannot write to %s: %s\n", map_file, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
@@ -424,7 +424,7 @@ void wait_for_other(int fd) {
 		*ptr = '\0';
 	}
 	else {
-		fprintf(stderr, "Error: cannot establish communication with the parent, exiting...\n");
+		exechelp_logerrv("firejail", "Error: cannot establish communication with the parent, exiting...\n");
 		exit(1);
 	}
 	fclose(stream);

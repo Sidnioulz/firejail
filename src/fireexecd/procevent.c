@@ -143,7 +143,8 @@ static int procevent_monitor(const int sock, pid_t mypid) {
 		int rv = select(max, &readfds, NULL, NULL, &tv);
 		if (rv == -1) {
 			fprintf(stderr, "recv: %s\n", strerror(errno));
-			return -1;
+			continue;
+		//return -1;
 		}
 		
 		// timeout
@@ -162,7 +163,8 @@ static int procevent_monitor(const int sock, pid_t mypid) {
 				return 0;
 			} else {
 				fprintf(stderr,"recv: %s\n", strerror(errno));
-				return -1;
+				continue;
+			//return -1;
 			}
 		}
 

@@ -46,7 +46,7 @@ static void extract_command(int argc, char **argv, int index) {
 		
 	// first argv needs to be a valid command
 	if (arg_doubledash == 0 && *argv[index] == '-') {
-		fprintf(stderr, "Error: invalid option %s after --join\n", argv[index]);
+		exechelp_logerrv("firejail", "Error: invalid option %s after --join\n", argv[index]);
 		exit(1);
 	}
 
@@ -121,7 +121,7 @@ static void extract_caps_seccomp(pid_t pid) {
 	FILE *fp = fopen(file, "r");
 	if (!fp) {
 		free(file);
-		fprintf(stderr, "Error: cannot open stat file for process %u\n", pid);
+		exechelp_logerrv("firejail", "Error: cannot open stat file for process %u\n", pid);
 		exit(1);
 	}
 
@@ -183,12 +183,12 @@ void extract_user_namespace(pid_t pid) {
 
 void join_name(const char *name, const char *homedir, int argc, char **argv, int index) {
 	if (!name || strlen(name) == 0) {
-		fprintf(stderr, "Error: invalid sandbox name\n");
+		exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
 		exit(1);
 	}
 	pid_t pid;
 	if (name2pid(name, &pid)) {
-		fprintf(stderr, "Error: cannot find sandbox %s\n", name);
+		exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", name);
 		exit(1);
 	}
 
@@ -226,7 +226,7 @@ void join(pid_t pid, const char *homedir, int argc, char **argv, int index) {
 		if (stat(dir, &s) < 0)
 			errExit("stat");
 		if (s.st_uid != uid) {
-			fprintf(stderr, "Error: permission is denied to join a sandbox created by a different user.\n");
+			exechelp_logerrv("firejail", "Error: permission is denied to join a sandbox created by a different user.\n");
 			exit(1);
 		}
 	}

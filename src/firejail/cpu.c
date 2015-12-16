@@ -18,6 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "firejail.h"
+#include <errno.h>
 #include <sched.h>
 
 // converts a numeric cpu value in the corresponding bit mask
@@ -27,7 +28,7 @@ static void set_cpu(const char *str) {
 	
 	int val = atoi(str);
 	if (val < 0 || val >= 32) {
-		fprintf(stderr, "Error: invalid cpu number. Accepted values are between 0 and 31.\n");
+		exechelp_logerrv("firejail", "Error: invalid cpu number. Accepted values are between 0 and 31.\n");
 		exit(1);
 	}
 	
@@ -47,7 +48,7 @@ void read_cpu_list(const char *str) {
 		if (*ptr == ',' || isdigit(*ptr))
 			;
 		else {
-			fprintf(stderr, "Error: invalid cpu list\n");
+			exechelp_logerrv("firejail", "Error: invalid cpu list\n");
 			exit(1);
 		}
 		ptr++;
@@ -82,7 +83,7 @@ void save_cpu(void) {
 			errExit("chown");
 	}
 	else {
-		fprintf(stderr, "Error: cannot save cpu affinity mask\n");
+		exechelp_logerrv("firejail", "Error: cannot save cpu affinity mask\n");
 		free(fname);
 		exit(1);
 	}
@@ -103,7 +104,7 @@ void load_cpu(const char *fname) {
 		fclose(fp);
 	}
 	else
-		fprintf(stderr, "Warning: cannot load cpu affinity mask\n");
+		exechelp_logerrv("firejail", "Warning: cannot load cpu affinity mask\n");
 }
 
 void set_cpu_affinity(void) {
@@ -119,18 +120,18 @@ void set_cpu_affinity(void) {
 	}
 	
         	if (sched_setaffinity(0, sizeof(mask), &mask) == -1) {
-        		fprintf(stderr, "Warning: cannot set cpu affinity\n");
-        		fprintf(stderr, "  ");
-        		perror("sched_setaffinity");
+        		exechelp_logerrv("firejail", "Warning: cannot set cpu affinity\n");
+        		exechelp_logerrv("firejail", "  ");
+        		exechelp_perror("firejail", "sched_setaffinity");
         	}
         	
         	// verify cpu affinity
 	cpu_set_t mask2;
 	CPU_ZERO(&mask2);
         	if (sched_getaffinity(0, sizeof(mask2), &mask2) == -1) {
-        		fprintf(stderr, "Warning: cannot verify cpu affinity\n");
-        		fprintf(stderr, "   ");
-        		perror("sched_getaffinity");
+        		exechelp_logerrv("firejail", "Warning: cannot verify cpu affinity\n");
+        		exechelp_logerrv("firejail", "   ");
+        		exechelp_perror("firejail", "sched_getaffinity");
         	}
         	else {
 	        	if (CPU_EQUAL(&mask, &mask2))

@@ -42,7 +42,7 @@ int is_command_linked_for_client(const char *command) {
   // use code below if you want to allow command names rather than only full paths
   char *real = exechelp_resolve_executable_path(command);
   if (!real) {
-    fprintf(stderr, "Error: could not find a real path for command (%s)\n", command);
+    exechelp_logerrv("firejail", "Error: could not find a real path for command (%s)\n", command);
     return 0;
   }
 */
