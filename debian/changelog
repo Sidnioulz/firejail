@@ -1,3 +1,9 @@
+firejail (0.9.29-6) vivid; urgency=medium
+
+  * gtk-update-icon-cache build dep
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 17 Dec 2015 14:41:05 +0000
+
 firejail (0.9.29-5) vivid; urgency=medium
 
   * Adding build dependencies
