@@ -1,3 +1,9 @@
+firejail (0.9.29-5) vivid; urgency=medium
+
+  * Adding build dependencies
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 17 Dec 2015 13:52:44 +0000
+
 firejail (0.9.29-4) vivid; urgency=medium
 
   * This time trying with no patch
