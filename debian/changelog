@@ -1,3 +1,15 @@
+firejail (0.9.29-3) vivid; urgency=medium
+
+  * Uploading again with all patches applied on Git
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 17 Dec 2015 00:06:14 +0000
+
+firejail (0.9.29-2) vivid; urgency=medium
+
+  * Wily package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Wed, 16 Dec 2015 23:44:51 +0000
+
 firejail (0.9.29-1) vivid; urgency=medium
 
   * New upstream release.
