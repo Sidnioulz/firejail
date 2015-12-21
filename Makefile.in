@@ -185,7 +185,7 @@ install: all
 	install -c -m 0644 icons/actions/48/firejail-unprotect.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/actions/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/64x64/actions/
 	install -c -m 0644 icons/actions/64/firejail-link.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/64x64/actions/
-	install -c -m 0644 icons/actions/6464/firejail-new.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/6464x64/actions/
+	install -c -m 0644 icons/actions/64/firejail-new.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/64x64/actions/
 	install -c -m 0644 icons/actions/64/firejail-protect.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/64x64/actions/
 	install -c -m 0644 icons/actions/64/firejail-run.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/64x64/actions/
 	install -c -m 0644 icons/actions/64/firejail-unprotect.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/64x64/actions/
