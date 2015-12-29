@@ -113,6 +113,9 @@ void fireexecd_sleep(int st) {
 int main(int argc, char **argv) {
 	int i;
 
+  // ignore children when they leave, that'll happen routinely with client handlers
+  signal(SIGCHLD, SIG_IGN);
+
 	// handle CTRL-C
 	signal (SIGINT, my_handler);
 	signal (SIGTERM, my_handler);
