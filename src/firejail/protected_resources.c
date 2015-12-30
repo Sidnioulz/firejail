@@ -158,7 +158,6 @@ char *get_protected_apps_for_client (void) {
   return result;
 }
 
-
 char *get_protected_files_for_client (int blacklist) {
   char *result = NULL;
 
@@ -256,8 +255,21 @@ char *get_protected_files_for_client (int blacklist) {
     }
 
     /* at this point we know if the profile matches the app to be run, and we know the file path */
-    if (found)
-      continue;
+
+    /* if the profile matches, we want to add the file to the white-list, but keep it here so firejail understands this instance runs protected files */
+    if (found) {
+      if (arg_whitelist_files) {
+        char *tmp;
+        if (asprintf(&tmp, "%s,%s", arg_whitelist_files, realpath) == -1)
+          errExit("asprintf");
+        else {
+          free(arg_whitelist_files);
+          arg_whitelist_files = tmp;
+        }
+      } else {
+        arg_whitelist_files = strdup(realpath);
+      }
+    }
 
     int written = result ? asprintf(&result, "%s:%s", result, realpath)
                          : asprintf(&result, "%s", realpath);
