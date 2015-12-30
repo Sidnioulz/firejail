@@ -764,7 +764,6 @@ int main(int argc, char **argv) {
 		else if (strncmp(argv[i], "--whitelist-apps=", 17) == 0) {
 			if (arg_whitelist_apps) {
 				exechelp_logerrv("firejail", "Error: a white-list of applications was already given\n");
-				exechelp_logerrv("firejail", "Error: a white-list of applications was already given\n");
 				exit(1);
 			}
 
@@ -781,7 +780,6 @@ int main(int argc, char **argv) {
 		}
 		else if (strncmp(argv[i], "--whitelist-files=", 18) == 0) {
 			if (arg_whitelist_files) {
-				exechelp_logerrv("firejail", "Error: a white-list of applications was already given\n");
 				exechelp_logerrv("firejail", "Error: a white-list of applications was already given\n");
 				exit(1);
 			}
@@ -804,7 +802,6 @@ int main(int argc, char **argv) {
 		else if (strncmp(argv[i], "--name=", 7) == 0) {
 			cfg.hostname = argv[i] + 7;
 			if (strlen(cfg.hostname) == 0) {
-				exechelp_logerrv("firejail", "Error: please provide a name for sandbox\n");
 				exechelp_logerrv("firejail", "Error: please provide a name for sandbox\n");
 				return 1;
 			}
@@ -833,7 +830,6 @@ int main(int argc, char **argv) {
 			}
 			if (strcmp(argv[i] + 6, "lo") == 0) {
 				exechelp_logerrv("firejail", "Error: cannot attach to lo device\n");
-				exechelp_logerrv("firejail", "Error: cannot attach to lo device\n");
 				exit(1);
 			}
 
@@ -848,7 +844,6 @@ int main(int argc, char **argv) {
 				br = &cfg.bridge3;
 			else {
 				exechelp_logerrv("firejail", "Error: maximum 4 network devices allowed\n");
-				exechelp_logerrv("firejail", "Error: maximum 4 network devices allowed\n");
 				return 1;
 			}
 			net_configure_bridge(br, argv[i] + 6);
@@ -860,11 +855,9 @@ int main(int argc, char **argv) {
 			Bridge *br = last_bridge_configured();
 			if (br == NULL) {
 				exechelp_logerrv("firejail", "Error: no network device configured\n");
-				exechelp_logerrv("firejail", "Error: no network device configured\n");
 				return 1;
 			}
 			if (br->iprange_start || br->iprange_end) {
-				exechelp_logerrv("firejail", "Error: cannot configure the IP range twice for the same interface\n");
 				exechelp_logerrv("firejail", "Error: cannot configure the IP range twice for the same interface\n");
 				return 1;
 			}
@@ -879,7 +872,6 @@ int main(int argc, char **argv) {
 			}
 			if (*secondip == '\0') {
 				exechelp_logerrv("firejail", "Error: invalid IP range\n");
-				exechelp_logerrv("firejail", "Error: invalid IP range\n");
 				return 1;
 			}
 			*secondip = '\0';
@@ -889,11 +881,9 @@ int main(int argc, char **argv) {
 			if (atoip(firstip, &br->iprange_start) || atoip(secondip, &br->iprange_end) ||
 			    br->iprange_start >= br->iprange_end) {
 				exechelp_logerrv("firejail", "Error: invalid IP range\n");
-				exechelp_logerrv("firejail", "Error: invalid IP range\n");
 				return 1;
 			}
 			if (in_netrange(br->iprange_start, br->ip, br->mask) || in_netrange(br->iprange_end, br->ip, br->mask)) {
-				exechelp_logerrv("firejail", "Error: IP range addresses not in network range\n");
 				exechelp_logerrv("firejail", "Error: IP range addresses not in network range\n");
 				return 1;
 			}
