@@ -160,33 +160,29 @@ void fs_helper_generate_files(void) {
   free(protfstr);
 
   /* generate list of white-listed apps from arg */
-  if (arg_whitelist_apps) {
-    if(arg_debug)
-      printf("Constructing a list of white-listed apps passed as parameters to firejail...\n");
-    if(arg_debug) {
-      if (arg_whitelist_apps) {
-        printf("The following apps are white-listed for this firejail instance: '%s'\n", arg_whitelist_apps);
-        exechelp_logv("firejail", "The following apps are white-listed for this firejail instance: '%s'\n", arg_whitelist_apps);
-      } else {
-        printf("No apps are white-listed by the sandbox, will write an empty file\n");
-        exechelp_logv("firejail", "No apps are white-listed by the sandbox, will write an empty file\n");
-      }
+  if(arg_debug)
+    printf("Constructing a list of white-listed apps passed as parameters to firejail...\n");
+  if(arg_debug) {
+    if (arg_whitelist_apps) {
+      printf("The following apps are white-listed for this firejail instance: '%s'\n", arg_whitelist_apps);
+      exechelp_logv("firejail", "The following apps are white-listed for this firejail instance: '%s'\n", arg_whitelist_apps);
+    } else {
+      printf("No apps are white-listed by the sandbox, will write an empty file\n");
+      exechelp_logv("firejail", "No apps are white-listed by the sandbox, will write an empty file\n");
     }
   }
   write_helper_list_to_file(WHITELIST_APPS_SB_PATH, arg_whitelist_apps);
 
   /* generate list of white-listed files from arg */
-  if (arg_whitelist_files) {
-    if(arg_debug)
-      printf("Constructing a list of white-listed files passed as parameters to firejail...\n");
-    if(arg_debug) {
-      if (arg_whitelist_files) {
-        printf("The following files are white-listed for this firejail instance: '%s'\n", arg_whitelist_files);
-        exechelp_logv("firejail", "The following files are white-listed for this firejail instance: '%s'\n", arg_whitelist_files);
-      } else {
-        printf("No files are white-listed by the sandbox, will write an empty file\n");
-        exechelp_logv("firejail", "No files are white-listed by the sandbox, will write an empty file\n");
-      }
+  if(arg_debug)
+    printf("Constructing a list of white-listed files passed as parameters to firejail...\n");
+  if(arg_debug) {
+    if (arg_whitelist_files) {
+      printf("The following files are white-listed for this firejail instance: '%s'\n", arg_whitelist_files);
+      exechelp_logv("firejail", "The following files are white-listed for this firejail instance: '%s'\n", arg_whitelist_files);
+    } else {
+      printf("No files are white-listed by the sandbox, will write an empty file\n");
+      exechelp_logv("firejail", "No files are white-listed by the sandbox, will write an empty file\n");
     }
   }
   write_helper_list_to_file(WHITELIST_FILES_SB_PATH, arg_whitelist_files);
