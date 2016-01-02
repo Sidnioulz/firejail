@@ -1,4 +1,0 @@
-/etc/cron.daily/ocsinventory-agent
-/usr/bin/ocsinventory-agent
-/usr/share/man/man1/ocsinventory-agent.1pm.gz
-/usr/share/perl5/Ocsinventory/Unix/postinst.pl

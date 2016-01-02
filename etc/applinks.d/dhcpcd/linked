@@ -1,9 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/dhcpcd.sh
-/sbin/dhcpcd
-/sbin/dhcpcd3
-/sbin/dhcpcd-bin
-/usr/bin/dhcpcd-gtk
-/usr/lib/dhcpcd-dbus/dhcpcd-dbus

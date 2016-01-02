@@ -1,7 +1,0 @@
-/etc/init.d/tlsdate
-/usr/bin/tlsdate
-/usr/bin/tlsdate-dbus-announce
-/usr/bin/tlsdate-helper
-/usr/bin/tlsdate-routeup
-/usr/sbin/tlsdate
-/usr/sbin/tlsdated

@@ -1,8 +1,0 @@
-/usr/bin/brutefir
-/usr/lib/brutefir/alsa.bfio
-/usr/lib/brutefir/brutefir.real
-/usr/lib/brutefir/cli.bflogic
-/usr/lib/brutefir/eq.bflogic
-/usr/lib/brutefir/file.bfio
-/usr/lib/brutefir/jack.bfio
-/usr/lib/brutefir/oss.bfio

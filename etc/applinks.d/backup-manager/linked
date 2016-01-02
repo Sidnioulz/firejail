@@ -1,9 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/cron.monthly/backup-manager-clean-upload-db
-/usr/bin/backup-manager-purge
-/usr/bin/backup-manager-upload
-/usr/sbin/backup-manager
-/usr/share/backup-manager/contrib/sanitize.sh
-/usr/share/backup-manager/contrib/upgrade-conffile.sh

@@ -1,9 +1,0 @@
-/usr/bin/powerwake
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/lib/python2.7/dist-packages/powerwake/__init__.py
-/usr/lib/python2.7/dist-packages/powerwake/monitors/ARPMonitor.py
-/usr/lib/python2.7/dist-packages/powerwake/monitors/__init__.py
-/usr/lib/python2.7/dist-packages/powerwake/powerwake.py

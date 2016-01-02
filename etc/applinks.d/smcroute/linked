@@ -1,7 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/init.d/smcroute
-/etc/startup.sh
-/usr/sbin/mcsender
-/usr/sbin/smcroute

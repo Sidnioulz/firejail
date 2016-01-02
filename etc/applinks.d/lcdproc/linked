@@ -1,6 +1,0 @@
-/etc/init.d/LCDd
-/usr/bin/lcdexec
-/usr/bin/lcdproc
-/usr/bin/lcdvc
-/usr/lib/pm-utils/sleep.d/50LCDd
-/usr/sbin/LCDd

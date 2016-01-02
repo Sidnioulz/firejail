@@ -1,9 +1,0 @@
-/etc/init.d/nfdump
-/usr/bin/ft2nfdump
-/usr/bin/nfanon
-/usr/bin/nfcapd
-/usr/bin/nfdump
-/usr/bin/nfexpire
-/usr/bin/nfprofile
-/usr/bin/nfreplay
-/usr/bin/sfcapd

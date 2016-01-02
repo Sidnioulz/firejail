@@ -1,5 +1,0 @@
-/etc/init.d/php5-fpm
-/usr/lib/php5/php5-fpm-checkconf
-/usr/lib/php5/php5-fpm-reopenlogs
-/usr/sbin/php5-fpm
-/usr/share/bug/php5-fpm/script

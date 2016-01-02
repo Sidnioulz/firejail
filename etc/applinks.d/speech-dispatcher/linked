@@ -1,9 +1,0 @@
-/etc/init.d/speech-dispatcher
-/usr/bin/spd-say
-/usr/bin/speech-dispatcher
-/usr/lib/speech-dispatcher-modules/sd_cicero
-/usr/lib/speech-dispatcher-modules/sd_dummy
-/usr/lib/speech-dispatcher-modules/sd_espeak
-/usr/lib/speech-dispatcher-modules/sd_festival
-/usr/lib/speech-dispatcher-modules/sd_flite
-/usr/lib/speech-dispatcher-modules/sd_generic

@@ -1,7 +1,0 @@
-/etc/init.d/liquidsoap
-/etc/liquidsoap/radio.liq.example
-/usr/bin/liquidsoap
-/usr/lib/emacsen-common/packages/install/liquidsoap-mode
-/usr/lib/emacsen-common/packages/remove/liquidsoap-mode
-/usr/lib/liquidsoap/1.1.1/extract-replaygain
-/usr/lib/liquidsoap/1.1.1/liquidtts

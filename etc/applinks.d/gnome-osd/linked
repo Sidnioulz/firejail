@@ -1,9 +1,0 @@
-/usr/bin/gnome-osd
-/usr/bin/gnome-osd-client
-/usr/bin/gnome-osd-event-bridge
-/usr/bin/gnome-osd-properties
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/lib/gnome-osd/gnome-osd-server

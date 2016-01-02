@@ -1,7 +1,0 @@
-/etc/apm/event.d/gpm
-/etc/init.d/gpm
-/usr/bin/mev
-/usr/lib/gpm/gpm_has_mouse_control
-/usr/sbin/gpm
-/usr/sbin/gpm-microtouch-setup
-/usr/sbin/gpm-mouse-test

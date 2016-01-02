@@ -1,9 +1,0 @@
-/etc/init.d/loggerhead
-/usr/bin/loggerhead
-/usr/bin/loggerhead.wsgi
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/bin/serve-branches
-/usr/share/loggerhead/static/javascript/yui/build

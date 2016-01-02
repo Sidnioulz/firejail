@@ -1,7 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/init.d/ziproxy
-/usr/bin/ziproxy
-/usr/bin/ziproxylogtool
-/usr/share/ziproxy/ziproxy_genhtml_stats.sh

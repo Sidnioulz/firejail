@@ -1,9 +1,0 @@
-/usr/bin/build-simple-cdd
-/usr/bin/simple-cdd
-/usr/share/man/man1/build-simple-cdd.1.gz
-/usr/share/simple-cdd/build-simple-cdd
-/usr/share/simple-cdd/checkpackages
-/usr/share/simple-cdd/profiles/ltsp.postinst
-/usr/share/simple-cdd/profiles/router.postinst
-/usr/share/simple-cdd/profiles/test.postinst
-/usr/share/simple-cdd/providecheck

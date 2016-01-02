@@ -1,7 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/sbin/vblade-persist
-/usr/share/vblade-persist/vblade-finish
-/usr/share/vblade-persist/vblade-logrun
-/usr/share/vblade-persist/vblade-run

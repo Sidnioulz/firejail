@@ -1,7 +1,0 @@
-/etc/init.d/sddm
-/usr/bin/sddm
-/usr/bin/sddm-greeter
-/usr/lib/x86_64-linux-gnu/sddm/sddm-helper
-/usr/share/sddm/scripts/Xsession
-/usr/share/sddm/scripts/Xsetup
-/usr/share/sddm/scripts/Xstop

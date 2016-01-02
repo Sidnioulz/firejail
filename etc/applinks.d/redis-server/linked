@@ -1,3 +1,0 @@
-/etc/init.d/redis-server
-/usr/bin/redis-sentinel
-/usr/bin/redis-server

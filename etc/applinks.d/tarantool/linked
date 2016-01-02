@@ -1,9 +1,0 @@
-/etc/cron.hourly/tarantool-common
-/etc/init.d/tarantool
-/usr/bin/tarantar
-/usr/bin/tarantool
-/usr/bin/tarantool_box
-/usr/lib/tarantool/logger
-/usr/lib/tarantool/tarantool_logrotate
-/usr/sbin/tarantool_instance
-/usr/sbin/tarantool_snapshot_rotate

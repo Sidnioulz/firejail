@@ -1,4 +1,0 @@
-/etc/ppp/ip-down.d/ipppd
-/etc/ppp/ip-up.d/ipppd
-/usr/sbin/ipppd
-/usr/sbin/ipppstats

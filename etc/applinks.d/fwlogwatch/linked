@@ -1,7 +1,0 @@
-/etc/cron.daily/fwlogwatch
-/etc/fwlogwatch/fwlw_notify
-/etc/fwlogwatch/fwlw_respond
-/etc/init.d/fwlogwatch
-/usr/sbin/fwlogwatch
-/usr/share/man/man8/fwlw_notify.8.gz
-/usr/share/man/man8/fwlw_respond.8.gz

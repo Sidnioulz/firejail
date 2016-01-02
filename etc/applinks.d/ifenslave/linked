@@ -1,6 +1,0 @@
-/etc/network/if-post-down.d/ifenslave
-/etc/network/if-pre-up.d/ifenslave
-/etc/network/if-up.d/ifenslave
-/sbin/ifenslave
-/sbin/ifenslave-2.6
-/usr/share/man/man8/ifenslave-2.6.8.gz

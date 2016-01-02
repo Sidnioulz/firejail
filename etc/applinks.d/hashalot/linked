@@ -1,9 +1,0 @@
-/usr/sbin/hashalot
-/usr/sbin/rmd160
-/usr/sbin/sha256
-/usr/sbin/sha384
-/usr/sbin/sha512
-/usr/share/man/man1/rmd160.1.gz
-/usr/share/man/man1/sha256.1.gz
-/usr/share/man/man1/sha384.1.gz
-/usr/share/man/man1/sha512.1.gz

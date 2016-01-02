@@ -1,4 +1,0 @@
-/etc/cron.weekly/mini-buildd
-/etc/init.d/mini-buildd
-/usr/sbin/mbd-debootstrap-uname-2.6
-/usr/sbin/mini-buildd

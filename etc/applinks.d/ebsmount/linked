@@ -1,9 +1,0 @@
-/usr/bin/ebsmount
-/usr/bin/ebsmount-manual
-/usr/bin/ebsmount-udev
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/lib/ebsmount/cmd_manual.py
-/usr/lib/ebsmount/cmd_udev.py

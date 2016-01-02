@@ -1,8 +1,0 @@
-/etc/init.d/xdm
-/etc/X11/xdm/Xreset
-/etc/X11/xdm/Xsession
-/etc/X11/xdm/Xsetup
-/etc/X11/xdm/Xstartup
-/etc/X11/xdm/Xwilling
-/usr/bin/xdm
-/usr/lib/X11/xdm/chooser

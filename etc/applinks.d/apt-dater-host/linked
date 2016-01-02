@@ -1,2 +1,0 @@
-/etc/kernel/postinst.d/apt-dater-host_reboot
-/usr/bin/apt-dater-host

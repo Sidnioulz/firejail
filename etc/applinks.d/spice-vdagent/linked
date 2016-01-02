@@ -1,5 +1,0 @@
-/etc/init.d/spice-vdagent
-/usr/bin/spice-vdagent
-/usr/sbin/spice-vdagent
-/usr/sbin/spice-vdagentd
-/usr/share/gdm/greeter/autostart/spice-vdagent.desktop

@@ -1,9 +1,0 @@
-/etc/init.d/munin-node
-/usr/bin/munindoc
-/usr/sbin/munin-node
-/usr/sbin/munin-node-c
-/usr/sbin/munin-node-configure
-/usr/sbin/munin-run
-/usr/sbin/munin-sched
-/usr/sbin/node
-/usr/share/man/man8/node.8.gz

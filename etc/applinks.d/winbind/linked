@@ -1,5 +1,0 @@
-/etc/init.d/winbind
-/usr/bin/ntlm_auth
-/usr/bin/wbinfo
-/usr/sbin/winbind
-/usr/sbin/winbindd

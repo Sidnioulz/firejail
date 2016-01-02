@@ -1,9 +1,0 @@
-/usr/bin/cisco-decrypt
-/usr/bin/pcf2vpnc
-/usr/sbin/vpnc
-/usr/sbin/vpnc-connect
-/usr/sbin/vpnc-disconnect
-/usr/share/man/man8/vpnc-connect.8.gz
-/usr/share/man/man8/vpnc-disconnect.8.gz
-/usr/share/vpnc-scripts/vpnc-script
-/usr/share/vpnc-scripts/vpnc-script-sshd

@@ -1,4 +1,0 @@
-/etc/init.d/atop
-/usr/bin/atop
-/usr/bin/atopsar
-/usr/share/atop/atop.wrapper

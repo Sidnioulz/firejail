@@ -1,9 +1,0 @@
-/etc/cron.daily/remote-tty
-/etc/init.d/remote-tty
-/usr/bin/rconsole
-/usr/bin/rconsole-user
-/usr/bin/remote-tty
-/usr/sbin/addrconsole
-/usr/sbin/delrconsole
-/usr/sbin/startsrv
-/usr/sbin/ttysrv

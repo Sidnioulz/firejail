@@ -1,7 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/bin/jellyfish
-/usr/lib/jellyfish/bin/generate_sequence
-/usr/lib/jellyfish/bin/jellyfish
-/usr/lib/jellyfish/bin/test_all

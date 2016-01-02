@@ -1,7 +1,0 @@
-/etc/cron.daily/checksecurity
-/etc/cron.weekly/checksecurity
-/usr/sbin/checksecurity
-/usr/share/checksecurity/check-diskfree
-/usr/share/checksecurity/check-passwd
-/usr/share/checksecurity/check-setuid
-/usr/share/checksecurity/check-sockets

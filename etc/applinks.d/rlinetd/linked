@@ -1,4 +1,0 @@
-/etc/init.d/rlinetd
-/usr/sbin/inetd2rlinetd
-/usr/sbin/rlinetd
-/usr/sbin/update-inetd

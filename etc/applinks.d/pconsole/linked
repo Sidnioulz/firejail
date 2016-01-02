@@ -1,8 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/bin/pconsole
-/usr/bin/pconsole-ssh
-/usr/lib/pconsole/pconsole
-/usr/share/pconsole/pconsole.sh
-/usr/share/pconsole/ssh.sh

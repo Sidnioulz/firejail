@@ -1,9 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/hostapd/ifupdown.sh
-/etc/init.d/hostapd
-/etc/network/if-post-down.d/hostapd
-/etc/network/if-pre-up.d/hostapd
-/usr/sbin/hostapd
-/usr/sbin/hostapd_cli

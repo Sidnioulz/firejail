@@ -1,5 +1,0 @@
-/etc/init.d/qpsmtpd
-/usr/bin/qpsmtpd
-/usr/bin/qpsmtpd-forkserver
-/usr/bin/qpsmtpd-prefork
-/usr/share/qpsmtpd/plugins/karma_tool

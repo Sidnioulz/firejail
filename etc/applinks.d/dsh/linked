@@ -1,6 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/dsh/group/all
-/usr/bin/dsh
-/usr/lib/update-cluster/dsh.updatelist

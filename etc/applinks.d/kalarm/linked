@@ -1,9 +1,0 @@
-/usr/bin/kalarm
-/usr/bin/kalarmautostart
-/usr/lib/kde4/libexec/kalarm_helper
-/usr/share/autostart/kalarm.autostart.desktop
-/usr/share/kde4/apps/kconf_update/kalarm-1.2.1-general.pl
-/usr/share/kde4/apps/kconf_update/kalarm-1.9.5-defaults.pl
-/usr/share/kde4/apps/kconf_update/kalarm-2.0.2-general.pl
-/usr/share/kde4/apps/kconf_update/kalarm-2.1.5-general.pl
-/usr/share/kde4/apps/kconf_update/kalarm-version.pl

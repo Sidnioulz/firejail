@@ -115,8 +115,7 @@ install: all
 	install -c -m 0644 etc/xdg/autostart/fireexecd.desktop $(DESTDIR)/etc/xdg/autostart/.
 	bash -c "if [ ! -f /etc/firejail/login.users ]; then install -c -m 0644 etc/login.users $(DESTDIR)/etc/firejail/.; fi;"
 	# app links
-	mkdir -p $(DESTDIR)/etc/firejail/applinks.d
-	make install -C etc/applinks.d/
+	install -c -m 0644 etc/applinks.conf $(DESTDIR)/etc/firejail/.
 	# libexechelper
 	strip src/libexechelper/libexechelper.so
 	strip src/libexechelper/libexechelperdecorations.so

@@ -1,7 +1,0 @@
-/etc/init.d/uruk
-/etc/network/if-up.d/uruk
-/lib/uruk/init/autodetect-ips
-/lib/uruk/init/enable-ipv6
-/sbin/uruk
-/sbin/urukctl
-/sbin/uruk-save

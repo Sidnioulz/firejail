@@ -1,5 +1,0 @@
-/etc/apm/apmd_proxy
-/etc/init.d/apmd
-/usr/bin/apm
-/usr/bin/apmsleep
-/usr/sbin/apmd

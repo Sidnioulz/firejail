@@ -1,9 +1,0 @@
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/bin/ubuntu-kylin-software-center
-/usr/bin/ubuntu-kylin-software-center-daemon
-/usr/share/python/runtime.d/ubuntu-kylin-software-center.rtupdate
-/usr/share/ubuntu-kylin-software-center-daemon/start_systemdbus.py
-/usr/share/ubuntu-kylin-software-center/utils/piston_generic_helper.py

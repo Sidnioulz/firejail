@@ -1,7 +1,0 @@
-/usr/bin/ssake
-/usr/bin/tqs
-/usr/share/ssake/makeFastaFileFromScaffolds.pl
-/usr/share/ssake/makePairedOutput2EQUALfiles.pl
-/usr/share/ssake/makePairedOutput2UNEQUALfiles.pl
-/usr/share/ssake/makePairedOutput.pl
-/usr/share/ssake/nLength.pl

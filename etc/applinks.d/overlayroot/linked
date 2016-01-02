@@ -1,5 +1,0 @@
-/etc/update-motd.d/97-overlayroot
-/usr/sbin/overlayroot
-/usr/sbin/overlayroot-chroot
-/usr/share/initramfs-tools/hooks/overlayroot
-/usr/share/initramfs-tools/scripts/init-bottom/overlayroot

@@ -308,85 +308,65 @@ ExecHelpBinaryAssociations *exechelp_get_binary_associations()
     t1 = time(0);
     size_t count=0;
 
-    DIR* FD;
-    if (NULL == (FD = opendir(APPLINKS_DIR))) {
-      fprintf(stderr, "Error: could not initialise linked apps because '"APPLINKS_DIR"' could not be opened: %s\n", strerror(errno));
+    FILE* file = fopen("/etc/firejail/applinks.conf", "rb");
+    if (!file) {
+      fprintf(stderr, "Error: could not open the linked apps configuration file: %s\n", strerror(errno));
       exechelp_hash_table_destroy(assoc->index);
       free(assoc);
       return NULL;
     }
 
-    struct dirent* package_dir;
-    while ((package_dir = readdir(FD))) {
-        ++count;
-        if (!strcmp(package_dir->d_name, ".") || !strcmp(package_dir->d_name, ".."))
-            continue;
-
-        char *mainpath, *linkpath, *mainbinary;
-        if (asprintf(&mainpath, APPLINKS_DIR"/%s/main", package_dir->d_name) == -1) {
-          fprintf(stderr, "Error: could not initialise linked apps of a memory allocation error (asprintf main path): %s\n", strerror(errno));
-          exechelp_hash_table_destroy(assoc->index);
-          //TODO: de-allocate inside assoc->index
-          //TODO: free assoc->assoc
-          free(assoc);
-          return NULL;
-        }
-        FILE* mainfile = fopen(mainpath, "rb");
-        free(mainpath);
-        if (!mainfile) {
-          if (arg_debug)
-            fprintf(stderr, "Error: package '%s' does not have a main binary, yet is present in the applinks.d directory, ignoring package\n", package_dir->d_name);
-          continue;
-        }
-
-        mainbinary = NULL;
-        size_t n = 0;
-        ssize_t linelen = getline(&mainbinary, &n, mainfile);
-        fclose(mainfile);
-        if (linelen == -1) {
-          if (arg_debug)
-            fprintf(stderr, "Error: could not read the main binary for package '%s', ignoring package\n", package_dir->d_name);
-          free(mainbinary);
-          continue;
-        }
-
-        if (mainbinary[linelen-1] == '\n')
-          mainbinary[linelen-1] = '\0';
-
-        if (asprintf(&linkpath, APPLINKS_DIR"/%s/linked", package_dir->d_name) == -1) {
-          fprintf(stderr, "Error: could not initialise linked apps of a memory allocation error (asprintf linked path): %s\n", strerror(errno));
-          exechelp_hash_table_destroy(assoc->index);
-          //TODO: de-allocate inside assoc->index
-          //TODO: free assoc->assoc
-          free(assoc);
-          return NULL;
-        }
-        FILE* linkfile = fopen(linkpath, "rb");
-        free(linkpath);
-        if (!linkfile) {
-          if (arg_debug)
-            printf("Error: package '%s' does not have a list of linked binaries, yet is present in the applinks.d directory, ignoring package\n", package_dir->d_name);
-          free(mainbinary);
-          continue;
-        }
-        
-        ExecHelpSList *list = NULL;
-        char *buffer = NULL;
+    ExecHelpSList *list = NULL;
+    char *buffer = NULL;
+    char *mainbinary = NULL;
+    size_t n = 0;
+    ssize_t linelen = 0;
+    while ((linelen = getline(&buffer, &n, file)) != -1) {
+      /* Skip empty lines and comments */
+      if (buffer[0] == '#' || buffer[0] == '\n') {
+        free(buffer);
+        buffer = NULL;
         n = 0;
-        while ((linelen = getline(&buffer, &n, linkfile)) != -1) {
-          if (buffer[linelen-1] == '\n')
-            buffer[linelen-1] = '\0';
+        continue;
+      }
 
-          char *currentlink = buffer;
-          buffer = NULL;
-          n = 0;
-          list = exechelp_slist_prepend(list, currentlink);
-          exechelp_hash_table_insert(assoc->index, currentlink, mainbinary);
+      if (buffer[linelen-1] == '\n')
+        buffer[linelen-1] = '\0';
+
+      /* New main binary */
+      if (buffer[0] == '[') {
+        /* Finalise previous binary if any */
+        if (mainbinary) {
+          exechelp_hash_table_insert(assoc->index, mainbinary, mainbinary);
+          list = exechelp_slist_prepend(list, mainbinary);
+          assoc->assoc = exechelp_slist_prepend(assoc->assoc, list);
         }
-        list = exechelp_slist_prepend(list, mainbinary);
-        assoc->assoc = exechelp_slist_prepend(assoc->assoc, list);
-        fclose(linkfile);
+      
+        if (buffer[linelen-2] == ']')
+          buffer[linelen-2] = '\0';
+
+        mainbinary = buffer;
+        list = NULL;
+        count++;
+      }
+      /* Add link to current binary */
+      else {
+        list = exechelp_slist_prepend(list, buffer);
+        exechelp_hash_table_insert(assoc->index, buffer, mainbinary);
+      }
+
+      buffer = NULL;
+      n = 0;
     }
+
+    /* Finalise previous binary if any */
+    if (mainbinary) {
+      exechelp_hash_table_insert(assoc->index, mainbinary, mainbinary);
+      list = exechelp_slist_prepend(list, mainbinary);
+      assoc->assoc = exechelp_slist_prepend(assoc->assoc, list);
+    }
+
+    fclose(file);
 
     t2 = time(0);
     if (arg_debug)

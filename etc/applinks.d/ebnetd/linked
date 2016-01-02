@@ -1,7 +1,0 @@
-/etc/init.d/ebnetd
-/usr/sbin/ebncheck
-/usr/sbin/ebncontrol
-/usr/sbin/ebndaily
-/usr/sbin/ebnetd
-/usr/sbin/ebnupgrade
-/usr/sbin/update-ebnetd.conf

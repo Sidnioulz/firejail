@@ -1,8 +1,0 @@
-/usr/bin/picomus
-/usr/bin/picosat
-/usr/bin/picosat.trace
-/usr/lib/libpicosat.so
-/usr/lib/libpicosat.so.1
-/usr/lib/libpicosat-trace.so
-/usr/lib/libpicosat-trace.so.1
-/usr/share/man/man1/picosat.trace.1.gz

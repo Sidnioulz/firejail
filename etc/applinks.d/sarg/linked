@@ -1,7 +1,0 @@
-/etc/cron.daily/sarg
-/etc/cron.monthly/sarg
-/etc/cron.weekly/sarg
-/etc/sarg/user_limit_block
-/usr/bin/sarg
-/usr/sbin/sarg
-/usr/sbin/sarg-reports

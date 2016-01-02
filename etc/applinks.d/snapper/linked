@@ -1,5 +1,0 @@
-/etc/cron.daily/snapper
-/etc/cron.hourly/snapper
-/usr/bin/snapper
-/usr/sbin/snapper
-/usr/sbin/snapperd

@@ -1,5 +1,0 @@
-/usr/bin/cdbs
-/usr/bin/cdbs-edit-patch
-/usr/lib/cdbs/licensecheck2dep5
-/usr/lib/cdbs/list-packages
-/usr/lib/cdbs/waf-unpack

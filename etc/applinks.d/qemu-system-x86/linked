@@ -1,4 +1,0 @@
-/etc/init.d/qemu-kvm
-/usr/bin/qemu-system-i386
-/usr/bin/qemu-system-x86
-/usr/bin/qemu-system-x86_64

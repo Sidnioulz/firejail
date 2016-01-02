@@ -1,6 +1,0 @@
-/etc/init.d/salt-master
-/usr/bin/salt
-/usr/bin/salt-cp
-/usr/bin/salt-key
-/usr/bin/salt-master
-/usr/bin/salt-run

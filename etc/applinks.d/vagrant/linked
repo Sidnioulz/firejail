@@ -1,6 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/bin/vagrant
-/usr/share/vagrant/plugins/communicators/winrm/command_filters/mkdir.rb
-/usr/share/vagrant/plugins/provisioners/salt/bootstrap-salt.sh

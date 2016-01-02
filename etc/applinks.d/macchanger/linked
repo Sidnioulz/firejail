@@ -1,8 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/macchanger/ifupdown.sh
-/etc/network/if-post-down.d/macchanger
-/etc/network/if-pre-up.d/macchanger
-/usr/bin/macchanger
-/usr/sbin/macchanger-gtk

@@ -1,8 +1,0 @@
-/etc/init.d/pyscrabble-server
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/sbin/pyscrabble-server
-/usr/share/games/pyscrabble/python/server_console.py
-/usr/share/python/runtime.d/pyscrabble-server.rtupdate

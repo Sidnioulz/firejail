@@ -1,8 +1,0 @@
-/etc/init.d/fetchmail
-/etc/ppp/ip-down.d/fetchmail
-/etc/ppp/ip-up.d/fetchmail
-/etc/resolvconf/update-libc.d/fetchmail
-/usr/bin/fetchmail
-/usr/bin/popclient
-/usr/share/man/man1/fetchmailrc.1.gz
-/usr/share/man/man1/popclient.1.gz

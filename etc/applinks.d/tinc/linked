@@ -1,6 +1,0 @@
-/etc/init.d/tinc
-/etc/network/if-post-down.d/tinc
-/etc/network/if-pre-up.d/tinc
-/etc/network/if-up.d/tinc
-/usr/sbin/tinc
-/usr/sbin/tincd

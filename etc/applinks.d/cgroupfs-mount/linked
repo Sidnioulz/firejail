@@ -1,8 +1,0 @@
-/bin/findmnt
-/etc/init.d/cgroupfs-mount
-/sbin/losetup
-/sbin/swapoff
-/sbin/swapon
-/usr/bin/cgroupfs-mount
-/usr/bin/cgroupfs-umount
-/usr/share/man/man8/swapoff.8.gz

@@ -1,9 +1,0 @@
-/usr/bin/gammaray
-/usr/lib/gammaray/libexec/gammaray-client
-/usr/lib/gammaray/libexec/gammaray-launcher
-/usr/lib/libgammaray_common-qt4.8-x86_64.so
-/usr/lib/libgammaray_common-qt5.4-x86_64.so
-/usr/lib/libgammaray_core-qt4.8-x86_64.so
-/usr/lib/libgammaray_core-qt5.4-x86_64.so
-/usr/lib/libgammaray_ui-qt4.8-x86_64.so
-/usr/lib/libgammaray_ui-qt5.4-x86_64.so

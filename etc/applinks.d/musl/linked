@@ -1,7 +1,0 @@
-/lib/ld-musl-x86_64.so.1
-/lib/x86_64-linux-musl/libc.so
-/usr/bin/ld-musl-config
-/usr/bin/musl
-/usr/bin/musl-gcc
-/usr/bin/musl-ldd
-/usr/lib/x86_64-linux-musl/libc.so

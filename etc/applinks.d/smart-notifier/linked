@@ -1,8 +1,0 @@
-/etc/smartmontools/run.d/60smart-notifier
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/bin/smart-notifier
-/usr/share/python/runtime.d/smart-notifier.rtupdate
-/usr/share/smart-notifier/smart-notifier

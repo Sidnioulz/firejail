@@ -1,7 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/bin/zypper
-/usr/sbin/zypper
-/usr/sbin/zypper-log
-/usr/sbin/zypp-refresh

@@ -1,8 +1,0 @@
-/etc/init.d/fs-uae-netplay-server
-/usr/bin/fs-uae-netplay-server
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/share/fs-uae-netplay-server/fs-uae-game-server
-/usr/share/fs-uae-netplay-server/fs-uae-netplay-server

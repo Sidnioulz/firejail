@@ -1,8 +1,0 @@
-/usr/bin/i3blocks
-/usr/share/i3blocks/battery
-/usr/share/i3blocks/cpu_usage
-/usr/share/i3blocks/disk
-/usr/share/i3blocks/load_average
-/usr/share/i3blocks/memory
-/usr/share/i3blocks/network
-/usr/share/i3blocks/volume

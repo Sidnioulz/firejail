@@ -1,6 +1,0 @@
-/etc/init.d/dkimproxy
-/etc/ssl/private/dkimproxy.key
-/usr/bin/dkim_responder
-/usr/sbin/dkimproxy
-/usr/sbin/dkimproxy.in
-/usr/sbin/dkimproxy.out

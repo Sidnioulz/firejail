@@ -1,6 +1,0 @@
-/etc/init.d/racoon
-/usr/lib/ipsec-tools/libracoon.so.0
-/usr/sbin/plainrsa-gen
-/usr/sbin/racoon
-/usr/sbin/racoonctl
-/usr/sbin/racoon-tool

@@ -1,5 +1,0 @@
-/usr/bin/dh_germinate_clean
-/usr/bin/dh_germinate_metapackage
-/usr/bin/germinate
-/usr/bin/germinate-pkg-diff
-/usr/bin/germinate-update-metapackage

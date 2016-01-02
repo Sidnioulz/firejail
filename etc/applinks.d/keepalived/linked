@@ -1,6 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/init.d/keepalived
-/usr/bin/genhash
-/usr/sbin/keepalived

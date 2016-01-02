@@ -1,4 +1,0 @@
-/etc/cron.daily/popularity-contest
-/usr/sbin/popcon-largest-unused
-/usr/sbin/popularity-contest
-/usr/share/popularity-contest/popcon-upload

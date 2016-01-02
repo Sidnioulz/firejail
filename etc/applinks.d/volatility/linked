@@ -1,9 +1,0 @@
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/bin/volatility
-/usr/share/python/runtime.d/volatility.rtupdate
-/usr/share/volatility/tools
-/usr/share/volatility/vol.py
-/usr/src/volatility-tools/vtype_diff.py

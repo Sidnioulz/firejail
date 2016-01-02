@@ -1,4 +1,0 @@
-/etc/cron.daily/prelink
-/usr/sbin/prelink
-/usr/sbin/prelink.bin
-/usr/share/man/man8/prelink.bin.8.gz

@@ -1,4 +1,0 @@
-/etc/init.d/netplan
-/usr/sbin/netplan
-/usr/share/netplan/init-d-script
-/var/lib/plan/netplan.dir/.netplan-acl

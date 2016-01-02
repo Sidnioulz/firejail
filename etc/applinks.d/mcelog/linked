@@ -1,9 +1,0 @@
-/etc/init.d/mcelog
-/etc/mcelog/bus-error-trigger
-/etc/mcelog/cache-error-trigger
-/etc/mcelog/dimm-error-trigger
-/etc/mcelog/iomca-error-trigger
-/etc/mcelog/page-error-trigger
-/etc/mcelog/socket-memory-error-trigger
-/etc/mcelog/unknown-error-trigger
-/usr/sbin/mcelog

@@ -1,6 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/bin/rssh
-/usr/lib/rssh/rssh_chroot_helper
-/usr/share/rssh/conf_convert

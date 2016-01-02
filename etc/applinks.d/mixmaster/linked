@@ -1,7 +1,0 @@
-/etc/cron.daily/mixmaster
-/etc/init.d/mixmaster
-/etc/ppp/ip-up.d/mixmaster
-/usr/bin/mixmaster
-/usr/bin/mixmaster-filter
-/usr/bin/mixmaster-update
-/usr/lib/mixmaster/mixmaster-rebuild

@@ -1,7 +1,0 @@
-/etc/cron.daily/locate
-/usr/bin/locate
-/usr/bin/locate.findutils
-/usr/bin/updatedb.findutils
-/usr/lib/locate/bigram
-/usr/lib/locate/code
-/usr/lib/locate/frcode

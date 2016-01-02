@@ -1,7 +1,0 @@
-/etc/apm/event.d/01chrony
-/etc/init.d/chrony
-/etc/ppp/ip-down.d/chrony
-/etc/ppp/ip-up.d/chrony
-/usr/bin/chronyc
-/usr/sbin/chrony
-/usr/sbin/chronyd

@@ -1,9 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/jed.d/README
-/usr/bin/jed
-/usr/share/jed/compile/jed-common
-/usr/share/jed/compile/jed-extra
-/usr/share/jed/jed-extra/drop-in/calendar.sl
-/usr/share/jed/jed-extra/tm.sed

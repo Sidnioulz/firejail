@@ -1,7 +1,0 @@
-/usr/bin/svn-buildpackage
-/usr/bin/svn-do
-/usr/bin/svn-inject
-/usr/bin/svn-upgrade
-/usr/bin/uclean
-/usr/share/svn-buildpackage/contrib/deblayout2svnprops
-/usr/share/svn-buildpackage/contrib/dpkg-getbdeps

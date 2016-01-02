@@ -1,4 +1,0 @@
-/etc/init.d/greylistd
-/usr/bin/greylist
-/usr/sbin/greylistd
-/usr/sbin/greylistd-setup-exim4

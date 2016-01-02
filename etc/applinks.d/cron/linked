@@ -1,6 +1,0 @@
-/etc/init.d/cron
-/usr/bin/cron-deja-vu
-/usr/bin/crontab
-/usr/sbin/cron
-/usr/sbin/cron-apt
-/usr/share/bug/cron/script

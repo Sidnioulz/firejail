@@ -1,9 +1,0 @@
-/etc/init.d/kanla
-/usr/bin/kanla
-/usr/share/perl5/auto/share/dist/kanla/fail
-/usr/share/perl5/auto/share/dist/kanla/git
-/usr/share/perl5/auto/share/dist/kanla/http
-/usr/share/perl5/auto/share/dist/kanla/irc
-/usr/share/perl5/auto/share/dist/kanla/kanla-restarted
-/usr/share/perl5/auto/share/dist/kanla/redis
-/usr/share/perl5/auto/share/dist/kanla/smtp

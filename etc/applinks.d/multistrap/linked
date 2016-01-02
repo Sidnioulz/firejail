@@ -1,9 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/sbin/multistrap
-/usr/share/multistrap/check-deps.sh
-/usr/share/multistrap/chroot.sh
-/usr/share/multistrap/device-table.pl
-/usr/share/multistrap/setcrossarch.sh
-/usr/share/multistrap/update-rc.d

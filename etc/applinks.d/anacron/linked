@@ -1,8 +1,0 @@
-/etc/apm/event.d/anacron
-/etc/cron.daily/0anacron
-/etc/cron.monthly/0anacron
-/etc/cron.weekly/0anacron
-/etc/init.d/anacron
-/usr/lib/pm-utils/power.d/anacron
-/usr/lib/pm-utils/sleep.d/95anacron
-/usr/sbin/anacron

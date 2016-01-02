@@ -1,9 +1,0 @@
-/usr/bin/pypy
-/usr/bin/pypyclean
-/usr/bin/pypycompile
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/lib/pypy/bin/pypy-c
-/usr/lib/pypy/runtime.d/public_modules.rtupdate

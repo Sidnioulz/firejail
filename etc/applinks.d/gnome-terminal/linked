@@ -1,6 +1,0 @@
-/usr/bin/gnome-terminal
-/usr/bin/gnome-terminal.real
-/usr/bin/gnome-terminal.wrapper
-/usr/lib/gnome-terminal/gnome-terminal-migration
-/usr/lib/gnome-terminal/gnome-terminal-server
-/usr/share/man/man1/gnome-terminal.wrapper.1.gz

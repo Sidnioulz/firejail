@@ -47,10 +47,12 @@ int is_command_linked_for_client(const char *command) {
   }
 */
 
-  int result = strstr(linked, command) != NULL;
-//  int result = strstr(linked, real) != NULL;
-//  free(real);
-  free(linked);
+  const char *found = strstr(linked, command);
 
+  int result = 0;
+  if (found && (found[strlen(command)+1] == '\0' || found[strlen(command)+1] == ':'))
+    result = 1;
+
+  free(linked);
   return result;
 }

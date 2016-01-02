@@ -1,9 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/init.d/elog
-/usr/bin/elconv
-/usr/bin/elog
-/usr/sbin/elog
-/usr/sbin/elogd
-/usr/share/elog/scripts/fckeditor

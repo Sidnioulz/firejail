@@ -1,8 +1,0 @@
-/usr/bin/mdns-browser
-/usr/bin/mdns-publish-vnc
-/usr/bin/mdns-publish-xendom
-/usr/bin/vnc-client
-/usr/bin/xenlog
-/usr/bin/xenscreen
-/usr/bin/xenstore-gtk
-/usr/bin/xenwatch

@@ -1,4 +1,0 @@
-/etc/init.d/gdnsd
-/usr/bin/gdnsd_geoip_test
-/usr/lib/x86_64-linux-gnu/gdnsd/gdnsd_extmon_helper
-/usr/sbin/gdnsd

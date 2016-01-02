@@ -1,4 +1,0 @@
-/etc/init.d/yhsm-validation-server
-/usr/sbin/yhsm-init-oath-token
-/usr/sbin/yhsm-validate-otp
-/usr/sbin/yhsm-validation-server

@@ -1,9 +1,0 @@
-/etc/init.d/resolvconf
-/etc/network/if-down.d/resolvconf
-/etc/network/if-up.d/000resolvconf
-/etc/ppp/ip-down.d/000resolvconf
-/etc/ppp/ip-up.d/000resolvconf
-/etc/resolvconf/update.d/libc
-/lib/resolvconf/list-records
-/sbin/resolvconf
-/usr/share/resolvconf/dump-debug-info

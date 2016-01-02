@@ -1,7 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/bin/create-online-accounts
-/usr/bin/ubuntu-touch-session
-/usr/sbin/ubuntu-touch-lightdm-session
-/usr/share/ubuntu-touch-session/usc-wrapper

@@ -1,4 +1,0 @@
-/etc/init.d/ipvsadm
-/sbin/ipvsadm
-/sbin/ipvsadm-restore
-/sbin/ipvsadm-save

@@ -1,8 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/init.d/motion
-/usr/bin/motion
-/usr/share/motion/examples/motion.init-Debian
-/usr/share/motion/examples/motion.init-Fedora
-/usr/share/motion/examples/motion.init-FreeBSD.sh

@@ -1,7 +1,0 @@
-/usr/bin/dh-make-ruby
-/usr/bin/dh_ruby
-/usr/bin/dh_ruby_fixdepends
-/usr/bin/gem2deb
-/usr/bin/gem2deb-test-runner
-/usr/bin/gem2tgz
-/usr/bin/gen-ruby-trans-pkgs

@@ -1,4 +1,0 @@
-/etc/init.d/nova-compute
-/usr/bin/lxc-usernet-manage
-/usr/bin/nova-compute
-/usr/bin/nova-idmapshift

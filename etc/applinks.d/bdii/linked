@@ -1,4 +1,0 @@
-/etc/init.d/bdii
-/usr/sbin/bdii
-/usr/sbin/bdii-update
-/var/lib/bdii/gip/ldif/default.ldif

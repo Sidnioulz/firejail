@@ -1,8 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/bin/bmake
-/usr/bin/mkdep
-/usr/bin/pmake
-/usr/share/man/man1/pmake.1.gz
-/usr/share/mk/stage-install.sh

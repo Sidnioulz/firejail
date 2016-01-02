@@ -1,9 +1,0 @@
-/etc/init.d/irker
-/usr/bin/irk
-/usr/bin/irker
-/usr/bin/irkerd
-/usr/bin/irkerhook
-/usr/bin/irkerhook-debian
-/usr/bin/irkerhook-git
-/usr/share/man/man1/irkerhook-git.1.gz
-/usr/share/man/man8/irk.8.gz

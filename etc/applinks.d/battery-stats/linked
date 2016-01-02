@@ -1,5 +1,0 @@
-/etc/init.d/battery-stats
-/usr/bin/battery-graph
-/usr/bin/battery-log
-/usr/sbin/battery-stats
-/usr/sbin/battery-stats-collector

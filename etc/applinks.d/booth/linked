@@ -1,4 +1,0 @@
-/etc/init.d/booth
-/usr/lib/ocf/resource.d/pacemaker/booth-site
-/usr/sbin/booth
-/usr/sbin/boothd

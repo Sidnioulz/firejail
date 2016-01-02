@@ -1,6 +1,0 @@
-/usr/bin/libwebsockets-test-client
-/usr/bin/libwebsockets-test-echo
-/usr/bin/libwebsockets-test-fraggle
-/usr/bin/libwebsockets-test-ping
-/usr/bin/libwebsockets-test-server
-/usr/bin/libwebsockets-test-server-extpoll

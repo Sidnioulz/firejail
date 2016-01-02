@@ -1,6 +1,0 @@
-
-/bin/bash
-/bin/sh
-/lib/udev/start_concordance_dhcpd.sh
-/lib/udev/start_concordance_dhcpd_wrapper.sh
-/usr/bin/concordance

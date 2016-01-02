@@ -1,5 +1,0 @@
-/usr/bin/kxc
-/usr/bin/kxc-add-key
-/usr/bin/kxc-cryptsetup
-/usr/share/initramfs-tools/hooks/kxc
-/usr/share/initramfs-tools/scripts/init-premount/kxc-premount-net

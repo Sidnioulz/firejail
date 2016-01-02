@@ -1,9 +1,0 @@
-/usr/bin/compress_gtf
-/usr/bin/cuffcompare
-/usr/bin/cuffdiff
-/usr/bin/cufflinks
-/usr/bin/cuffmerge
-/usr/bin/cuffnorm
-/usr/bin/cuffquant
-/usr/bin/gffread
-/usr/bin/gtf_to_sam

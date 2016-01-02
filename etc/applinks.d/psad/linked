@@ -1,6 +1,0 @@
-/etc/init.d/psad
-/usr/bin/nf2csv
-/usr/sbin/fwcheck_psad
-/usr/sbin/kmsgsd
-/usr/sbin/psad
-/usr/sbin/psadwatchd

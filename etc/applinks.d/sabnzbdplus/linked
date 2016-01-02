@@ -1,9 +1,0 @@
-/etc/init.d/sabnzbdplus
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/bin/sabnzbdplus
-/usr/share/python/runtime.d/sabnzbdplus.rtupdate
-/usr/share/sabnzbdplus/interfaces/smpl/templates/static/excanvas/excanvas.js
-/usr/share/sabnzbdplus/interfaces/smpl/templates/static/MochiKit/MochiKit.js

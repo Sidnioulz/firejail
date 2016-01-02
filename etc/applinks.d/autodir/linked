@@ -1,8 +1,0 @@
-/etc/init.d/autodir
-/usr/lib/autodir/autogroup.so
-/usr/lib/autodir/autogroup.so.1001
-/usr/lib/autodir/autohome.so
-/usr/lib/autodir/autohome.so.1001
-/usr/lib/autodir/automisc.so
-/usr/lib/autodir/automisc.so.1001
-/usr/sbin/autodir

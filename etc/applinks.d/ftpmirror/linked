@@ -1,5 +1,0 @@
-/etc/cron.daily/ftpmirror
-/etc/cron.monthly/ftpmirror
-/etc/cron.weekly/ftpmirror
-/usr/sbin/ftpmirror
-/usr/share/ftpmirror/config

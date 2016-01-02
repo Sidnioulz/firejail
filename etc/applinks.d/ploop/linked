@@ -1,4 +1,0 @@
-/sbin/mount.ploop
-/sbin/umount.ploop
-/usr/sbin/ploop
-/usr/sbin/ploop-balloon

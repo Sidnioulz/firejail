@@ -1,8 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/init.d/fs2ram
-/lib/fs2ram/unmount-scripts/keep_file_content
-/lib/fs2ram/unmount-scripts/keep_file_structure
-/lib/fs2ram/unmount-scripts/keep_folder_structure
-/sbin/fs2ram

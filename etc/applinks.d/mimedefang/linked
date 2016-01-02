@@ -1,8 +1,0 @@
-/etc/init.d/mimedefang
-/usr/bin/md-mx-ctrl
-/usr/bin/mimedefang
-/usr/bin/mimedefang-multiplexor
-/usr/bin/mimedefang.pl
-/usr/bin/mimedefang-util
-/usr/bin/watch-mimedefang
-/usr/bin/watch-multiple-mimedefangs.tcl

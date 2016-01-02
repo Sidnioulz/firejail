@@ -1,4 +1,0 @@
-/etc/kernel/postinst.d/pv-grub-menu
-/etc/kernel/postrm.d/pv-grub-menu
-/usr/bin/pv
-/usr/sbin/update-menu-lst

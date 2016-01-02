@@ -1,7 +1,0 @@
-/etc/init.d/stunnel4
-/etc/ppp/ip-down.d/0stunnel4
-/etc/ppp/ip-up.d/0stunnel4
-/usr/bin/stunnel
-/usr/bin/stunnel3
-/usr/bin/stunnel4
-/usr/share/man/man8/stunnel.8.gz

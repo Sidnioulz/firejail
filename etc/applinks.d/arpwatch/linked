@@ -1,8 +1,0 @@
-/etc/init.d/arpwatch
-/usr/sbin/arp2ethers
-/usr/sbin/arpfetch
-/usr/sbin/arpsnmp
-/usr/sbin/arpwatch
-/usr/sbin/bihourly
-/usr/sbin/dmassagevendor
-/usr/sbin/massagevendor

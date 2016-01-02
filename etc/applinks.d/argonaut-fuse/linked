@@ -1,5 +1,0 @@
-/bin/ulockmgr_server
-/etc/init.d/argonaut-fuse
-/sbin/mount.fuse
-/usr/sbin/argonaut-fuse
-/usr/share/initramfs-tools/hooks/fuse

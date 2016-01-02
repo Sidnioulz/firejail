@@ -1,5 +1,0 @@
-/etc/init.d/watchdog
-/etc/init.d/wd_keepalive
-/usr/sbin/watchdog
-/usr/sbin/wd_identify
-/usr/sbin/wd_keepalive

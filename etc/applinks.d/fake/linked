@@ -1,6 +1,0 @@
-/etc/cron.hourly/fake-hwclock
-/etc/init.d/fake-hwclock
-/sbin/fake-hwclock
-/usr/lib/heartbeat/fake
-/usr/sbin/fake
-/usr/sbin/send_arp

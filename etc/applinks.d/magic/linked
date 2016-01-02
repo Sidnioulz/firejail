@@ -1,9 +1,0 @@
-/usr/bin/ext2sim
-/usr/bin/ext2spice
-/usr/bin/magic
-/usr/lib/x86_64-linux-gnu/magic/tcl/console.tcl
-/usr/lib/x86_64-linux-gnu/magic/tcl/magicdnull
-/usr/lib/x86_64-linux-gnu/magic/tcl/magicexec
-/usr/lib/x86_64-linux-gnu/magic/tcl/strip_reflibs.tcl
-/usr/lib/x86_64-linux-gnu/magic/tcl/tkcon.tcl
-/usr/lib/x86_64-linux-gnu/magic/tcl/tkshell.tcl

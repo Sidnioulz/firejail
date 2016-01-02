@@ -1,8 +1,0 @@
-/etc/init.d/nova-api
-/etc/init.d/nova-api-ec2
-/etc/init.d/nova-api-metadata
-/etc/init.d/nova-api-os-compute
-/usr/bin/nova-api
-/usr/bin/nova-api-ec2
-/usr/bin/nova-api-metadata
-/usr/bin/nova-api-os-compute

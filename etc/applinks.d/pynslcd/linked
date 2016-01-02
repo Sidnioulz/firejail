@@ -1,8 +1,0 @@
-/etc/init.d/pynslcd
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/sbin/pynslcd
-/usr/share/pynslcd/pynslcd.py
-/usr/share/python/runtime.d/pynslcd.rtupdate

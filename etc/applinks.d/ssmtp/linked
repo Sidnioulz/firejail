@@ -1,6 +1,0 @@
-/usr/lib/sendmail
-/usr/sbin/mailq
-/usr/sbin/newaliases
-/usr/sbin/sendmail
-/usr/sbin/ssmtp
-/usr/share/man/man8/sendmail.8.gz

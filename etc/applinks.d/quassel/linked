@@ -1,6 +1,0 @@
-/etc/init.d/quasselcore
-/usr/bin/quassel
-/usr/bin/quasselclient
-/usr/bin/quasselcore
-/usr/share/quassel/scripts/inxi
-/usr/share/quassel/scripts/mpris

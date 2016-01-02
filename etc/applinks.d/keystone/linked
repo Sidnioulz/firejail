@@ -1,9 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/init.d/keystone
-/usr/bin/keystone
-/usr/bin/keystone-all
-/usr/bin/keystone-manage
-/usr/share/keystone/convert_to_sqlite.sh
-/usr/share/keystone/sample_data.sh

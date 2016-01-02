@@ -1,7 +1,0 @@
-/etc/init.d/shellinabox
-/etc/shellinabox/options-enabled/00+Black
-/etc/shellinabox/options-enabled/00_White
-/etc/shellinabox/options-enabled/01+Color
-/etc/shellinabox/options-enabled/01_Monochrome.css
-/usr/bin/shellinabox
-/usr/bin/shellinaboxd

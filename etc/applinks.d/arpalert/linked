@@ -1,3 +1,0 @@
-/etc/init.d/arpalert
-/usr/sbin/arpalert
-/usr/share/arpalert/send_alert.pl

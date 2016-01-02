@@ -1,4 +1,0 @@
-/lib/udev/dmsetup_env
-/lib/udev/kpartx_id
-/sbin/kpartx
-/usr/share/initramfs-tools/hooks/kpartx

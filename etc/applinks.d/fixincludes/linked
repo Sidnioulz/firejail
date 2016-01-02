@@ -1,8 +1,0 @@
-
-/bin/bash
-/bin/sh
-/usr/bin/fixincludes
-/usr/lib/gcc/x86_64-linux-gnu/4.9/install-tools/fixincl
-/usr/lib/gcc/x86_64-linux-gnu/4.9/install-tools/fixinc.sh
-/usr/lib/gcc/x86_64-linux-gnu/4.9/install-tools/mkheaders
-/usr/lib/gcc/x86_64-linux-gnu/4.9/install-tools/mkinstalldirs

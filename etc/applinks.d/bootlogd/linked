@@ -1,4 +1,0 @@
-/etc/init.d/bootlogd
-/etc/init.d/stop-bootlogd
-/etc/init.d/stop-bootlogd-single
-/sbin/bootlogd

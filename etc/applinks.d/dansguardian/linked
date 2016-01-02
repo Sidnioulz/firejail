@@ -1,6 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/init.d/dansguardian
-/usr/lib/cgi-bin/dansguardian.pl
-/usr/sbin/dansguardian

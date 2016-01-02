@@ -1,9 +1,0 @@
-/usr/bin/intltool
-/usr/bin/intltool-extract
-/usr/bin/intltoolize
-/usr/bin/intltool-merge
-/usr/bin/intltool-prepare
-/usr/bin/intltool-update
-/usr/share/intltool-debian/intltool-extract
-/usr/share/intltool-debian/intltool-merge
-/usr/share/intltool-debian/intltool-update

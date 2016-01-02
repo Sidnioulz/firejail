@@ -1,8 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/ejabberd/ejabberdctl.cfg
-/etc/init.d/ejabberd
-/usr/lib/x86_64-linux-gnu/ejabberd/priv/bin/captcha.sh
-/usr/sbin/ejabberd
-/usr/sbin/ejabberdctl

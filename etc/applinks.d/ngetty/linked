@@ -1,6 +1,0 @@
-/etc/ngetty/setup
-/sbin/ngetty
-/sbin/ngetty-argv
-/sbin/ngetty-helper
-/usr/share/man/man8/ngetty-argv.8.gz
-/usr/share/man/man8/ngetty-helper.8.gz

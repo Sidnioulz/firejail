@@ -1,8 +1,0 @@
-/usr/bin/dnaclust
-/usr/bin/dnaclust-abun
-/usr/bin/dnaclust-ref
-/usr/bin/find-large-clusters
-/usr/bin/generate_test_clusters
-/usr/bin/star-align
-/usr/lib/dnaclust/fastaselect
-/usr/lib/dnaclust/fastasort

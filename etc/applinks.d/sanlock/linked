@@ -1,6 +1,0 @@
-/etc/init.d/sanlock
-/etc/init.d/wdmd
-/usr/lib/sanlock/libsanlock.so.1
-/usr/lib/sanlock/libwdmd.so.1
-/usr/sbin/sanlock
-/usr/sbin/wdmd

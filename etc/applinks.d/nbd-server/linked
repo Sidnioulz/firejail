@@ -1,3 +1,0 @@
-/bin/nbd-server
-/bin/nbd-trdump
-/etc/init.d/nbd-server

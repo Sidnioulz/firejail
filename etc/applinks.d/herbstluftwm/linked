@@ -1,8 +1,0 @@
-
-/bin/bash
-/bin/sh
-/etc/xdg/herbstluftwm/autostart
-/etc/xdg/herbstluftwm/panel.sh
-/etc/xdg/herbstluftwm/restartpanels.sh
-/usr/bin/herbstclient
-/usr/bin/herbstluftwm

@@ -1,7 +1,0 @@
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/bin/trace-cmd
-/usr/lib/trace-cmd/python/event-viewer.py
-/usr/share/python/runtime.d/trace-cmd.rtupdate

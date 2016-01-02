@@ -1,3 +1,0 @@
-/etc/cron.daily/debtags
-/usr/bin/debtags
-/usr/bin/debtags-submit-patch

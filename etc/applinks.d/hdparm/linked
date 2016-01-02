@@ -1,5 +1,0 @@
-/etc/apm/event.d/20hdparm
-/lib/udev/hdparm
-/sbin/hdparm
-/usr/lib/pm-utils/power.d/95hdparm-apm
-/usr/lib/pm-utils/sleep.d/95hdparm-apm

@@ -1,7 +1,0 @@
-/sbin/dump
-/sbin/rdump
-/sbin/restore
-/sbin/rrestore
-/usr/sbin/rmt-dump
-/usr/share/man/man8/rdump.8.gz
-/usr/share/man/man8/rrestore.8.gz

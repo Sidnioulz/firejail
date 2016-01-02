@@ -1,8 +1,0 @@
-/etc/init.d/suricata
-/usr/bin/python
-/usr/bin/python2.7
-/usr/bin/python3.4
-/usr/bin/python3.4m
-/usr/bin/suricata
-/usr/bin/suricatasc
-/usr/lib/x86_64-linux-gnu/libhtp-0.5.16.so.1

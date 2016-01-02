@@ -1,9 +1,0 @@
-/usr/bin/kissplice
-/usr/lib/kissplice/ks_bubble_enumeration
-/usr/lib/kissplice/ks_clean_duplicates
-/usr/lib/kissplice/ks_debruijn4
-/usr/lib/kissplice/ks_error_removal
-/usr/lib/kissplice/ks_kissreadsSNPS
-/usr/lib/kissplice/ks_kissreadsSplice
-/usr/lib/kissplice/ks_print_bcc
-/usr/lib/kissplice/ks_run_modules

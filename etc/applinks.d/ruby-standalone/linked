@@ -1,9 +1,0 @@
-/usr/bin/ruby-standalone
-/usr/lib/ruby-standalone/bin/erb
-/usr/lib/ruby-standalone/bin/gem
-/usr/lib/ruby-standalone/bin/irb
-/usr/lib/ruby-standalone/bin/rake
-/usr/lib/ruby-standalone/bin/rdoc
-/usr/lib/ruby-standalone/bin/ri
-/usr/lib/ruby-standalone/bin/ruby
-/usr/lib/ruby-standalone/bin/testrb

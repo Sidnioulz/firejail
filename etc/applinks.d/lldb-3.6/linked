@@ -1,8 +1,0 @@
-/usr/bin/lldb-3.6
-/usr/bin/lldb-gdbserver-3.6
-/usr/bin/lldb-mi-3.6
-/usr/bin/lldb-platform-3.6
-/usr/lib/llvm-3.6/bin/lldb
-/usr/lib/llvm-3.6/bin/lldb-gdbserver
-/usr/lib/llvm-3.6/bin/lldb-mi
-/usr/lib/llvm-3.6/bin/lldb-platform

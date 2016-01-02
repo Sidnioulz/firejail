@@ -1,8 +1,0 @@
-/etc/ppp/ip-down.d/iminitel
-/etc/ppp/ip-up.d/iminitel
-/usr/bin/xtel
-/usr/lib/X11/xtel/connect_iminitel
-/usr/sbin/make_xtel_lignes
-/usr/sbin/mdmdetect
-/usr/sbin/xtel
-/usr/sbin/xteld

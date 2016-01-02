@@ -1,6 +1,0 @@
-/etc/init.d/cvsd
-/usr/sbin/cvsd
-/usr/sbin/cvsd-buginfo
-/usr/sbin/cvsd-buildroot
-/usr/sbin/cvsd-passwd
-/usr/share/bug/cvsd

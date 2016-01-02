@@ -1,6 +1,0 @@
-/etc/init.d/snmptt
-/usr/lib/snmptt/snmptthandler-embedded
-/usr/sbin/snmptt
-/usr/sbin/snmpttconvert
-/usr/sbin/snmpttconvertmib
-/usr/sbin/snmptthandler
