@@ -108,7 +108,7 @@ static fireexecd_client_t *process_registration(int clisocket, char *ptr) {
   client_register(client);
   client_list_insert(client);
 
-  DBGLEAVE(0, "process_registration");
+  DBGLEAVE((int) pid, "process_registration");
   return client;
 }
 

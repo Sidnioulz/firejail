@@ -1465,3 +1465,10 @@ int protected_files_save_finish (FILE **fp) {
   *fp = NULL;
   return ret;
 }
+
+pid_t exechelp_fork(void) {
+  pid_t spoon = fork();
+  if (spoon == 0)
+    exechelp_log_force_unlock();
+  return spoon;
+}

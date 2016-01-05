@@ -46,7 +46,7 @@ static void sig_handler(int signo)
 static int command_execute(fireexecd_client_t *cli, const char *command, char *argv[]) {
   DBGENTER(cli?cli->pid:-1, "command_execute");
 
-  pid_t id = fork();
+  pid_t id = exechelp_fork();
 
   if (id == -1) {
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to fork when attempting to execute the '%s' command (error: %s)\n", cli->pid, command, strerror(errno));
@@ -397,25 +397,25 @@ static void merge_profiles_for_files(fireexecd_client_t *cli, char **forbidden_f
       interp = exechelp_list_copy_deep(local, (ExecHelpCopyFunc) protected_files_handler_copy, NULL);
     } else {
       for (lp = local; lp; lp = lp->next) {
-        printf ("doing %s:%s\n", ((ExecHelpProtectedFileHandler *)lp->data)->handler_path, ((ExecHelpProtectedFileHandler *)lp->data)->profile_name);
+//        printf ("doing %s:%s\n", ((ExecHelpProtectedFileHandler *)lp->data)->handler_path, ((ExecHelpProtectedFileHandler *)lp->data)->profile_name);
 
         for (ip = interp; ip; ip = ip->next) {
-          printf ("merging with %s:%s", ((ExecHelpProtectedFileHandler *)ip->data)->handler_path, ((ExecHelpProtectedFileHandler *)ip->data)->profile_name);
+//          printf ("merging with %s:%s", ((ExecHelpProtectedFileHandler *)ip->data)->handler_path, ((ExecHelpProtectedFileHandler *)ip->data)->profile_name);
           ExecHelpProtectedFileHandler *merged = NULL;
           ExecHelpHandlerMergeResult result = protected_files_handlers_merge(lp->data, ip->data, &merged);
 
           if (result == HANDLER_IDENTICAL) {
             prepend = exechelp_list_prepend(prepend, protected_files_handler_copy(ip->data, NULL));
-            printf ("\tidentical\n");
+//            printf ("\tidentical\n");
             //do nothing
           } else if (result == HANDLER_USE_MERGED) {
-            printf ("\tmerged\n");
+//            printf ("\tmerged\n");
             prepend = exechelp_list_prepend(prepend, merged);
           } else if (result == HANDLER_UNMERGEABLE) {
-            printf ("\tunmergeable\n");
+//            printf ("\tunmergeable\n");
           }
-          else
-            printf ("\terror\n");
+//          else
+//            printf ("\terror\n");
         } // end loop on intersection
       } // end loop on local
 
@@ -871,7 +871,6 @@ static void client_command_process(fireexecd_client_t *cli, char *msg, ssize_t l
 
 void client_handle_real(fireexecd_client_t *cli) {
   DBGENTER(cli?cli->pid:-1, "client_handle_real");
-
   if (!cli) {
     DBGERR("[n/a]\t\e[01;40;101mERROR:\e[0;0m cannot handle a NULL client, aborting\n");
     DBGLEAVE(cli?cli->pid:-1, "client_handle_real");
@@ -905,7 +904,7 @@ void client_handle_real(fireexecd_client_t *cli) {
   }
 
   // get the command socket
-  if (arg_debug >= 2)
+  if (arg_debug)
     DBGOUT("[%d]\tINFO:  Opening socket '%s' to communicate with client...\n", cli->pid, cli->cmdpath);
   
   int cmdsock, clisock;

@@ -34,6 +34,10 @@
 
 static pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+void exechelp_log_force_unlock(void) {
+  pthread_mutex_unlock(&log_mutex);
+}
+
 static int exechelp_log_make_dir(void) {
   const char *env      = getenv("HOME");
   char       *local    = NULL;
@@ -167,7 +171,6 @@ ssize_t exechelp_log(const char *id, const char *fmt, va_list args) {
     free(buf2);
     free(buf);
   }
-  
   else {
     ret += write(fd, buf, strlen(buf));
     free(buf);

@@ -125,6 +125,7 @@ void *exechelp_memdup (const void *mem, unsigned int byte_size);
 
 /* General utilities */
 char *exechelp_resolve_executable_path(const char *target);
+pid_t exechelp_fork(void);
 
 
 

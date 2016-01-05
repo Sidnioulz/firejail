@@ -27,6 +27,7 @@
 #include <sys/time.h>
 #include <time.h>
 
+void exechelp_log_force_unlock(void);
 ssize_t exechelp_log(const char *id, const char *fmt, va_list args);
 ssize_t exechelp_logv(const char *id, const char *fmt, ...);
 ssize_t exechelp_logerr(const char *id, const char *fmt, va_list args);

@@ -228,7 +228,7 @@ void client_register(fireexecd_client_t *cli) {
     return;
   }
 
-  if (cli->status == IDENTIFIED || cli->status == ERASED || cli->status == HANDLED) {
+  if (cli->status == REGISTERED || cli->status == ERASED || cli->status == HANDLED) {
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m client has already been registered, nothing to do\n", cli->pid);
     DBGLEAVE(cli?cli->pid:0, "client_register");
     return;
@@ -244,29 +244,9 @@ void client_register(fireexecd_client_t *cli) {
 static void *client_identify_and_handle_real(void *user_data) {
   fireexecd_client_t *cli = user_data;
   DBGENTER(cli?cli->pid:0, "client_identify_and_handle_real");
-  struct timespec rqtp = {0, 200000000};
-  int counter = 0;
 
-  DBGOUT("[%d]\tINFO:  Starting to identify client...\n", cli->pid);
-  while(cli->status == REGISTERED && counter < _CLIENT_AUTH_COUNTER_LIMIT_200MS) {
-    if(client_identities_list_find(cli->pid)) {
-      cli->status = IDENTIFIED;
-    } else {
-      nanosleep(&rqtp, NULL);
-      counter++;
-    }
-  }
-
-  // 10 seconds elapsed without authenticating client...
-  if(counter == _CLIENT_AUTH_COUNTER_LIMIT_200MS) {
-    DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m client attempted to register but could not be confirmed to be a firejail launcher in the past %d seconds, aborting\n", cli->pid, _CLIENT_AUTH_COUNTER_LIMIT_SECS);
-    client_list_remove(cli);
-    cli->status = ERROR;
-    return NULL;
-  }
-
-  DBGOUT("[%d]\tINFO:  Client successfully identified as a firejail process, starting to handle it\n", cli->pid);
-  pid_t spoon = fork();
+  DBGOUT("[%d]\tINFO:  Client successfully registered as a firejail process, starting to handle it\n", cli->pid);
+  pid_t spoon = exechelp_fork();
   if (spoon == -1) {
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m could not fork the daemon to handle client (error: %s)\n", cli->pid, strerror(errno));
     client_list_remove(cli);
@@ -279,6 +259,7 @@ static void *client_identify_and_handle_real(void *user_data) {
   cli->status = HANDLED;
 
   if (spoon == 0) {
+  DBGENTER(cli?cli->pid:-1, "TESTING client_handle_real");
     client_handle_real(cli);
     exit(-1); // exiting in case client_handle_real forgets to
   } else {

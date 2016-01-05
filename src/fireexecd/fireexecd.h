@@ -35,7 +35,6 @@ extern int arg_debug;
 typedef enum _client_status_t {
   UNDEFINED=0,
   REGISTERED=1,
-  IDENTIFIED=2,
   HANDLED=3,
   ERASED=4,
   ERROR=5
