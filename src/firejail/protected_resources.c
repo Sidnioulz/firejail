@@ -223,11 +223,6 @@ char *get_protected_files_for_client (int blacklist) {
       return NULL;
     }
 
-    // if blacklisting, we can already do this now
-    if (blacklist) {
-      fs_blacklist_file(realpath);
-    }
-
 
     // split the remaining string starting from past the separator
     int found = 0;
@@ -256,7 +251,7 @@ char *get_protected_files_for_client (int blacklist) {
 
     /* at this point we know if the profile matches the app to be run, and we know the file path */
 
-    /* if the profile matches, we want to add the file to the white-list, but keep it here so firejail understands this instance runs protected files */
+    /* if the profile matches, we want to add the file to the whitelist, but keep it here so firejail understands this instance runs protected files */
     if (found) {
       if (arg_whitelist_files) {
         char *tmp;
@@ -269,6 +264,10 @@ char *get_protected_files_for_client (int blacklist) {
       } else {
         arg_whitelist_files = strdup(realpath);
       }
+    }
+    /* if the file is not whitelisted, then it's blacklisted */
+    else if (blacklist && !exechelp_file_list_contains_path(arg_whitelist_files, realpath, NULL)) {
+      fs_blacklist_file(realpath);
     }
 
     int written = result ? asprintf(&result, "%s:%s", result, realpath)

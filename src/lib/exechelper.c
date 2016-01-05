@@ -149,26 +149,36 @@ int exechelp_str_has_prefix_on_sep(const char *str, const char *prefix, const ch
   return 0;
 }
 
-int exechelp_file_list_contains_path(const char *list, const char *real, char **prefix)
+static int _exechelp_file_list_contains_path(const char *list, const char *real, char **prefix, char _sep1, char *_sep2)
 {
   const char *iter = list;
   int found = 0;
 
   while(iter && iter[0]!='\0' && !found) {
-    found = exechelp_str_has_prefix_on_sep(real, iter, ':');
+    found = exechelp_str_has_prefix_on_sep(real, iter, _sep1);
     if (found && prefix) {
       *prefix = strdup(iter);
-      char *cleanup = strstr(*prefix, ":");
+      char *cleanup = strstr(*prefix, _sep2);
       if (cleanup)
         *cleanup = '\0';
     }
 
-    iter = strstr(iter, ":");
+    iter = strstr(iter, _sep2);
     if (iter)
       iter++;
   }
 
   return found;
+}
+
+int exechelp_file_list_contains_path(const char *list, const char *real, char **prefix)
+{
+  return _exechelp_file_list_contains_path(list, real, prefix, ':', ":");
+}
+
+int exechelp_file_list_contains_path_comma(const char *list, const char *real, char **prefix)
+{
+  return _exechelp_file_list_contains_path(list, real, prefix, ',', ",");
 }
 
 static char *_exechelp_resolve_executable_path(const char *file)

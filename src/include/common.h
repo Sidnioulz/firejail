@@ -118,6 +118,7 @@ int join_namespace(pid_t pid, char *type);
 int name2pid(const char *name, pid_t *pid);
 char *pid_proc_comm(const pid_t pid);
 char *pid_proc_cmdline(const pid_t pid);
+int string_in_list_comma(const char* list, const char* string);
 int string_in_list(const char* list, const char* string);
 char *string_list_flatten(char **list, char *sep);
 int string_list_is_empty(char **list);

@@ -588,6 +588,7 @@ static int client_check_has_protected_files(fireexecd_client_t       *cli,
     char *prefix = NULL;
     if (exechelp_file_list_contains_path(managed, real, &prefix)) {
       has_protected_files++;
+      printf ("\n\n\n\n\n\n now adding %s, and also its prefix %s\n\n\n\n\n", argv[i], prefix);
       string_list_append(forbidden_files, strdup(argv[i]));
       string_list_append(files_to_whitelist, prefix);
     }

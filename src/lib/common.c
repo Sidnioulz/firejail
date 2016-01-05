@@ -191,6 +191,21 @@ char *pid_proc_cmdline(const pid_t pid) {
 	return rv;
 }
 
+int string_in_list_comma(const char* list, const char* string) {
+  if(!list || !string)
+    return 0;
+
+  char *found = strstr(list, string);
+  if(!found)
+    return 0;
+
+  char next = *(found + strlen(string));
+  if(next == '\0' || next == ',')
+    return 1;
+  else
+    return 0;
+}
+
 int string_in_list(const char* list, const char* string) {
   if(!list || !string)
     return 0;

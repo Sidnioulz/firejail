@@ -99,6 +99,7 @@ void exechelp_build_run_dir(void);
 char *exechelp_read_list_from_file(const char *file_path);
 int exechelp_str_has_prefix_on_sep(const char *str, const char *prefix, const char sep);
 int exechelp_file_list_contains_path(const char *list, const char *real, char **prefix);
+int exechelp_file_list_contains_path_comma(const char *list, const char *real, char **prefix);
 ExecHelpExecutionPolicy *exechelp_targets_sandbox_protected_file(const char *filepath, const char *target, char *const argv[], int whitelist, char **forbiddenpaths);
 
 
