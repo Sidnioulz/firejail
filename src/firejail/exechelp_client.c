@@ -227,7 +227,7 @@ void exechelp_register_socket(void) {
   strcpy(remote.sun_path, EXECHELP_REGISTRATION_SOCKET);
   socklen_t len = strlen(remote.sun_path) + sizeof(remote.sun_family);
   if (connect(s, (struct sockaddr *)&remote, len) == -1) {
-    exechelp_logerrv("firejail", "Error: the --helper option was given but no execution helper daemon is running. Please run 'firexecd' prior to running client processes with the --helper option.\n");
+    exechelp_logerrv("firejail", "Error: the --helper option was given but no execution helper daemon is running. Please run 'fireexecd' prior to running client processes with the --helper option.\n");
     errExit("connect"); 
   }
 

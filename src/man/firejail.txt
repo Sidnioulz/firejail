@@ -321,6 +321,12 @@ $ firejail \-\-env=LD_LIBRARY_PATH=/opt/test/lib
 \fB\-?\fR, \fB\-\-help\fR
 Print options end exit.
 .TP
+\fB\-?\fR, \fB\-\-helper\fR
+Configures the program to forward exec* system calls to the firejail daemon if they match specific
+combinations of programs and file names as defined in /etc/firejail/protected\-{apps,files}.policy.
+This option requires a running instance of the fireexecd daemon. See also the \-\-whitelist\-apps and
+\-\-whitelist\-files options to bypass individual policy rules if necessary. Implies \-\-shell=none.
+.TP
 \fB\-\-ip=address
 Assign IP addresses to the last network interface defined by a \-\-net option. A
 default gateway is assigned by default.
@@ -1090,6 +1096,17 @@ Example:
 $ firejail \-\-version
 .br
 firejail version 0.9.27
+.TP
+\fB\-\-whitelist-apps=list
+--whitelist-apps=list
+List of paths to binaries, separated by a \":\",
+which will always be executable from within the sandbox even if they
+are normally protected applications. Use in conjuction with --helper.
+.TP
+\fB\-\-whitelist-files=list
+List of paths, separated by a \":\", to files
+that are always reachable within the sandbox, even if they are normally
+protected files. Includes sub-folders. Use in conjuction with \-\-helper.
 .TP
 \fB\-\-zsh
 Use /usr/bin/zsh as default user shell.
