@@ -187,7 +187,9 @@ static void init_cfg(void) {
 	cfg.bridge1.devsandbox = "eth1";
 	cfg.bridge2.devsandbox = "eth2";
 	cfg.bridge3.devsandbox = "eth3";
-	
+
+  cfg.helper = 1;
+
 	extract_user_data();
 }
 
@@ -757,9 +759,9 @@ int main(int argc, char **argv) {
 		//*************************************
 		// execution helper
 		//*************************************
-		else if (strcmp(argv[i], "--helper") == 0) {
-			cfg.helper = 1;
-      exechelp_logv("firejail", "Running with the Execution Helper\n");
+		else if (strcmp(argv[i], "--disable-helper") == 0) {
+			cfg.helper = 0;
+      exechelp_logv("firejail", "Disable the Execution Helper that provides Xfce integration and permits sandbox launching\n");
 		}
 		else if (strncmp(argv[i], "--whitelist-apps=", 17) == 0) {
 			if (arg_whitelist_apps) {

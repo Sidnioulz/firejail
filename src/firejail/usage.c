@@ -72,6 +72,16 @@ void usage(void) {
 	printf("\t\tFirejail software build and exit.\n\n");
 	printf("\t--defaultgw=address - use this address as default gateway in the new\n");
 	printf("\t\tnetwork namespace.\n\n");
+	
+	printf("\t--disable-helper - disables the execution helper that is responsible\n");
+	printf("\t\tfor Xfce integration and launching apps and files from a sandbox.\n\n");
+	printf("\t\tEnabled by default, the helper causes the sandboxed app to forward\n");
+	printf("\t\texec* system calls to fireexecd if they match combinations of programs\n");
+	printf("\t\tand file names defined in /etc/firejail/protected-{apps,files}.policy.\n\n");
+	printf("\t\tThis option requires a running instance of the fireexecd daemon. See\n");
+	printf("\t\talso the --whitelist-apps and --whitelist-files options to bypass\n");
+	printf("\t\tindividual policy rules if necessary.\n\n");
+
 	printf("\t--dns=address - set a DNS server for the sandbox. Up to three DNS\n");
 	printf("\t\tservers can be defined.\n\n");
 	printf("\t--dns.print=name - print DNS configuration for the sandbox identified\n");
@@ -82,13 +92,6 @@ void usage(void) {
 	printf("\t--env=name=value - set environment variable in the new sandbox\n");
 	
 	printf("\t--help, -? - this help screen.\n\n");
-
-	printf("\t--helper - configures the program to forward exec* system calls to the\n");
-	printf("\t\tfirejail daemon if they match specific combinations of programs and\n");
-	printf("\t\tfile names as defined in /etc/firejail/protected-{apps,files}.policy.\n\n");
-	printf("\t\tThis option requires a running instance of the fireexecd daemon. See\n");
-	printf("\t\talso the --whitelist-apps and --whitelist-files options to bypass\n");
-	printf("\t\tindividual policy rules if necessary. Implies --shell=none.\n\n");
 
 	printf("\t--ip=address - set interface IP address.\n\n");
 	printf("\t--ip=none - no IP address and no default gateway address are configured\n");
@@ -227,7 +230,7 @@ void usage(void) {
 #endif
 
 	printf("\t--shell=none - run the program directly without a user shell.\n\n");
-	printf("\t--shell=program - set default user shell.\n\n");
+	printf("\t--shell=program - set default user shell. Requires --disable-helper.\n\n");
 	printf("\t--shutdown=name - shutdown the sandbox identified by name.\n\n");
 	printf("\t--shutdown=pid - shutdown the sandbox identified by PID.\n\n");
 	printf("\t--slow - pauses program for 30 seconds on startup and prints the sandbox's pid.\n");
@@ -239,10 +242,10 @@ void usage(void) {
 	printf("\t--version - print program version and exit.\n\n");
 	printf("\t--whitelist-apps=list - list of paths to binaries, separated by a \":\",\n");
 	printf("\t\twhich will always be executable from within the sandbox even if they\n");
-	printf("\t\tare normally protected applications. Use in conjuction with --helper.\n\n");
+	printf("\t\tare normally protected applications. Disabled by --disable-helper.\n\n");
 	printf("\t--whitelist-files=list - list of paths, separated by a \":\", to files\n");
 	printf("\t\tthat are always reachable within the sandbox, even if they are normally\n");
-	printf("\t\tprotected files. Includes sub-folders. Use in conjuction with --helper.\n\n");
+	printf("\t\tprotected files. Includes sub-folders. Disabled by --disable-helper.\n\n");
 	printf("\t--zsh - use /usr/bin/zsh as default shell.\n\n");
 	printf("\n");
 	printf("\n");

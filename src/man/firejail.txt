@@ -321,11 +321,15 @@ $ firejail \-\-env=LD_LIBRARY_PATH=/opt/test/lib
 \fB\-?\fR, \fB\-\-help\fR
 Print options end exit.
 .TP
-\fB\-?\fR, \fB\-\-helper\fR
-Configures the program to forward exec* system calls to the firejail daemon if they match specific
-combinations of programs and file names as defined in /etc/firejail/protected\-{apps,files}.policy.
-This option requires a running instance of the fireexecd daemon. See also the \-\-whitelist\-apps and
-\-\-whitelist\-files options to bypass individual policy rules if necessary. Implies \-\-shell=none.
+\fB\-?\fR, \fB\-\-disable\-helper\fR
+Disables the execution helper that is responsible for Xfce integration and
+launching apps and files from a sandbox. Enabled by default, the helper causes
+the sandboxed app to forward exec* system calls to fireexecd if they match
+combinations of programs and file names defined in /etc/firejail/protected-{apps,files}.policy.
+This option requires a running instance of the fireexecd daemon. See also the
+\-\-whitelist\-apps and \-\-whitelist\-files options to bypass individual policy
+rules if necessary.
+
 .TP
 \fB\-\-ip=address
 Assign IP addresses to the last network interface defined by a \-\-net option. A
@@ -983,7 +987,7 @@ $ firejail \-\-shell=none script.sh
 Set default user shell. Use this shell to run the application using \-c shell option.
 For example "firejail \-\-shell=/bin/dash firefox" will start Mozilla Firefox as "/bin/dash \-c firefox".
 By default Bash shell (/bin/bash) is used. Options such as \-\-zsh and \-\-csh can also set the default
-shell.
+shell. Requires \-\-disable\-helper.
 .br
 
 .br
@@ -1098,15 +1102,14 @@ $ firejail \-\-version
 firejail version 0.9.27
 .TP
 \fB\-\-whitelist-apps=list
---whitelist-apps=list
 List of paths to binaries, separated by a \":\",
 which will always be executable from within the sandbox even if they
-are normally protected applications. Use in conjuction with --helper.
+are normally protected applications. Disabled by \-\-disable\-helper.
 .TP
 \fB\-\-whitelist-files=list
 List of paths, separated by a \":\", to files
 that are always reachable within the sandbox, even if they are normally
-protected files. Includes sub-folders. Use in conjuction with \-\-helper.
+protected files. Includes sub-folders. Disabled by \-\-disable\-helper.
 .TP
 \fB\-\-zsh
 Use /usr/bin/zsh as default user shell.
