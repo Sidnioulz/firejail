@@ -41,6 +41,8 @@
 #define PROTECTED_APPS_NAME       "protected-apps.policy"
 #define PROTECTED_FILES_NAME      "protected-files.policy"
 
+#define DBUS_RUN_SESSION          "dbus-run-session"
+
 #define MAX_INCLUDE_LEVEL 6
 
 // main.c
@@ -108,7 +110,10 @@ typedef struct config_t {
 	
 	// sandbox helper for cross-sandbox IPC
 	int helper;
-	
+
+  // DBus IPC
+	int dbus;
+  char *dbus_policy;
 
 	// command line
 	char *command_line;

@@ -478,7 +478,23 @@ int sandbox(void* sandbox_arg) {
 
 		if (!arg_command)
 			printf("Child process initialized\n");
-		execvp(cfg.original_argv[cfg.original_program_index], &cfg.original_argv[cfg.original_program_index]);
+
+    if (cfg.dbus == 0) {
+	    char **argv = exechelp_malloc0(sizeof(char *) * (cfg.original_argc+3));
+	    argv[0] = DBUS_RUN_SESSION;
+	    argv[1] = "--";
+
+			int i, j;
+			for (i = cfg.original_program_index, j = 2; i < cfg.original_argc; i++, j++) {
+				if (cfg.original_argv[i] == NULL)
+					break;
+				argv[j] = cfg.original_argv[i];
+			}
+
+  		execvp(DBUS_RUN_SESSION, argv);
+    } else {
+  		execvp(cfg.original_argv[cfg.original_program_index], &cfg.original_argv[cfg.original_program_index]);
+    }
 	}
 	//****************************************
 	// start the program using a shell
@@ -495,8 +511,12 @@ int sandbox(void* sandbox_arg) {
 		else
 			sh = "/bin/bash";
 			
-		char *arg[5];
+		char *arg[7];
 		int index = 0;
+		if (cfg.dbus == 0) {
+			arg[index++] = DBUS_RUN_SESSION;
+			arg[index++] = "--";
+		}
 		arg[index++] = sh;
 		arg[index++] = "-c";
 		assert(cfg.command_line);
@@ -507,7 +527,7 @@ int sandbox(void* sandbox_arg) {
 			arg[index++] = "--";
 		arg[index++] = cfg.command_line;
 		arg[index] = NULL;
-		assert(index < 5);
+		assert(index < 7);
 		
 		if (arg_debug) {
 			char *msg;
@@ -525,10 +545,14 @@ int sandbox(void* sandbox_arg) {
 				printf("execvp argument %d: %s\n", i, arg[i]);
 			}
 		}
-		
+
 		if (!arg_command)
 			printf("Child process initialized\n");
-		execvp(sh, arg);
+
+	  if (cfg.dbus == 0)
+  		execvp(DBUS_RUN_SESSION, arg);
+    else
+		  execvp(sh, arg);
 	}
 	
 

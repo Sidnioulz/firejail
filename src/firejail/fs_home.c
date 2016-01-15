@@ -198,7 +198,7 @@ void fs_private_homedir(void) {
 		if (mount("tmpfs", "/root", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=700,gid=0") < 0)
 			errExit("mounting home directory");
 	}
-	else {
+	else if (0) { //FIXME
 		// mask /home
 		if (arg_debug)
 			printf("Mounting a new /home directory\n");
@@ -254,7 +254,7 @@ void fs_private(void) {
 		if (chown(homedir, u, g) < 0)
 			errExit("chown");
 	}
-	else {
+	else if (0) { //FIXME
 		// mask tmp only in root mode; KDE keeps all kind of sockets in /tmp!
 		if (arg_debug)
 			printf("Mounting a new /tmp directory\n");
@@ -495,7 +495,7 @@ void fs_private_home_list(void) {
 		if (mount("tmpfs", "/root", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=700,gid=0") < 0)
 			errExit("mounting home directory");
 	}
-	else {
+	else if (0) { //FIXME
 		// mask /home
 		if (arg_debug)
 			printf("Mounting a new /home directory\n");

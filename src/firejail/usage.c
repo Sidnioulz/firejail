@@ -65,6 +65,17 @@ void usage(void) {
 	printf("\t--cpu=cpu-number,cpu-number - set cpu affinity.\n");
 	printf("\t\tExample: cpu=0,1,2\n\n");
 	printf("\t--csh - use /bin/csh as default shell.\n\n");
+	
+	printf("\t--dbus=none - disable access to the desktop's DBus session, and\n");
+	printf("\t\tspawns a local DBus session instead. For apps that attempt to\n"); 
+	printf("\t\tprevent running multiple instances, this option should suffice\n");
+	printf("\t\tto ensure the apps in the sandbox are unaware of existing\n");
+	printf("\t\tinstances outside the sandbox.\n\n");
+	printf("\t--dbus=full - enable full access to the desktop's DBus session.\n");
+	printf("\t\tThis may allow apps to escape the sandbox, especially apps that\n");
+	printf("\t\tuse DBus to prevent multiple running instances.\n");
+	printf("\t--dbus=policy - not supported yet.\n\n");
+	
 	printf("\t--debug - print sandbox debug messages.\n\n");
 	printf("\t--debug-syscalls - print all recognized system calls in the current\n");
 	printf("\t\tFirejail software build and exit.\n\n");

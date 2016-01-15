@@ -959,6 +959,136 @@ int main(int argc, char **argv) {
 			arg_netfilter_file = argv[i] + 12;
 			check_netfilter_file(arg_netfilter_file);
 		}
+		else if (strcmp(argv[i], "--scan") == 0) {
+			arg_scan = 1;
+		}
+		else if (strncmp(argv[i], "--iprange=", 10) == 0) {
+			Bridge *br = last_bridge_configured();
+			if (br == NULL) {
+				exechelp_logerrv("firejail", "Error: no network device configured\n");
+				return 1;
+			}
+			if (br->iprange_start || br->iprange_end) {
+				exechelp_logerrv("firejail", "Error: cannot configure the IP range twice for the same interface\n");
+				return 1;
+			}
+			
+			// parse option arguments
+			char *firstip = argv[i] + 10;
+			char *secondip = firstip;
+			while (*secondip != '\0') {
+				if (*secondip == ',')
+					break;
+				secondip++;
+			}
+			if (*secondip == '\0') {
+				exechelp_logerrv("firejail", "Error: invalid IP range\n");
+				return 1;
+			}
+			*secondip = '\0';
+			secondip++;
+			
+			// check addresses
+			if (atoip(firstip, &br->iprange_start) || atoip(secondip, &br->iprange_end) ||
+			    br->iprange_start >= br->iprange_end) {
+				exechelp_logerrv("firejail", "Error: invalid IP range\n");
+				return 1;
+			}
+			if (in_netrange(br->iprange_start, br->ip, br->mask) || in_netrange(br->iprange_end, br->ip, br->mask)) {
+				exechelp_logerrv("firejail", "Error: IP range addresses not in network range\n");
+				return 1;
+			}
+		}
+		else if (strncmp(argv[i], "--mac=", 6) == 0) {
+			Bridge *br = last_bridge_configured();
+			if (br == NULL) {
+				exechelp_logerrv("firejail", "Error: no network device configured\n");
+				return 1;
+			}
+			if (mac_not_zero(br->macsandbox)) {
+				exechelp_logerrv("firejail", "Error: cannot configure the MAC address twice for the same interface\n");
+				return 1;
+			}
+
+			// read the address
+			if (atomac(argv[i] + 6, br->macsandbox)) {
+				exechelp_logerrv("firejail", "Error: invalid MAC address\n");
+				return 1;
+			}
+		}
+		else if (strncmp(argv[i], "--ip=", 5) == 0) {
+			Bridge *br = last_bridge_configured();
+			if (br == NULL) {
+				exechelp_logerrv("firejail", "Error: no network device configured\n");
+				return 1;
+			}
+			if (br->arg_ip_none || br->ipsandbox) {
+				exechelp_logerrv("firejail", "Error: cannot configure the IP address twice for the same interface\n");
+				return 1;
+			}
+
+			// configure this IP address for the last bridge defined
+			if (strcmp(argv[i] + 5, "none") == 0)
+				br->arg_ip_none = 1;
+			else {
+				if (atoip(argv[i] + 5, &br->ipsandbox)) {
+					exechelp_logerrv("firejail", "Error: invalid IP address\n");
+					return 1;
+				}
+			}
+		}
+		else if (strncmp(argv[i], "--defaultgw=", 12) == 0) {
+			if (atoip(argv[i] + 12, &cfg.defaultgw)) {
+				exechelp_logerrv("firejail", "Error: invalid IP address\n");
+				return 1;
+			}
+		}
+		else if (strncmp(argv[i], "--dns=", 6) == 0) {
+			uint32_t dns;
+			if (atoip(argv[i] + 6, &dns)) {
+				exechelp_logerrv("firejail", "Error: invalid DNS server IP address\n");
+				return 1;
+			}
+			
+			if (cfg.dns1 == 0)
+				cfg.dns1 = dns;
+			else if (cfg.dns2 == 0)
+				cfg.dns2 = dns;
+			else if (cfg.dns3 == 0)
+				cfg.dns3 = dns;
+			else {
+				exechelp_logerrv("firejail", "Error: up to 3 DNS servers can be specified\n");
+				return 1;
+			}
+		}
+		else if (strcmp(argv[i], "--netfilter") == 0)
+			arg_netfilter = 1;
+		else if (strncmp(argv[i], "--netfilter=", 12) == 0) {
+			arg_netfilter = 1;
+			arg_netfilter_file = argv[i] + 12;
+			check_netfilter_file(arg_netfilter_file);
+		}
+
+		//*************************************
+		// DBus
+		//*************************************
+		else if (strncmp(argv[i], "--dbus=", 7) == 0) {
+			if (strcmp(argv[i] + 7, "none") == 0) {
+        exechelp_logv("firejail", "Running with isolated DBus session\n");
+				cfg.dbus  = 0;
+			} else if (strcmp(argv[i] + 7, "full") == 0) {
+        exechelp_logv("firejail", "Running with the current DBus session\n");
+				cfg.dbus  = 1;
+			} else if (strcmp(argv[i] + 7, "policy") == 0) {
+        //exechelp_logv("firejail", "Running a filtered DBus session based on the passed security policy\n");
+				//cfg.dbus  = 1;
+				//cfg.dbus_policy = strdup(argv[i] + 7);
+				//TODO
+			} else {
+				exechelp_logerrv("firejail", "Error: invalid DBus parameter (must be one of 'none' or 'full')\n");
+				return 1;
+			}
+		}
 
 		//*************************************
 		// command
