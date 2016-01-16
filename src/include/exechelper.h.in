@@ -20,6 +20,7 @@
 #define __EH_EXECHELP_H__
 
 #include <stdio.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include "exechelper-datatypes.h"
 
