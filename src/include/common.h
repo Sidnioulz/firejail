@@ -84,7 +84,6 @@ static inline char *in_netrange(uint32_t ip, uint32_t ifip, uint32_t ifmask) {
 	  else if ((ip | ~ifmask) == ip)
 		  return "Error: the IP address is a network address\n";
 	} else {
-	  printf ("lala %d %d\n", ip, ifip);
 	  if (ip + 1 != ifip)
 	    return "Error: the IP address is not in the interface range\n";
 	}
