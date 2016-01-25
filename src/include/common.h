@@ -76,12 +76,18 @@ static inline int atoip(const char *str, uint32_t *ip) {
 
 // verify an ip address is in the network range given by ifip and mask
 static inline char *in_netrange(uint32_t ip, uint32_t ifip, uint32_t ifmask) {
-	if ((ip & ifmask) != (ifip & ifmask))
-		return "Error: the IP address is not in the interface range\n";
-	else if ((ip & ifmask) == ip)
-		return "Error: the IP address is a network address\n";
-	else if ((ip | ~ifmask) == ip)
-		return "Error: the IP address is a network address\n";
+	if (mask2bits(ifmask) != 31) {
+	  if ((ip & ifmask) != (ifip & ifmask))
+		  return "Error: the IP address is not in the interface range\n";
+	  if ((ip & ifmask) == ip)
+		  return "Error: the IP address is a network address\n";
+	  else if ((ip | ~ifmask) == ip)
+		  return "Error: the IP address is a network address\n";
+	} else {
+	  printf ("lala %d %d\n", ip, ifip);
+	  if (ip + 1 != ifip)
+	    return "Error: the IP address is not in the interface range\n";
+	}
 	return NULL;
 }
 

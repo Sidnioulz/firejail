@@ -199,7 +199,7 @@ void net_nat_bridge(Bridge *br);
 void net_nat_parent_finalize(Bridge *br, pid_t child);
 void net_nat_finalize(Bridge *br, pid_t child);
 void net_configure_bridge(Bridge *br, char *dev_name);
-int net_get_next_ip(Bridge *br, uint32_t *ip, const char *iface_name);
+int net_get_next_ip(Bridge *br, uint32_t *ip);
 void net_configure_sandbox_ip(Bridge *br);
 void net_configure_veth_pair(Bridge *br, const char *ifname, pid_t child);
 void net_check_cfg(void);

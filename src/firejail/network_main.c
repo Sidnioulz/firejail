@@ -113,15 +113,31 @@ void net_nat_bridge(Bridge *br) {
 	}
 
   // get an IP for the internal veth interface
-  if (!br->ipsandbox) {
-    net_get_next_ip(br, &br->ipsandbox, br->devsandbox);
-    br->iprange_start = br->ipsandbox + 1;
-  }
+  if (!br->ipsandbox || !br->ip) {
+    uint32_t first = 0, second = 0;
+    while (!first || !second) {
+      net_get_next_ip(br, &first);
+      br->iprange_start = first + 1;
+      net_get_next_ip(br, &second);
 
-  // get an IP for the internal veth interface
-  if (!br->ip) {
-    net_get_next_ip(br, &br->ip, br->dev);
-    br->iprange_start = br->ip + 1;
+      // we exhausted all the options
+      if (!first || !second) {
+			  exechelp_logerrv("firejail", "Error: cannot find two available IP addresses in the same range (/%d), cannot instantiate the network namespace\n", mask2bits(br->mask));
+			  exit(1);
+      }
+
+		  // our IPs are not in the same range, try again
+		  char *rv = in_netrange(first, second, br->mask);
+		  if (rv) {
+		    first = 0;
+		    second = 0;
+		  } else {
+		    br->ipsandbox = first;
+		    br->ip = second;
+		  }
+    }
+    if (arg_debug)
+      printf("IP addresses %d.%d.%d.%d/%d and  %d.%d.%d.%d/%d are available for child process's network sandbox\n", PRINT_IP(br->ipsandbox), mask2bits(br->mask), PRINT_IP(br->ip), mask2bits(br->mask));
   }
 
 	br->configured = 1;
@@ -239,9 +255,11 @@ void net_configure_bridge(Bridge *br, char *dev_name) {
 }
 
 // stores the next available IP address within br's range in ip.
-int net_get_next_ip(Bridge *br, uint32_t *ip, const char *iface_name) {
+int net_get_next_ip(Bridge *br, uint32_t *ip) {
   assert(br);
   assert(ip);
+
+  *ip = 0;
 
   struct ifaddrs *ifaddr, *ifa;
   int family, s, n;
@@ -283,13 +301,6 @@ int net_get_next_ip(Bridge *br, uint32_t *ip, const char *iface_name) {
     if (!taken)
       *ip = candidate;
   } while (taken && candidate++ < end);
-
-  if (arg_debug) {
-    if (iface_name)
-      printf("Proposing IP address %d.%d.%d.%d for child process's network sandbox (iface '%s')\n", PRINT_IP(candidate), iface_name);
-    else
-      printf("Proposing IP address %d.%d.%d.%d for child process's network sandbox\n", PRINT_IP(candidate));
-  }
 
   freeifaddrs(ifaddr);
   return (candidate < end)? 0 : -1;
