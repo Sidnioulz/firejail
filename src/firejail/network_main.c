@@ -34,40 +34,6 @@
 #include <stdlib.h>
 #include <linux/if_link.h>
 
-void net_auto_bridge(void) {
-
-	//************************
-	// build command
-	//************************
-  char *cmd;
-  if (asprintf(&cmd, "%s/lib/firejail/fnetnsadd.sh %d", PREFIX, sandbox_pid) == -1)
-		errExit("asprintf");
-
-  // backups to restore process after script execution
-  char **envtmp = environ;
-  uid_t euid = geteuid();
-  uid_t ruid = getuid();
-
-	// wipe out environment variables
-	environ = NULL;
-
-	// elevate privileges
-	if (setreuid(0, 0))
-		errExit("setreuid");
-
-  // execute command
-  int retst = system(cmd);
-  if (WEXITSTATUS(retst) != 0)
-    errExit("system");
-
-  // reset privileges
-	if (setreuid(ruid, euid))
-		errExit("setreuid");
-
-  // reset environment variables
-  environ = envtmp;
-}
-
 void net_nat_bridge(Bridge *br) {
 	assert(br);
   if (br->configured)
@@ -149,6 +115,18 @@ void net_nat_parent_finalize(Bridge *br, pid_t child) {
   if (br->configured == 0)
     return;
 
+  // backups to restore process after script execution
+  char **envtmp = environ;
+  uid_t euid = geteuid();
+  uid_t ruid = getuid();
+
+	// wipe out environment variables
+	environ = NULL;
+
+	// elevate privileges
+	if (setreuid(0, 0))
+		errExit("setreuid");
+
   // move one veth iface into the namespace
   char *cmd;
   if (asprintf(&cmd, "ip link set %s netns %d", br->devsandbox, child) == -1)
@@ -184,6 +162,13 @@ void net_nat_parent_finalize(Bridge *br, pid_t child) {
     errExit("net_nat_finalize: enable IPv4 forwarding");
   free(cmd);
   
+  // reset privileges
+	if (setreuid(ruid, euid))
+		errExit("setreuid");
+
+  // reset environment variables
+  environ = envtmp;
+
 	if (arg_debug)
 		printf("NAT device %s in host system configured\n", br->dev);
 }

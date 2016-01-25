@@ -195,7 +195,6 @@ void check_user_namespace(void);
 int sandbox(void* sandbox_arg);
 
 // network_main.c
-void net_auto_bridge(void);
 void net_nat_bridge(Bridge *br);
 void net_nat_parent_finalize(Bridge *br, pid_t child);
 void net_nat_finalize(Bridge *br, pid_t child);
