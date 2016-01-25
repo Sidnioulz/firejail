@@ -295,6 +295,9 @@ int sandbox(void* sandbox_arg) {
 		// configure lo and eth0...eth3
 		net_if_up("lo");
 		
+    if (cfg.bridgenat.configured)
+      net_nat_finalize(&cfg.bridgenat, child_pid);
+		
 		if (mac_not_zero(cfg.bridge0.macsandbox))
 			net_config_mac(cfg.bridge0.devsandbox, cfg.bridge0.macsandbox);
 		sandbox_if_up(&cfg.bridge0);

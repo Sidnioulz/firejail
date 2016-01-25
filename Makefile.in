@@ -70,6 +70,8 @@ install: all
 	strip src/ftee/ftee
 	install -c -m 0755 src/ftee/ftee $(DESTDIR)/$(PREFIX)/lib/firejail/.
 	install -c -m 0755 src/fshaper/fshaper.sh $(DESTDIR)/$(PREFIX)/lib/firejail/.
+	install -c -m 0755 src/fshaper/fnetnsadd.sh $(DESTDIR)/$(PREFIX)/lib/firejail/.
+	install -c -m 0755 src/fshaper/fnetnsdel.sh $(DESTDIR)/$(PREFIX)/lib/firejail/.
 	# documents
 	mkdir -p $(DESTDIR)/$(DOCDIR)
 	install -c -m 0644 COPYING $(DESTDIR)/$(DOCDIR)/.

@@ -63,6 +63,7 @@ typedef struct bridge_t {
 	// flags
 	uint8_t arg_ip_none;	// --ip=none
 	uint8_t macvlan;	// set by --net=eth0 (or eth1, ...); reset by --net=br0 (or br1, ...)
+	uint8_t nat;	// set by --net=any; reset by --net=br* or --net=eth*
 	uint8_t configured;
 	uint8_t scan;		// set by --scan
 }  Bridge;
@@ -90,6 +91,7 @@ typedef struct config_t {
 	// networking
 	char *hostname;
 	uint32_t defaultgw;	// default gateway
+	Bridge bridgenat;
 	Bridge bridge0;
 	Bridge bridge1;
 	Bridge bridge2;
@@ -126,7 +128,7 @@ typedef struct config_t {
 extern Config cfg;
 
 static inline int any_bridge_configured(void) {
-	if (cfg.bridge3.configured || cfg.bridge2.configured || cfg.bridge1.configured || cfg.bridge0.configured)
+	if (cfg.bridge3.configured || cfg.bridge2.configured || cfg.bridge1.configured || cfg.bridge0.configured || cfg.bridgenat.configured)
 		return 1;
 	else
 		return 0;
@@ -192,7 +194,12 @@ void check_user_namespace(void);
 int sandbox(void* sandbox_arg);
 
 // network_main.c
+void net_auto_bridge(void);
+void net_nat_bridge(Bridge *br);
+void net_nat_parent_finalize(Bridge *br, pid_t child);
+void net_nat_finalize(Bridge *br, pid_t child);
 void net_configure_bridge(Bridge *br, char *dev_name);
+int net_get_next_ip(Bridge *br, uint32_t *ip, const char *iface_name);
 void net_configure_sandbox_ip(Bridge *br);
 void net_configure_veth_pair(Bridge *br, const char *ifname, pid_t child);
 void net_check_cfg(void);

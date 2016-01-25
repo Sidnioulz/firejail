@@ -23,6 +23,166 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <net/if.h>
+#include <unistd.h>
+
+#define _GNU_SOURCE     /* To get defns of NI_MAXSERV and NI_MAXHOST */
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <ifaddrs.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <linux/if_link.h>
+
+void net_auto_bridge(void) {
+
+	//************************
+	// build command
+	//************************
+  char *cmd;
+  if (asprintf(&cmd, "%s/lib/firejail/fnetnsadd.sh %d", PREFIX, sandbox_pid) == -1)
+		errExit("asprintf");
+
+  // backups to restore process after script execution
+  char **envtmp = environ;
+  uid_t euid = geteuid();
+  uid_t ruid = getuid();
+
+	// wipe out environment variables
+	environ = NULL;
+
+	// elevate privileges
+	if (setreuid(0, 0))
+		errExit("setreuid");
+
+  // execute command
+  int retst = system(cmd);
+  if (WEXITSTATUS(retst) != 0)
+    errExit("system");
+
+  // reset privileges
+	if (setreuid(ruid, euid))
+		errExit("setreuid");
+
+  // reset environment variables
+  environ = envtmp;
+}
+
+void net_nat_bridge(Bridge *br) {
+	assert(br);
+  if (br->configured)
+    return;
+
+	br->macvlan = 0;
+	br->nat = 1;
+
+	char *dev;
+	if (asprintf(&dev, "firejail-%u", sandbox_pid) < 0)
+		errExit("asprintf");
+	br->dev = dev;
+
+	char *newname;
+	if (asprintf(&newname, "%s-%u", br->devsandbox, getpid()) == -1)
+		errExit("asprintf");
+	br->devsandbox = newname;
+
+	// create a veth pair
+  net_create_veth(dev, newname, sandbox_pid);
+	
+	// set a range of IPs and a mask to use if none were given
+	if (!br->iprange_start || !br->iprange_end) {
+	  if (atoip("10.1.1.0", &br->iprange_start)) {
+			exechelp_logerrv("firejail", "Error:  internal atoip() error\n");
+			exit(1);
+		}
+	  if (atoip("10.253.253.253", &br->iprange_end)) {
+			exechelp_logerrv("firejail", "Error:  internal atoip() error\n");
+			exit(1);
+		}
+	}
+  if (!br->mask) {
+    if (atoip("255.255.255.254", &br->mask)) {
+		  exechelp_logerrv("firejail", "Error:  internal atoip() error\n");
+		  exit(1);
+	  }
+  }
+	// this software is not supported for /31 networks
+  else if ((~br->mask + 1) < 4) {
+		exechelp_logerrv("firejail", "Error: the software is not supported for /31 networks\n");
+		exit(1);
+	}
+
+  // get an IP for the internal veth interface
+  if (!br->ipsandbox) {
+    net_get_next_ip(br, &br->ipsandbox, br->devsandbox);
+    br->iprange_start = br->ipsandbox + 1;
+  }
+
+  // get an IP for the internal veth interface
+  if (!br->ip) {
+    net_get_next_ip(br, &br->ip, br->dev);
+    br->iprange_start = br->ip + 1;
+  }
+
+	br->configured = 1;
+}
+
+void net_nat_parent_finalize(Bridge *br, pid_t child) {
+	assert(br);
+	assert(child);
+  if (br->configured == 0)
+    return;
+
+  // move one veth iface into the namespace
+  char *cmd;
+  if (asprintf(&cmd, "ip link set %s netns %d", br->devsandbox, child) == -1)
+		errExit("asprintf");
+  if(system(cmd))
+    errExit("net_nat_parent_finalise: move veth into namespace");
+  free(cmd);
+
+  // assign an IP to the other one and up it
+  net_if_up(br->dev);
+  net_if_ip(br->dev, br->ip, br->mask);
+  
+  // tell the outer system to treat the veth iface as a NAT client and reroute its traffic to the main gateway
+  if (asprintf(&cmd, "iptables -t nat -A POSTROUTING -s %d.%d.%d.%d/%d -d 0.0.0.0/0 -j MASQUERADE", PRINT_IP(br->ip), mask2bits(br->mask)) == -1)
+		errExit("asprintf");
+  if(system(cmd))
+    errExit("net_nat_finalize: route namespace traffic via NAT");
+  free(cmd);
+
+  // tell the outer system to treat the veth iface as a NAT client and reroute its traffic to the main gateway
+  if (asprintf(&cmd, "%s", "sysctl net.ipv4.ip_forward=1") == -1)
+		errExit("asprintf");
+  if(system(cmd))
+    errExit("net_nat_finalize: enable IPv4 forwarding");
+  free(cmd);
+  
+	if (arg_debug)
+		printf("NAT device %s in host system configured\n", br->dev);
+}
+
+void net_nat_finalize(Bridge *br, pid_t child) {
+	assert(br);
+	assert(child);
+  if (br->configured == 0)
+    return;
+
+  net_if_up(br->devsandbox);
+  net_if_ip(br->devsandbox, br->ipsandbox, br->mask);
+
+  char *cmd;
+  // add a route inside the sandbox towards the outside veth interface
+  if (asprintf(&cmd, "ip route add default via %d.%d.%d.%d", PRINT_IP(br->ip)) == -1)
+		errExit("asprintf");
+  if(system(cmd))
+    errExit("net_nat_finalize: add route inside namespace");
+  free(cmd);
+
+	if (arg_debug)
+		printf("NAT device %s in child process's network namespace configured\n", br->devsandbox);
+}
 
 // configure bridge structure
 // - extract ip address and mask from the bridge interface
@@ -78,6 +238,62 @@ void net_configure_bridge(Bridge *br, char *dev_name) {
 	br->configured = 1;
 }
 
+// stores the next available IP address within br's range in ip.
+int net_get_next_ip(Bridge *br, uint32_t *ip, const char *iface_name) {
+  assert(br);
+  assert(ip);
+
+  struct ifaddrs *ifaddr, *ifa;
+  int family, s, n;
+  char host[NI_MAXHOST];
+
+  if (getifaddrs(&ifaddr) == -1) {
+    exechelp_logerrv("firejail", "Error: call to getifaddrs() failed, cannot calculate an IP for the sandbox's network namespace\n");
+    errExit("getifaddrs");
+	}
+	
+	if (!br->iprange_start || !br->iprange_end) {
+    exechelp_logerrv("firejail", "Error: the automatic NAT interface requires an IP range to be set\n");
+    return -1;
+	}
+
+	uint32_t candidate = br->iprange_start;
+	uint32_t end = br->iprange_end;
+  uint32_t current;
+  int taken = -1;
+
+  do {
+    taken = 0;
+    
+    for (ifa = ifaddr, n = 0; ifa != NULL && !taken; ifa = ifa->ifa_next, n++) {
+      if (ifa->ifa_addr == NULL)
+        continue;
+      if (ifa->ifa_addr->sa_family != AF_INET)
+        continue;
+
+      s = getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in), host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+      if (s != 0) {
+        exechelp_logerrv("firejail", "getnameinfo() failed on interface '%s': %s", ifa->ifa_name, gai_strerror(s));
+        continue;
+      }
+
+      if (atoip(host, &current) == 0)
+        taken = current == candidate;
+    }
+    if (!taken)
+      *ip = candidate;
+  } while (taken && candidate++ < end);
+
+  if (arg_debug) {
+    if (iface_name)
+      printf("Proposing IP address %d.%d.%d.%d for child process's network sandbox (iface '%s')\n", PRINT_IP(candidate), iface_name);
+    else
+      printf("Proposing IP address %d.%d.%d.%d for child process's network sandbox\n", PRINT_IP(candidate));
+  }
+
+  freeifaddrs(ifaddr);
+  return (candidate < end)? 0 : -1;
+}
 
 void net_configure_sandbox_ip(Bridge *br) {
 	assert(br);

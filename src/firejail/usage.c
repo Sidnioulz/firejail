@@ -117,6 +117,11 @@ void usage(void) {
 	printf("\t--list - list all sandboxes.\n\n");
 	printf("\t--mac=xx:xx:xx:xx:xx:xx - set interface MAC address.\n\n");
 	printf("\t--name=name - set sandbox hostname.\n\n");
+	printf("\t--net=auto - enable a new network namespace, which will automatically\n");
+	printf("\t\ttry to connect you to the Internet. This will use two IP addresses\n");
+	printf("\t\ton your system, require IPv4 forwarding and NAT traversal rules.\n\n");
+	printf("\t\tNote that almost all other network options are incompatible with\n");
+	printf("\t\tthe automatic mode.\n\n");
 	printf("\t--net=bridgename - enable network namespaces and connect to this bridge\n");
 	printf("\t\tdevice. Unless specified with option --ip and --defaultgw, an\n");
 	printf("\t\tIP address and a default gateway will be assigned automatically\n");

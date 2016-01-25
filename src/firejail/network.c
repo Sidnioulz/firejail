@@ -192,7 +192,7 @@ void net_if_ip(const char *ifname, uint32_t ip, uint32_t mask) {
 		exit(1);
 	}
 
-	int sock = socket(AF_INET,SOCK_DGRAM,0);
+	int sock = socket(AF_INET,SOCK_DGRAM|SOCK_CLOEXEC,0);
 	if (sock < 0)
 		errExit("socket");
 

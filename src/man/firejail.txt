@@ -444,6 +444,21 @@ Example:
 $ firejail \-\-name=mybrowser firefox
 
 .TP
+\fB\-\-net=auto
+Enable a new network namespace, which will automatically try
+to connect you to the Internet. This will use two IP addresses on
+your system, require IPv4 forwarding and NAT traversal rules.
+.br
+
+Note that almost all other network options are incompatible with the automatic mode.
+.br
+
+.br
+Example:
+.br
+$ firejail \-\-net=auto vlc
+
+.TP
 \fB\-\-net=bridge_interface
 Enable a new network namespace and connect it to this bridge interface.
 Unless specified with option \-\-ip and \-\-defaultgw, an IP address and a default gateway will be assigned

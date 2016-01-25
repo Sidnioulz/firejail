@@ -67,7 +67,7 @@ int net_create_veth(const char *dev, const char *nsdev, unsigned pid) {
 	assert(dev);
 	assert(nsdev);
 	assert(pid);
-
+	
 	if (rtnl_open(&rth, 0) < 0) {
 		exechelp_logerrv("firejail", "cannot open netlink\n");
 		exit(1);

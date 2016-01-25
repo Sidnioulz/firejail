@@ -183,6 +183,7 @@ static int read_pid(char *str, pid_t *pid) {
 static void init_cfg(void) {
 	memset(&cfg, 0, sizeof(cfg));
 	
+	cfg.bridgenat.devsandbox = "virtual0";
 	cfg.bridge0.devsandbox = "eth0";
 	cfg.bridge1.devsandbox = "eth1";
 	cfg.bridge2.devsandbox = "eth2";
@@ -195,7 +196,15 @@ static void init_cfg(void) {
 
 static void check_network(Bridge *br) {
 	assert(br);
-	if (br->macvlan == 0) // for bridge devices check network range or arp-scan and assign address
+	if (br->nat == 1) { // for NAT devices, do nothing, IP assignment is done later
+	  assert(br->dev);
+	  assert(br->devsandbox);
+	  assert(br->iprange_start);
+	  assert(br->iprange_end);
+    assert(br->mask);
+    assert(br->ip);
+    assert(br->ipsandbox);
+	} else if (br->macvlan == 0) // for bridge devices check network range or arp-scan and assign address
 		net_configure_sandbox_ip(br);
 	else if (br->ipsandbox) { // for macvlan check network range
 		char *rv = in_netrange(br->ipsandbox, br->ip, br->mask);
@@ -255,6 +264,10 @@ static void run_cmd_and_exit(int i, int argc, char **argv) {
 			exit(1);
 		}
 
+		// extract pid
+		pid_t pid;
+		int is_pid = (read_pid(argv[i] + 12, &pid) == 0);
+
 		// extract network name
 		char *dev = NULL;
 		int down = 0;
@@ -266,6 +279,13 @@ static void run_cmd_and_exit(int i, int argc, char **argv) {
 				exit(1);
 			}
 			dev = argv[i + 2];
+
+      
+      // translate the 'auto' device name
+      if (strcmp(dev, "auto") == 0) {
+        if (asprintf(&dev, "firejail-%d", pid) == -1)
+          errExit("asprintf");
+      }
 
 			// check device name
 			if (if_nametoindex(dev) == 0) {
@@ -294,8 +314,7 @@ static void run_cmd_and_exit(int i, int argc, char **argv) {
 		}	
 		
 		// extract pid or sandbox name
-		pid_t pid;
-		if (read_pid(argv[i] + 12, &pid) == 0)
+		if (is_pid)
 			bandwidth_pid(pid, cmd, dev, down, up);
 		else
 				bandwidth_name(argv[i] + 12, cmd, dev, down, up);
@@ -824,16 +843,33 @@ int main(int argc, char **argv) {
 			if (strcmp(argv[i] + 6, "none") == 0) {
         exechelp_logv("firejail", "Running without network\n");
 				arg_nonetwork  = 1;
+				cfg.bridgenat.configured = 0;
 				cfg.bridge0.configured = 0;
 				cfg.bridge1.configured = 0;
 				cfg.bridge2.configured = 0;
 				cfg.bridge3.configured = 0;
 				continue;
 			}
+			if (strcmp(argv[i] + 6, "any") == 0 || strcmp(argv[i] + 6, "auto") == 0) {
+        exechelp_logv("firejail", "Running with an isolated network automatically bridged to the Internet\n");
+			  Bridge *br;
+			  if (cfg.bridgenat.configured == 0) {
+				  br = &cfg.bridgenat;
+          net_nat_bridge(br);
+			  } else {
+				  exechelp_logerrv("firejail", "Error: already configured the automatic NAT-based network namespace\n");
+				  exit(1);
+			  }
+				continue;
+			}
 			if (strcmp(argv[i] + 6, "lo") == 0) {
 				exechelp_logerrv("firejail", "Error: cannot attach to lo device\n");
 				exit(1);
 			}
+		  if (cfg.bridgenat.configured) {
+        exechelp_logerrv("firejail", "Error: cannot combine the automatic NAT-based network namespace with other network devices, aborting\n");
+        exit(1);
+      }
 
 			Bridge *br;
 			if (cfg.bridge0.configured == 0)
@@ -1331,6 +1367,7 @@ int main(int argc, char **argv) {
 			flock(lockfd, LOCK_EX);
 		}
 		
+		check_network(&cfg.bridgenat);
 		check_network(&cfg.bridge0);
 		check_network(&cfg.bridge1);
 		check_network(&cfg.bridge2);
@@ -1375,36 +1412,42 @@ int main(int argc, char **argv) {
 		if (getuid() == 0) // only for root
 			printf("The new log directory is /proc/%d/root/var/log\n", child);
 	}
-	
 
-	// create veth pair or macvlan device
-	if (cfg.bridge0.configured && !arg_nonetwork) {
-		if (cfg.bridge0.macvlan == 0)
-			net_configure_veth_pair(&cfg.bridge0, "eth0", child);
-		else
-			net_create_macvlan(cfg.bridge0.devsandbox, cfg.bridge0.dev, child);
-	}
+  // finish the NAT bridge
+  if (cfg.bridgenat.configured && !arg_nonetwork) {
+    net_nat_parent_finalize(&cfg.bridgenat, child);
+  }
+  // create veth pair or macvlan device
+  else {
+	  if (cfg.bridge0.configured && !arg_nonetwork) {
+		  if (cfg.bridge0.macvlan == 0)
+			  net_configure_veth_pair(&cfg.bridge0, "eth0", child);
+		  else
+			  net_create_macvlan(cfg.bridge0.devsandbox, cfg.bridge0.dev, child);
+	  }
 	
-	if (cfg.bridge1.configured && !arg_nonetwork) {
-		if (cfg.bridge1.macvlan == 0)
-			net_configure_veth_pair(&cfg.bridge1, "eth1", child);
-		else
-			net_create_macvlan(cfg.bridge1.devsandbox, cfg.bridge1.dev, child);
-	}
+	  if (cfg.bridge1.configured && !arg_nonetwork) {
+		  if (cfg.bridge1.macvlan == 0)
+			  net_configure_veth_pair(&cfg.bridge1, "eth1", child);
+		  else
+			  net_create_macvlan(cfg.bridge1.devsandbox, cfg.bridge1.dev, child);
+	  }
 	
-	if (cfg.bridge2.configured && !arg_nonetwork) {
-		if (cfg.bridge2.macvlan == 0)
-			net_configure_veth_pair(&cfg.bridge2, "eth2", child);
-		else
-			net_create_macvlan(cfg.bridge2.devsandbox, cfg.bridge2.dev, child);
-	}
+	  if (cfg.bridge2.configured && !arg_nonetwork) {
+		  if (cfg.bridge2.macvlan == 0)
+			  net_configure_veth_pair(&cfg.bridge2, "eth2", child);
+		  else
+			  net_create_macvlan(cfg.bridge2.devsandbox, cfg.bridge2.dev, child);
+	  }
 	
-	if (cfg.bridge3.configured && !arg_nonetwork) {
-		if (cfg.bridge3.macvlan == 0)
-			net_configure_veth_pair(&cfg.bridge3, "eth3", child);
-		else
-			net_create_macvlan(cfg.bridge3.devsandbox, cfg.bridge3.dev, child);
-	}
+	  if (cfg.bridge3.configured && !arg_nonetwork) {
+		  if (cfg.bridge3.macvlan == 0)
+			  net_configure_veth_pair(&cfg.bridge3, "eth3", child);
+		  else
+			  net_create_macvlan(cfg.bridge3.devsandbox, cfg.bridge3.dev, child);
+	  }
+  }	
+
 
  	// close each end of the unused pipes
  	close(parent_to_child_fds[0]);

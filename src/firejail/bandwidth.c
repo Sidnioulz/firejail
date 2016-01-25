@@ -189,6 +189,8 @@ void network_shm_set_file(pid_t pid) {
 	// create an empty file and set mod and ownership
 	FILE *fp = fopen(fname, "w");
 	if (fp) {
+		if (cfg.bridgenat.configured)
+			fprintf(fp, "%s:%s\n", cfg.bridgenat.dev, cfg.bridgenat.devsandbox);
 		if (cfg.bridge0.configured)
 			fprintf(fp, "%s:%s\n", cfg.bridge0.dev, cfg.bridge0.devsandbox);
 		if (cfg.bridge1.configured)
@@ -409,7 +411,7 @@ void bandwidth_pid(pid_t pid, const char *command, const char *dev, int down, in
 			errExit("asprintf");
 		FILE *fp = fopen(fname, "r");
 		if (!fp) {
-			exechelp_logerrv("firejail", "Error: cannot read netowk map filel %s\n", fname);
+			exechelp_logerrv("firejail", "Error: cannot read network map file %s\n", fname);
 			exit(1);
 		}
 		
