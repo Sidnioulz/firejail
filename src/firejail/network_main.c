@@ -168,6 +168,15 @@ void net_nat_parent_finalize(Bridge *br, pid_t child) {
     errExit("net_nat_finalize: route namespace traffic via NAT");
   free(cmd);
 
+  if (cfg.helper) {
+    if (asprintf(&cmd, "iptables -t nat -D POSTROUTING -s %d.%d.%d.%d/%d -d 0.0.0.0/0 -j MASQUERADE\n", PRINT_IP(br->ip), mask2bits(br->mask)) == -1)
+		  errExit("asprintf");
+    fs_helper_write_net_cleanup_file(cmd);
+  } else {
+    fprintf(stderr, "Warning: this instance of Firejail is running with --no-helper. Firejail will be unable to forward instructions to Fireexecd to clean-up after the sandbox is shut down. You will have to manually delete firewall rules after the child process is closed, by executing the following command as root:\n#\t%s\n", cmd);
+  }
+  free(cmd);
+
   // tell the outer system to treat the veth iface as a NAT client and reroute its traffic to the main gateway
   if (asprintf(&cmd, "%s", "sysctl net.ipv4.ip_forward=1") == -1)
 		errExit("asprintf");

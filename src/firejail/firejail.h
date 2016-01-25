@@ -38,6 +38,7 @@
 #define PROTECTED_FILES_SB_PATH   SELF_DIR"/"EXECHELP_PROTECTED_FILES
 #define WHITELIST_APPS_SB_PATH    SELF_DIR"/"EXECHELP_WHITELIST_APPS
 #define WHITELIST_FILES_SB_PATH   SELF_DIR"/"EXECHELP_WHITELIST_FILES
+#define NET_CLEANUP_SB_PATH       SELF_DIR"/"NET_CLEANUP_SB_FILE
 #define PROTECTED_APPS_NAME       "protected-apps.policy"
 #define PROTECTED_FILES_NAME      "protected-files.policy"
 
@@ -397,6 +398,7 @@ void fs_check_etc_list(void);
 void fs_private_etc_list(void);
 
 // fs_helper.c
+void fs_helper_write_net_cleanup_file(const char *content);
 void fs_helper_fix_gtk3_windows(void);
 void fs_helper_generate_files(void);
 void fs_helper_mount_self_dir(void);

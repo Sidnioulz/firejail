@@ -84,6 +84,35 @@ static void write_helper_list_to_file(const char *path, const char *list)
   free(runpath);
 }
 
+void fs_helper_write_net_cleanup_file(const char *content)
+{
+  /* write list down to appropriate file */
+  if(arg_debug)
+    printf("Creating a file for fireexecd to know how to cleanup the child process's network stack...\n");
+
+  exechelp_build_run_dir();
+
+  char *runpath;
+  if (asprintf(&runpath, "%s/%d-%s", EXECHELP_RUN_DIR, sandbox_pid, NET_CLEANUP_FILE) == -1)
+    errExit("asprintf");
+
+  int fd = open(runpath, O_WRONLY | O_CREAT, 0600);
+  if (fd == -1)
+    errExit("open");
+
+  if (content) {
+    if (write(fd, content, strlen(content)) == -1)
+      errExit("write");
+  }
+
+  if (close(fd) == -1)
+    errExit("close");
+
+  if (arg_debug)
+      printf("Finished writing instructions to path '%s'\n", runpath);
+  free(runpath);
+}
+
 void fs_helper_generate_files(void) {
 	struct stat s;
 	fs_build_mnt_etc_dir();

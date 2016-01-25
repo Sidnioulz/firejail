@@ -53,7 +53,7 @@ typedef struct _fireexecd_client_t {
 } fireexecd_client_t;
 
 fireexecd_client_t *client_new(pid_t, const char *, const char *, const char *);
-void client_delete_socket(fireexecd_client_t *);
+void client_delete_files(fireexecd_client_t *);
 void client_free(fireexecd_client_t *);
 void client_register(fireexecd_client_t *);
 void client_identify_and_handle(fireexecd_client_t *);

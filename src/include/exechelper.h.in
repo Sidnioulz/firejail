@@ -64,6 +64,8 @@ extern int arg_debug;
 #define EXECHELP_COMMAND_MAXLEN           92000
 #define EXECHELP_POLICY_LINE_MAX_READ     8192
 
+#define NET_CLEANUP_FILE                  "network-cleanup.sh"
+
 #define EXECHELP_COMMAND_ANY              "*"
 #define EXECHELP_PROFILE_ANY              "*"
 #define EXECHELP_PROFILE_NONE             "UNSANDBOXED"
