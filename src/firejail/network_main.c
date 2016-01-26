@@ -179,6 +179,18 @@ void net_nat_finalize(Bridge *br, pid_t child) {
   if (br->configured == 0)
     return;
 
+  // backups to restore process after script execution
+  char **envtmp = environ;
+  uid_t euid = geteuid();
+  uid_t ruid = getuid();
+
+	// wipe out environment variables
+	environ = NULL;
+
+	// elevate privileges
+	if (setreuid(0, 0))
+		errExit("setreuid");
+
   net_if_up(br->devsandbox);
   net_if_ip(br->devsandbox, br->ipsandbox, br->mask);
 
@@ -186,9 +198,21 @@ void net_nat_finalize(Bridge *br, pid_t child) {
   // add a route inside the sandbox towards the outside veth interface
   if (asprintf(&cmd, "ip route add default via %d.%d.%d.%d", PRINT_IP(br->ip)) == -1)
 		errExit("asprintf");
+
+  printf ("DBG: about to route.\n\n\n");
+  system("ip addr");
+  sleep (5);
+
   if(system(cmd))
     errExit("net_nat_finalize: add route inside namespace");
   free(cmd);
+  
+  // reset privileges
+	if (setreuid(ruid, euid))
+		errExit("setreuid");
+
+  // reset environment variables
+  environ = envtmp;
 
 	if (arg_debug)
 		printf("NAT device %s in child process's network namespace configured\n", br->devsandbox);
