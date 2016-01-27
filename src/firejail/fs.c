@@ -216,6 +216,42 @@ static void disable_file(OPERATION op, const char *filename, const char *emptydi
 	free(fname);
 }
 
+/* This is a cheap hack to match specific patterns, especially lock files that,
+   like in Firefox, might be dangling and hidden in multiple folders. The alternative
+   would be to copy the entire glob implementation of the glibc and remove their
+   spurious dangling symlink check. This is likely less error-prone. */
+static int linksmartglob(const char *pattern, int flags, int (*errfunc) (const char *epath, int eerrno), glob_t *pglob) {
+  const char *laststar = strrchr(pattern, '*');
+  const char *lastdir = strrchr(pattern, '/');
+
+  // match the directory, then append the leftover on all entries
+  if (laststar && lastdir && lastdir > laststar) {
+    char *copy = strdup(pattern);
+    char *clastdir = strrchr(copy, '/');
+    *clastdir = '\0';
+    clastdir++;
+
+    int ret = glob(copy, flags, errfunc, pglob);
+    if (!ret) {
+      size_t i;
+	    for (i = 0; pglob && i < pglob->gl_pathc; i++) {
+		    char *entry = pglob->gl_pathv[i];
+
+	      char *newentry;
+	      if (asprintf(&newentry, "%s/%s", entry, clastdir) == -1)
+	        errExit("asprintf");
+
+        pglob->gl_pathv[i] = newentry;
+        free(entry);
+      }
+    }
+
+    free(copy);
+    return ret;
+  } else
+    return glob(pattern, flags, errfunc, pglob);
+}
+
 // Treat pattern as a shell glob pattern and blacklist matching files
 static void globbing(OPERATION op, const char *pattern, const char *noblacklist[], size_t noblacklist_len, const char *emptydir, const char *emptyfile) {
 	assert(pattern);
@@ -225,12 +261,12 @@ static void globbing(OPERATION op, const char *pattern, const char *noblacklist[
 	glob_t globbuf;
 	// Profiles contain blacklists for files that might not exist on a user's machine.
 	// GLOB_NOCHECK makes that okay.
-	int globerr = glob(pattern, GLOB_NOCHECK | GLOB_NOSORT, NULL, &globbuf);
+	int globerr = linksmartglob(pattern, GLOB_NOCHECK | GLOB_NOSORT, NULL, &globbuf);
 	if (globerr) {
 		exechelp_logerrv("firejail", "Error: failed to glob pattern %s\n", pattern);
 		exit(1);
 	}
-
+	
 	size_t i, j;
 	for (i = 0; i < globbuf.gl_pathc; i++) {
 		char* path = globbuf.gl_pathv[i];
