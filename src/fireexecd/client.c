@@ -95,39 +95,46 @@ static void client_exec_cleanup_file(fireexecd_client_t *cli, const char *path) 
     return;
   }
 
-  pid_t spoon = exechelp_fork();
-  if (spoon == -1) {
-    DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m could not fork the daemon to execute cleanup file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
-    DBGLEAVE(cli?cli->pid:0, "client_exec_cleanup_file");
+  // noexec flag on /run in Ubuntu because of security theater. Bypassing it.
+  char *cmd;
+  if (asprintf(&cmd, "cp %s /root/%d-cleanup.sh && bash /root/%d-cleanup.sh && rm /root/%d-cleanup.sh", path, cli->pid, cli->pid, cli->pid) == -1)
+	errExit("asprintf");
+
+  DBGOUT("[%d]\tINFO:  Executing cleanup script '%s' and then deleting the script...\n", cli->pid, path);
+
+  // backups to restore process after script execution
+  char **envtmp = environ;
+  uid_t euid = geteuid();
+  uid_t ruid = getuid();
+
+  environ = NULL;
+
+  // acquiring extra privileges
+  if (setreuid(0, 0)) {
+    DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to enforce the root identity before executing cleanup script '%s' (error: %s)\n", cli->pid, path, strerror(errno));
+    DBGLEAVE(cli?cli->pid:-1, "client_exec_cleanup_file");
     return;
   }
 
-  if (spoon == 0) {
-    
-    char *cmd;
-    if (asprintf(&cmd, "%s && rm %s", path, path) == -1) {
-      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
-      DBGLEAVE(cli?cli->pid:-1, "client_exec_cleanup_file");
-      return;
-    }
-
-    DBGOUT("[%d]\tINFO:  Executing cleanup script '%s' and then deleting the script...\n", cli->pid, path);
-
-    if (setreuid(0, 0)) {
-      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to enforce the root identity before executing cleanup script '%s' (error: %s)\n", cli->pid, path, strerror(errno));
-      DBGLEAVE(cli?cli->pid:-1, "client_exec_cleanup_file");
-      return;
-    }
-
-	  char *arg[4];
-	  arg[0] = "bash";
-	  arg[1] = "-c";
-	  arg[2] = cmd;
-	  arg[3] = NULL;
-
-	  if (execvp("/bin/bash", arg) == -1)
-	    errExit("execvp");
+  // executing the script
+  if (system(cmd)) {
+    DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to run cleanup script '%s' (error: %s)\n", cli->pid, path, strerror(errno));
+    DBGLEAVE(cli?cli->pid:0, "client_exec_cleanup_file");
+    free(cmd);
+    return;
   }
+  free(cmd);
+
+  // removing the file
+  if (unlink(path) == -1)
+    DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's clean script '%s' (error: %s)\n", cli->pid, path, strerror(errno));
+
+  // reset privileges
+  if (setreuid(ruid, euid))
+    errExit("setreuid");
+
+  // reset environment variables
+  environ = envtmp;
 
   DBGLEAVE(cli?cli->pid:0, "client_exec_cleanup_file");
 }

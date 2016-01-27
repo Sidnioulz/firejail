@@ -147,7 +147,7 @@ void net_nat_parent_finalize(Bridge *br, pid_t child) {
   free(cmd);
 
   if (cfg.helper) {
-    if (asprintf(&cmd, "iptables -t nat -D POSTROUTING -s %d.%d.%d.%d/%d -d 0.0.0.0/0 -j MASQUERADE\n", PRINT_IP(br->ip), mask2bits(br->mask)) == -1)
+    if (asprintf(&cmd, "#!/bin/sh\niptables -t nat -D POSTROUTING -s %d.%d.%d.%d/%d -d 0.0.0.0/0 -j MASQUERADE &&\nip link delete firejail-%d &&\nexit", PRINT_IP(br->ip), mask2bits(br->mask), sandbox_pid) == -1)
 		  errExit("asprintf");
     fs_helper_write_net_cleanup_file(cmd);
   } else {
@@ -163,8 +163,8 @@ void net_nat_parent_finalize(Bridge *br, pid_t child) {
   free(cmd);
   
   // reset privileges
-	if (setreuid(ruid, euid))
-		errExit("setreuid");
+  if (setreuid(ruid, euid))
+    errExit("setreuid");
 
   // reset environment variables
   environ = envtmp;
@@ -198,10 +198,6 @@ void net_nat_finalize(Bridge *br, pid_t child) {
   // add a route inside the sandbox towards the outside veth interface
   if (asprintf(&cmd, "ip route add default via %d.%d.%d.%d", PRINT_IP(br->ip)) == -1)
 		errExit("asprintf");
-
-  printf ("DBG: about to route.\n\n\n");
-  system("ip addr");
-  sleep (5);
 
   if(system(cmd))
     errExit("net_nat_finalize: add route inside namespace");
