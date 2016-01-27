@@ -148,7 +148,7 @@ int profile_check_line(char *ptr, int lineno) {
 		cfg.bridge3.configured = 0;
 		return 0;
 	}
-	else if (strcmp(ptr, "net any") == 0) {
+	else if (strcmp(ptr, "net any") == 0 || strcmp(ptr, "net auto") == 0) {
 		cfg.bridgenat.configured = 1;
 		cfg.bridge0.configured = 0;
 		cfg.bridge1.configured = 0;
