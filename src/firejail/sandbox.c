@@ -282,6 +282,17 @@ int sandbox(void* sandbox_arg) {
 	// update /proc, /dev, /boot directorymy
 	//****************************
 	fs_proc_sys_dev_boot();
+
+ 	//****************************
+	// --nosound and fix for pulseaudio 7.0
+ 	//****************************
+	if (arg_nosound)
+		pulseaudio_disable();
+	else
+		pulseaudio_init();
+
+ 	//****************************
+ 	// networking
 	
 	//****************************
 	// networking

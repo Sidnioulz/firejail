@@ -32,6 +32,7 @@
 #define ETC_DIR	                  "/tmp/firejail/mnt/etc"
 #define ETC_FJ_DIR                "/tmp/firejail/mnt/etc/firejail"
 #define SELF_DIR                  "/tmp/firejail/mnt/etc/firejail/self"
+#define PULSE_DIR	                "/tmp/firejail/mnt/pulse"
 
 #define LINKED_APPS_SB_PATH       SELF_DIR"/"EXECHELP_LINKED_APPS
 #define PROTECTED_APPS_SB_PATH    SELF_DIR"/"EXECHELP_PROTECTED_APPS
@@ -179,6 +180,7 @@ extern int arg_reachability;	// whether the app matching a profile can be run in
 extern int arg_private_dev;	// private dev directory
 extern int arg_private_etc;	// private etc directory
 extern int arg_scan;		// arp-scan all interfaces
+extern int arg_nosound;	// disable sound
 
 extern int parent_to_child_fds[2];
 extern int child_to_parent_fds[2];
@@ -216,6 +218,10 @@ void net_bridge_add_interface(const char *bridge, const char *dev);
 uint32_t network_get_defaultgw(void);
 int net_config_mac(const char *ifname, const unsigned char mac[6]);
 int net_get_mac(const char *ifname, unsigned char mac[6]);
+
+// pulseaudio.c
+void pulseaudio_init(void);
+void pulseaudio_disable(void);
 
 // fs.c
 // build /tmp/firejail directory

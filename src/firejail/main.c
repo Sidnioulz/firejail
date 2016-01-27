@@ -88,6 +88,7 @@ int arg_reachability = ALWAYS_REACHABLE;	// whether the app matching a profile c
 int arg_private_dev = 0;			// private dev directory
 int arg_private_etc = 0;			// private etc directory
 int arg_scan = 0;				// arp-scan all interfaces
+int arg_nosound = 0;				// disable sound
 
 int parent_to_child_fds[2];
 int child_to_parent_fds[2];
@@ -835,7 +836,11 @@ int main(int argc, char **argv) {
 		}
 		else if (strncmp(argv[i], "--env=", 6) == 0)
 			env_store(argv[i] + 6);
-		
+		else if (strncmp(argv[i], "--nosound", 9) == 0) {
+			arg_nosound = 1;
+			arg_private_dev = 1;
+		}
+				
 		//*************************************
 		// network
 		//*************************************
