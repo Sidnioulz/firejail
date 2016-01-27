@@ -111,6 +111,7 @@ install: all
 	install -c -m 0644 etc/quassel.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/deadbeef.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/filezilla.profile $(DESTDIR)/etc/firejail/.
+	install -c -m 0644 etc/parole.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/protected-apps.policy $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/protected-files.policy $(DESTDIR)/etc/firejail/.
 	mkdir -p $(DESTDIR)/etc/xdg/autostart
