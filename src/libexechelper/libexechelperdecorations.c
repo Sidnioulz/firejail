@@ -32,6 +32,7 @@
 
 #include "../include/common.h"
 #include "../include/exechelper.h"
+#include "../include/exechelper-logger.h"
 
 int arg_debug = DEBUGLVL;
 
