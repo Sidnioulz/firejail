@@ -26,6 +26,7 @@
 #include <pthread.h>
 #include <pwd.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -82,7 +83,10 @@ int client_execute_sandboxed(fireexecd_client_t *cli,
   sandboxargv[index++] = strdup("firejail");
   sandboxargv[index++] = strdup("--helper");
   // if you add too many lines here, remember to allocate more memory
-  if (arg_debug)
+  char *dbg_env = getenv(EXECHELP_DEBUG_ENV);
+  errno = 0;
+  int dbg = strtol(dbg_env? dbg_env : "0", NULL, 10);
+  if (!errno && dbg);
     sandboxargv[index++] = strdup("--debug");
 
   if (profile && strcmp(profile, EXECHELP_PROFILE_ANY)) {

@@ -49,8 +49,9 @@ printf("time %s:%d %u\n", __FILE__, __LINE__, (uint32_t) systick);
 #define STACK_SIZE (1024 * 1024)
 static char child_stack[STACK_SIZE];		// space for child's stack
 Config cfg;					// configuration
-int arg_private = 0;				// mount private /home and /tmp directoryu
+int arg_private = 0;				// mount private /home and /tmp directory
 int arg_debug = 0;				// print debug messages
+int arg_debug_eh = 0;				// print debug messages inside libexechelper
 int arg_slow = 0;				  // pause the program for a while to help debuggers attach
 int arg_nonetwork = 0;				// --net=none
 int arg_command = 0;				// -c
@@ -471,6 +472,11 @@ int main(int argc, char **argv) {
 		
 		if (strcmp(argv[i], "--debug") == 0)
 			arg_debug = 1;
+
+  	else if (strcmp(argv[i], "--debug-helper") == 0) {
+			arg_debug_eh = 1;
+			arg_debug = 1;
+		}
 		
 		else if (strcmp(argv[i], "--slow") == 0)
 			arg_slow = 1;

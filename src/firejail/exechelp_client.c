@@ -82,7 +82,7 @@ void exechelp_propagate_sandbox_info_to_env(void) {
       errExit("setenv");
   }
 
-  if (arg_debug) {
+  if (arg_debug_eh) {
     char *level;
     if (asprintf(&level, "%d", arg_debug) == -1)
       errExit("asprintf");

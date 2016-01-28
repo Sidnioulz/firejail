@@ -144,6 +144,7 @@ typedef enum reachability_t {
 
 extern int arg_private;		// mount private /home and /tmp directory
 extern int arg_debug;		// print debug messages
+extern int arg_debug_eh;		// print debug messages inside libexechelper
 extern int arg_nonetwork;	// --net=none
 extern int arg_command;	// -c
 extern int arg_overlay;		// overlay option

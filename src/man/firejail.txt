@@ -241,6 +241,15 @@ Example:
 .br
 $ firejail \-\-debug firefox
 .TP
+\fB\-\-debug-helper\fR
+Print debug messages also in execution helper library.
+.br
+
+.br
+Example:
+.br
+$ firejail \-\-debug \-\-debug\-helper firefox
+.TP
 \fB\-\-debug-syscalls
 Print all recognized system calls in the current Firejail software build and exit.
 .br

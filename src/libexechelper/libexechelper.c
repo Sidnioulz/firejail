@@ -39,7 +39,7 @@
 #include "../include/exechelper.h"
 #include "../include/exechelper-logger.h"
 
-int arg_debug = DEBUGLVL;
+int arg_debug = 0;
 pthread_mutex_t commandmutex = PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -71,12 +71,12 @@ int fprintf(FILE *stream, const char *format, ...) {
   va_list args;
   va_start(args, format);
 
-  if (stream == stderr)
-    exechelp_log("firejail-client", format, args);
-
   int ret = -1;
   if (original_fprintf)
     ret = original_fprintf(stream, format, args);
+
+  if (stream == stderr)
+    exechelp_log("firejail-client", format, args);
 
   va_end(args);
   return ret;
@@ -89,16 +89,15 @@ size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
   if (!original_fwrite)
     original_fwrite = dlsym(RTLD_NEXT, "fwrite");
 
-  if (stream == stderr)
-    exechelp_logv("firejail-client", "%s", (const char *)ptr);
-
   size_t ret = -1;
   if (original_fwrite)
     original_fwrite(ptr, size, nmemb, stream);
 
+  if (stream == stderr)
+    exechelp_logv("firejail-client", "%s", (const char *)ptr);
+
   return ret;
 }
-
 
 
 #define _SERVER_SOCKET_COUNTER_LIMIT_SECS   10

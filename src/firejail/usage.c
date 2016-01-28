@@ -77,6 +77,7 @@ void usage(void) {
 	printf("\t--dbus=policy - not supported yet.\n\n");
 	
 	printf("\t--debug - print sandbox debug messages.\n\n");
+	printf("\t--debug-helper - print sandbox debug messages also in execution helper library.\n\n");
 	printf("\t--debug-syscalls - print all recognized system calls in the current\n");
 	printf("\t\tFirejail software build and exit.\n\n");
 	printf("\t--debug-caps - print all recognized capabilities in the current\n");
