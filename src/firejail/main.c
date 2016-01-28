@@ -269,7 +269,7 @@ static void run_cmd_and_exit(int i, int argc, char **argv) {
 		// extract pid
 		pid_t pid;
 		int is_pid = (read_pid(argv[i] + 12, &pid) == 0);
-
+		
 		// extract network name
 		char *dev = NULL;
 		int down = 0;
@@ -285,6 +285,17 @@ static void run_cmd_and_exit(int i, int argc, char **argv) {
       
       // translate the 'auto' device name
       if (strcmp(dev, "auto") == 0) {
+        if (!is_pid) {
+        	if (strlen(argv[i] + 12) == 0) {
+		        exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
+		        exit(1);
+	        }
+	        if (name2pid(argv[i] + 12, &pid)) {
+		        exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", !argv[i] + 12);
+		        exit(1);
+	        }
+        }
+      
         if (asprintf(&dev, "firejail-%d", pid) == -1)
           errExit("asprintf");
       }
@@ -319,7 +330,7 @@ static void run_cmd_and_exit(int i, int argc, char **argv) {
 		if (is_pid)
 			bandwidth_pid(pid, cmd, dev, down, up);
 		else
-				bandwidth_name(argv[i] + 12, cmd, dev, down, up);
+			bandwidth_name(argv[i] + 12, cmd, dev, down, up);
 		exit(0);
 	}
 
