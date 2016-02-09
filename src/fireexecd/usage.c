@@ -29,7 +29,7 @@ void usage(void) {
 	printf("\t--help, -? - this help screen.\n\n");
 	printf("\t--version - print program version and exit.\n\n");
 
-	printf("The fireexecd daemon must be running in order for the --helper option to be used.\n\n");
+	printf("The fireexecd daemon must be running, unless the --disable-helper option is used.\n\n");
 
 	printf("License GPL version 3 or later\n");
 	printf("fireexecd is an unofficial extension to Firejail.\n");

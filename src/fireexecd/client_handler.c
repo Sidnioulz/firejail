@@ -81,7 +81,6 @@ int client_execute_sandboxed(fireexecd_client_t *cli,
   size_t index=0;
   size_t offset=0;
   sandboxargv[index++] = strdup("firejail");
-  sandboxargv[index++] = strdup("--helper");
   // if you add too many lines here, remember to allocate more memory
   char *dbg_env = getenv(EXECHELP_DEBUG_ENV);
   errno = 0;
