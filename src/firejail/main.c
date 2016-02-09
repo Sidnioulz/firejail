@@ -291,7 +291,7 @@ static void run_cmd_and_exit(int i, int argc, char **argv) {
 		        exit(1);
 	        }
 	        if (name2pid(argv[i] + 12, &pid)) {
-		        exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", !argv[i] + 12);
+		        exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", argv[i] + 12);
 		        exit(1);
 	        }
         }
