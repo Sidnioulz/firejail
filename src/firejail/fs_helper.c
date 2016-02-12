@@ -239,12 +239,18 @@ void fs_helper_fix_gtk3_windows(void) {
 	if (stat(confpath, &s)) {
 		/* coverity[toctou] */
 		int rv = mkdir(confpath, S_IRWXU | S_IRWXG | S_IRWXO);
-		if (rv == -1)
-			errExit("mkdir");
-		if (chown(confpath, realuid, realgid) < 0)
-			errExit("chown");
-		if (chmod(confpath, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
-			errExit("chmod");
+		if (rv == -1) {
+	    exechelp_logerrv("firejail", "Warning: could not create directory '%s' in user home for the GTK+3.0 config file. Window decorations might be duplicate: %s\n", confpath, strerror(errno));
+      return;
+		}
+		if (chown(confpath, realuid, realgid) < 0) {
+	    exechelp_logerrv("firejail", "Error: chown %s failed: %s.\n", confpath, strerror(errno));
+      return;
+		}
+		if (chmod(confpath, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0) {
+	    exechelp_logerrv("firejail", "Error: chmod %s failed: %s.\n", confpath, strerror(errno));
+      return;
+		}
 	}
   free(confpath);
 
@@ -255,16 +261,24 @@ void fs_helper_fix_gtk3_windows(void) {
 	if (stat(gtkpath, &s)) {
 		/* coverity[toctou] */
 		int rv = mkdir(gtkpath, S_IRWXU | S_IRWXG | S_IRWXO);
-		if (rv == -1)
-			errExit("mkdir");
-		if (chown(gtkpath, realuid, realgid) < 0)
-			errExit("chown");
-		if (chmod(gtkpath, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
-			errExit("chmod");
+		if (rv == -1) {
+	    exechelp_logerrv("firejail", "Warning: could not create directory '%s' in user home for the GTK+3.0 config file. Window decorations might be duplicate: %s\n", gtkpath, strerror(errno));
+	    return;
+		}
+		if (chown(gtkpath, realuid, realgid) < 0) {
+	    exechelp_logerrv("firejail", "Error: chown %s failed: %s.\n", gtkpath, strerror(errno));
+      return;
+		}
+		if (chmod(gtkpath, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0) {
+	    exechelp_logerrv("firejail", "Error: chmod %s failed: %s.\n", gtkpath, strerror(errno));
+      return;
+		}
 	}
 
-  if (mount(gtkpath, gtkpath, NULL, MS_BIND|MS_REC, NULL) < 0)
-	  errExit("mount bind");
+  if (mount(gtkpath, gtkpath, NULL, MS_BIND|MS_REC, NULL) < 0) {
+    exechelp_logerrv("firejail", "Warning: could not mount-bind directory '%s' to make changes to its files disposable. Window decorations might be duplicate: %s\n", gtkpath, strerror(errno));
+    return;
+	}
   free(gtkpath);
   
   // create a file to hold our gtk config in our temporary folder
@@ -273,13 +287,18 @@ void fs_helper_fix_gtk3_windows(void) {
 	if (asprintf(&filepath, "%s/gtk.css", MNT_DIR) == -1)
 	  errExit("asprintf");
   int fd = open(filepath, O_WRONLY | O_APPEND | O_CREAT, 0644);
-  if (fd == -1)
-    errExit("open");
-  if (chown(filepath, realuid, realgid) < 0)
-	  errExit("chown");
-  if (chmod(filepath, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0)
-	  errExit("chmod");
-
+  if (fd == -1) {
+    exechelp_logerrv("firejail", "Warning: could not open file '%s' to write required CSS hacks. Window decorations might be duplicate: %s\n", filepath, strerror(errno));
+    return;
+	}
+  if (chown(filepath, realuid, realgid) < 0) {
+    exechelp_logerrv("firejail", "Error: chown %s failed: %s.\n", filepath, strerror(errno));
+    return;
+	}
+  if (chmod(filepath, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0) {
+    exechelp_logerrv("firejail", "Error: chmod %s failed: %s.\n", filepath, strerror(errno));
+    return;
+	}
 
   // ensure gtk.css exists, if it does, copy its content into our file
   char *targetpath;
@@ -290,15 +309,21 @@ void fs_helper_fix_gtk3_windows(void) {
 	  missing = 1;
 
   int targetfd = open(targetpath, O_RDWR | O_CREAT, 0644);
-  if (targetfd == -1)
-    errExit("open");
+  if (targetfd == -1) {
+    exechelp_logerrv("firejail", "Warning: could not open file '%s' to read existing CSS rules. Window decorations might be duplicate: %s\n", targetpath, strerror(errno));
+    return;
+	}
 
   // ensure the user owns the new file
   if (missing) {
-	  if (chown(targetpath, realuid, realgid) < 0)
-		  errExit("chown");
-	  if (chmod(targetpath, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0)
-		  errExit("chmod");
+	  if (chown(targetpath, realuid, realgid) < 0) {
+      exechelp_logerrv("firejail", "Error: chown %s failed: %s.\n", targetpath, strerror(errno));
+      return;
+	  }
+	  if (chmod(targetpath, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0) {
+      exechelp_logerrv("firejail", "Error: chmod %s failed: %s.\n", targetpath, strerror(errno));
+      return;
+	  }
 	}
 	// or copy its existing contents into our temporary file
 	else {
@@ -336,7 +361,7 @@ void fs_helper_fix_gtk3_windows(void) {
 
   // finally, mount our temporary file on top of the current one
   if (mount(filepath, targetpath, NULL, MS_BIND|MS_REC, NULL) < 0)
-	  errExit("mount bind");
+    exechelp_logerrv("firejail", "Warning: could not mount-bind file '%s' into '%s'. Window decorations might be duplicate: %s\n", filepath, targetpath, strerror(errno));
 
   free(filepath);
   free(targetpath);
