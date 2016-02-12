@@ -263,7 +263,7 @@ void exechelp_register_socket(void) {
       if (received < 0)
         errExit("recv");
       else {
-        exechelp_logerrv("firejail", "Error: no execution helper daemon is running. Please run 'fireexecd' prior to running firejail, or use the '--disable-helper' option to run firejail without execution helper (can help to circumvent bugs).\n");
+        exechelp_logerrv("firejail", "Error: the execution helper daemon should be running but sent data we could not receive. 'fireexecd' might have crashed. Use the '--disable-helper' option to run firejail without execution helper (can help to circumvent bugs).\n");
         exit(1);
       }
   }
