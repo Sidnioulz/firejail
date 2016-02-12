@@ -26,6 +26,18 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <libmount.h>
+
+int mkdir_if_not_exists(const char *pathname, mode_t mode)
+{
+	struct stat s;
+
+	if (stat(pathname, &s) == 0)
+	  return S_ISDIR(s.st_mode)? 0 : EEXIST;
+  else
+    return mkdir(pathname, mode);
+}
+
 
 // build /tmp/firejail directory
 void fs_build_firejail_dir(void) {
@@ -629,8 +641,224 @@ void fs_basic_fs(void) {
 // # umount /root/overlay/root
 
 
+static void
+fs_overlayfs_dir(const char *oroot, const char *dest, const char *basedir, int oldkernel);
+
+static void mount_automounts_into_overlay(const char *oroot, const char *basedir, int oldkernel) {
+  if (arg_debug) {
+    printf("Mounting host filesystem's mount points into OverlayFS layer...\n");
+  }
+
+  /* get the /proc/mounts pseudo-file and cache it somewhere */
+  FILE *mounts = fopen(MOUNTS_FILE, "rb");
+  if (!mounts) {
+		exechelp_logerrv("firejail", "Error: could not open the mounts file used for --overlay mode to produce a fully-working system, expecting further issues: %s (%s)\n", MOUNTS_FILE, strerror(errno));
+    return;
+  }
+
+  char *cpath = MNT_DIR"/mounts";
+  FILE *cached = fopen(cpath, "w+");
+  if (!cached) {
+		exechelp_logerrv("firejail", "Error: could not create a temporary file to process mount units, needed for --overlay mode to produce a fully-working system, expecting further issues: %s (%s)\n", cpath, strerror(errno));
+    return;
+  }
+
+  char buffer[4096];
+  size_t bytes;
+  errno = 0;
+  while (!errno && 0 < (bytes = fread(buffer, 1, sizeof(buffer), mounts)))
+    fwrite(buffer, 1, bytes, cached);
+  if (errno)
+    errExit("fread/fwrite");
+
+  fclose(mounts);
+  rewind(cached);
+
+  /* start processing */
+  char *format;
+	if(asprintf(&format, "%%%ds %%%ds %%%ds %%%ds %%d %%d\n", PATH_MAX-1, PATH_MAX-1, PATH_MAX-1, PATH_MAX-1) == -1)
+		errExit("asprintf");
+  int matched;
+  char origin[PATH_MAX], dest[PATH_MAX], type[PATH_MAX], opt[PATH_MAX];
+  uid_t uid;
+  gid_t gid;
+
+  do {
+    matched = fscanf(cached, format, &origin, &dest, &type, &opt, &uid, &gid);
+    if (matched == 6) {
+      /* some rules just ought to be ignored */
+      if (strcmp(dest, "/") == 0 ||
+          strncmp(dest, "/dev", 4) == 0 ||
+          strncmp(dest, "/sys", 4) == 0 ||
+          strncmp(dest, "/proc", 5) == 0 ||
+          strncmp(dest, "/boot", 5) == 0 ||
+          strncmp(dest, "/tmp/firejail", 13) == 0)
+        continue;
+
+      /* typical data-containing mount points, make them writable in the overlayfs, by overlayfs'ing them too */
+      if (strncmp(dest, "/home", 5) == 0 ||
+          strncmp(dest, "/mnt", 4) == 0 ||
+          strncmp(dest, "/media", 6) == 0 ||
+          uid == getuid()) {
+        /* debug */
+	      if (arg_debug) {
+	        char *tmp;
+	        if (asprintf(&tmp, "Mounting %s of type %s as an OverlayFS layer into OverlayFS\n", dest, type) == -1)
+		        errExit("asprintf");
+		      printf("%s", tmp);
+		      free(tmp);
+	      }
+
+        char *neworoot;
+        if (asprintf(&neworoot, "%s%s", oroot, dest) == -1)
+		        errExit("asprintf");
+        fs_overlayfs_dir(neworoot, dest, basedir, oldkernel);
+        free(neworoot);
+      }
+
+	    /* mount-bind the directory, read-only */
+      else {
+        /* debug */
+	      if (arg_debug) {
+	        char *tmp;
+	        if (asprintf(&tmp, "Mounting %s of type %s into OverlayFS\n", dest, type) == -1)
+		        errExit("asprintf");
+		      printf("%s", tmp);
+		      free(tmp);
+	      }
+
+        unsigned long mountflags = 0;
+        char *mountpt;
+        if (asprintf(&mountpt, "%s%s", oroot, dest) == -1)
+	        errExit("asprintf");
+
+        if (mnt_optstr_get_flags(opt, &mountflags, mnt_get_builtin_optmap(MNT_LINUX_MAP))) {
+	        exechelp_logerrv("firejail", "Error: mnt_optstr_get_flags: failed to process mount flags for %s\n", dest);
+	        continue;
+        }
+
+        if (mount(dest, mountpt, type, mountflags|MS_BIND|MS_REC, NULL) < 0) {
+          char *errmsg;
+          if (asprintf(&errmsg, "mounting %s", mountpt) == -1)
+	          errExit("asprintf");
+          errExit(errmsg);
+        }
+
+        free(mountpt);
+      }
+    }
+  } while (matched > 0);
+
+  free(format);
+
+  /* close and destroy the tmp file used for scanning */
+  fclose(cached);
+  unlink(cpath);
+}
+
+
 // to do: fix the code below; also, it might work without /dev; impose seccomp/caps filters when not root
 #include <sys/utsname.h>
+static void
+fs_overlayfs_dir(const char *oroot, const char *dest, const char *basedir, int oldkernel) {
+  if (!dest || !oroot)
+    errExit("fs_overlayfs_dir");
+
+  /* first ensure that oroot exists */
+	if (mkdir_if_not_exists(oroot, S_IRWXU | S_IRWXG | S_IRWXO)) {
+		exechelp_logerrv("firejail", "Error: cannot create overlay directory in temporary mountpoint: %s\n", oroot);
+		exit(1);
+	}
+	if (chown(oroot, 0, 0) < 0)
+		errExit("chown");
+	if (chmod(oroot, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+		errExit("chmod");
+
+	char *baseworkdir;
+  if(asprintf(&baseworkdir, "%s/.temp", basedir) == -1)
+	  errExit("asprintf");
+	if (mkdir_if_not_exists(baseworkdir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
+		exechelp_logerrv("firejail", "Error: cannot create overlay work directory in user home: %s\n", baseworkdir);
+		exit(1);
+	}
+	free(baseworkdir);
+
+  /* choose a name for odiff's persistent folder, and the owork temp folder */
+	char *odiff;
+	char *owork;
+  /* use the special "System" folder name for the system FS */
+  if (strcmp("/", dest) == 0) {
+	  if(asprintf(&odiff, "%s/System", basedir) == -1)
+		  errExit("asprintf");
+	  if(asprintf(&owork, "%s/.temp/System", basedir) == -1)
+		  errExit("asprintf");
+  }
+  /* use the Home folder for users' homes */
+  else if (strcmp("/home", dest) == 0 || strcmp("/home/", dest) == 0) {
+	  if(asprintf(&odiff, "%s/Users", basedir) == -1)
+		  errExit("asprintf");
+	  if(asprintf(&owork, "%s/.temp/Users", basedir) == -1)
+		  errExit("asprintf");
+  }
+  /* construct a name from the mountpoint */
+  else {
+    char *tmp = strdup(dest);
+    char *ptr;
+    for (ptr = strchr(tmp, '/'); ptr; ptr = strchr(ptr, '/'))
+      ptr[0]='-';
+    ptr = (tmp[0] == '-')? tmp+1 : tmp;
+
+	  if(asprintf(&odiff, "%s/%s", basedir, tmp) == -1)
+		  errExit("asprintf");
+	  if(asprintf(&owork, "%s/.temp/%s", basedir, dest) == -1)
+		  errExit("asprintf");
+
+    free(tmp);
+  }
+
+	if (mkdir_if_not_exists(odiff, S_IRWXU | S_IRWXG | S_IRWXO)) {
+		exechelp_logerrv("firejail", "Error: cannot create overlay persistent diff directory in user home: %s\n", odiff);
+		exit(1);
+	}
+	if (chown(odiff, 0, 0) < 0)
+		errExit("chown");
+	if (chmod(odiff, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+		errExit("chmod");
+
+	if (mkdir_if_not_exists(owork, S_IRWXU | S_IRWXG | S_IRWXO)) {
+		exechelp_logerrv("firejail", "Error: cannot create overlay work directory in user home: %s\n", owork);
+		exit(1);
+	}
+	if (chown(owork, 0, 0) < 0)
+		errExit("chown");
+	if (chmod(owork, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+		errExit("chmod");
+	
+	// mount overlayfs
+	if (arg_debug)
+		printf("Mounting OverlayFS\n");
+
+	char *option;
+	if (oldkernel) {
+		if (asprintf(&option, "lowerdir=%s,upperdir=%s", dest, odiff) == -1)
+			errExit("asprintf");
+		if (mount("overlayfs", oroot, "overlayfs", MS_MGC_VAL, option) < 0)
+			errExit("mounting overlayfs");
+	} else { // kernel 3.18 or newer
+		if (asprintf(&option, "lowerdir=%s,upperdir=%s,workdir=%s", dest, odiff, owork) == -1)
+			errExit("asprintf");
+
+		if (mount("overlay", oroot, "overlay", MS_MGC_VAL, option) < 0)
+			errExit("mounting overlayfs");
+	}
+
+	printf("OverlayFS configured in %s directory\n", odiff);
+
+	free(option);
+	free(odiff);
+	free(owork);
+}
+
 void fs_overlayfs(void) {
 	// check kernel version
 	struct utsname u;
@@ -653,74 +881,38 @@ void fs_overlayfs(void) {
 	}
 	if (major == 3 && minor < 18)
 		oldkernel = 1;
-	
+
+ // old Ubuntu/OpenSUSE kernels
+	if (oldkernel && arg_overlay_keep) {
+		exechelp_logerrv("firejail", "Error: option --overlay= not available for kernels older than 3.18\n");
+		exit(1);
+	}
+
 	// build overlay directories
 	fs_build_mnt_dir();
-
-	char *oroot;
-	if(asprintf(&oroot, "%s/oroot", MNT_DIR) == -1)
-		errExit("asprintf");
-	if (mkdir(oroot, S_IRWXU | S_IRWXG | S_IRWXO))
-		errExit("mkdir");
-	if (chown(oroot, 0, 0) < 0)
-		errExit("chown");
-	if (chmod(oroot, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
-		errExit("chmod");
-
+	
+  /* then determine where we'll keep the odiff and owork folders */
 	char *basedir = MNT_DIR;
 	if (arg_overlay_keep) {
 		// set base for working and diff directories
 		basedir = cfg.overlay_dir;
-		if (mkdir(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
-			exechelp_logerrv("firejail", "Error: cannot create overlay directory\n");
+		if (mkdir_if_not_exists(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
+			exechelp_logerrv("firejail", "Error: cannot create overlay directory in user home\n");
 			exit(1);
 		}
 	}
 
-	char *odiff;
-	if(asprintf(&odiff, "%s/odiff", basedir) == -1)
+	char *oroot;
+	if(asprintf(&oroot, "%s/oroot", MNT_DIR) == -1)
 		errExit("asprintf");
-	if (mkdir(odiff, S_IRWXU | S_IRWXG | S_IRWXO))
-		errExit("mkdir");
-	if (chown(odiff, 0, 0) < 0)
-		errExit("chown");
-	if (chmod(odiff, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
-		errExit("chmod");
-	
-	char *owork;
-	if(asprintf(&owork, "%s/owork", basedir) == -1)
-		errExit("asprintf");
-	if (mkdir(owork, S_IRWXU | S_IRWXG | S_IRWXO))
-		errExit("mkdir");
-	if (chown(owork, 0, 0) < 0)
-		errExit("chown");
-	if (chmod(owork, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
-		errExit("chmod");
-	
-	// mount overlayfs
-	if (arg_debug)
-		printf("Mounting OverlayFS\n");
-	char *option;
-	if (oldkernel) { // old Ubuntu/OpenSUSE kernels
-		if (arg_overlay_keep) {
-			exechelp_logerrv("firejail", "Error: option --overlay= not available for kernels older than 3.18\n");
-			exit(1);
-		}
-		if (asprintf(&option, "lowerdir=/,upperdir=%s", odiff) == -1)
-			errExit("asprintf");
-		if (mount("overlayfs", oroot, "overlayfs", MS_MGC_VAL, option) < 0)
-			errExit("mounting overlayfs");
-	}
-	else { // kernel 3.18 or newer
-		if (asprintf(&option, "lowerdir=/,upperdir=%s,workdir=%s", odiff, owork) == -1)
-			errExit("asprintf");
-//printf("option #%s#\n", option);			
-		if (mount("overlay", oroot, "overlay", MS_MGC_VAL, option) < 0)
-			errExit("mounting overlayfs");
-	}
-	printf("OverlayFS configured in %s directory\n", basedir);
+  fs_overlayfs_dir(oroot, "/", basedir, oldkernel);
+
+  //FIXME arg for mounting dev in a special way!?
+  //FIXME might want to mount *some* /dev, esp /dev/shm
+	mount_automounts_into_overlay(oroot, basedir, oldkernel);
 	
 	// mount-bind dev directory
+	//FIXME should that really be a special case?
 	if (arg_debug)
 		printf("Mounting /dev\n");
 	char *dev;
@@ -732,6 +924,8 @@ void fs_overlayfs(void) {
 	// chroot in the new filesystem
 	if (chroot(oroot) == -1)
 		errExit("chroot");
+	free(oroot);
+
 	// update /var directory in order to support multiple sandboxes running on the same root directory
 	if (!arg_private_dev)
 		fs_dev_shm();
@@ -742,14 +936,21 @@ void fs_overlayfs(void) {
 	fs_var_cache();
 	fs_var_utmp();
 
+  /* don't let the inside of the box reach the base directory
+   * (we here assume that it'll be mounted in the same place inside and outside
+   * the box, this in practice is not correct if basedir is in /home/ and /home
+   * is mounted in a different path inside the box; that should only happen if
+   * a root-owned process changes mountpoints while we are launching firejail,
+   * though) */
+  fs_blacklist(basedir);
+  free(basedir);
+
+  //FIXME handle file sync, when you want to retrieve the global file
+  //FIXME handle file version visibility
+
 	// only in user mode
 	if (getuid())
 		sanitize_home();
-
-	// cleanup and exit
-	free(option);
-	free(oroot);
-	free(odiff);
 }
 
 

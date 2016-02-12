@@ -56,7 +56,8 @@ int arg_slow = 0;				  // pause the program for a while to help debuggers attach
 int arg_nonetwork = 0;				// --net=none
 int arg_command = 0;				// -c
 int arg_overlay = 0;				// overlay option
-int arg_overlay_keep = 0;			// place overlay diff directory in ~/.firejail
+int arg_overlay_keep = 0;			// place overlay diff directory in ~/Sandboxes/
+int arg_overlay_home = 0;			// mount home as an OverlayFS too
 int arg_zsh = 0;				// use zsh as default shell
 int arg_csh = 0;				// use csh as default shell
 
@@ -236,6 +237,58 @@ void check_user_namespace(void) {
 		exechelp_logerrv("firejail", "Warning: user namespaces not available in the current kernel.\n");
 		arg_noroot = 0;
 	}
+}
+
+static void overlay_build_directory(void) {
+	// create ~/.firejail directory
+	char *dirname;
+	if (asprintf(&dirname, "%s/Sandboxes/", cfg.homedir) == -1)
+		errExit("asprintf");
+	struct stat s;
+	if (stat(dirname, &s) == -1) {
+		if (mkdir(dirname, S_IRWXU | S_IRWXG | S_IRWXO))
+			errExit("mkdir");
+		if (chown(dirname, getuid(), getgid()) < 0)
+			errExit("chown");
+		if (chmod(dirname, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+	free(dirname);
+
+
+	// if the sandbox is named, look up the name of the sandbox and try to reuse its contents
+  if (cfg.hostname) {
+	  if (asprintf(&dirname, "%s/Sandboxes/%s", cfg.homedir, cfg.hostname) == -1)
+      errExit("asprintf");
+  }
+	// else, come up with a name based on the date and current PID
+  else {
+    char date[300] = {0};
+    time_t t = time(NULL);
+    struct tm ttm;
+    localtime_r(&t, &ttm);
+    if (!strftime(date, sizeof(date), "%Y-%m-%d %H:%M", &ttm))
+      date[0] = '\0';
+
+    char *execname = strrchr(cfg.original_argv[cfg.original_program_index], '/');
+    execname = execname? execname+1 : cfg.original_argv[cfg.original_program_index];
+
+	  if (asprintf(&dirname, "%s/Sandboxes/%s %s", cfg.homedir, date, execname) == -1)
+      errExit("asprintf");
+
+    if (stat(dirname, &s) == 0) {
+      free(dirname);
+      if (asprintf(&dirname, "%s/Sandboxes/%s %s (pid %d)", cfg.homedir, date, execname, getpid()) == -1)
+        errExit("asprintf");
+      
+      if (stat(dirname, &s) == 0) {
+		    exechelp_logerrv("firejail", "Error: overlay directory already exists: %s\n", dirname);
+		    exit(1);
+      }
+	  }
+  }
+  	
+  cfg.overlay_dir = dirname;
 }
 
 // exit commands
@@ -652,31 +705,18 @@ int main(int argc, char **argv) {
 			}
 			arg_overlay = 1;
 			arg_overlay_keep = 1;
+			arg_overlay_home = 1;
       exechelp_logv("firejail", "Running with an overlay filesystem\n");
-			
-			// create ~/.firejail directory
-			char *dirname;
-			if (asprintf(&dirname, "%s/.firejail", cfg.homedir) == -1)
-				errExit("asprintf");
-			struct stat s;
-			if (stat(dirname, &s) == -1) {
-				if (mkdir(dirname, S_IRWXU | S_IRWXG | S_IRWXO))
-					errExit("mkdir");
-				if (chown(dirname, getuid(), getgid()) < 0)
-					errExit("chown");
-				if (chmod(dirname, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
-					errExit("chmod");
-			}
-			free(dirname);
-			
-			// check overlay directory
-			if (asprintf(&dirname, "%s/.firejail/%d", cfg.homedir, getpid()) == -1)
-				errExit("asprintf");
-			if (stat(dirname, &s) == 0) {
-				exechelp_logerrv("firejail", "Error: overlay directory already exists: %s\n", dirname);
+		}
+		else if (strcmp(argv[i], "--overlay-private-home") == 0) {
+			if (cfg.chrootdir) {
+				exechelp_logerrv("firejail", "Error: --overlay and --chroot options are mutually exclusive\n");
 				exit(1);
 			}
-			cfg.overlay_dir = dirname;
+			arg_overlay = 1;
+			arg_overlay_keep = 1;
+			arg_overlay_home = 0;
+      exechelp_logv("firejail", "Running with an overlay filesystem and a private, persistent home\n");
 		}
 		else if (strcmp(argv[i], "--overlay-tmpfs") == 0) {
 			if (cfg.chrootdir) {
@@ -1251,6 +1291,9 @@ int main(int argc, char **argv) {
 			exit(1);
 		}
 	}
+
+  // build the overlay directory
+  overlay_build_directory();
 
 	// log command
 	logargs(argc, argv);

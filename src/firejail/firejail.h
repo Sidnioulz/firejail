@@ -33,6 +33,7 @@
 #define ETC_FJ_DIR                "/tmp/firejail/mnt/etc/firejail"
 #define SELF_DIR                  "/tmp/firejail/mnt/etc/firejail/self"
 #define PULSE_DIR	                "/tmp/firejail/mnt/pulse"
+#define MOUNTS_FILE               "/proc/mounts"
 
 #define LINKED_APPS_SB_PATH       SELF_DIR"/"EXECHELP_LINKED_APPS
 #define PROTECTED_APPS_SB_PATH    SELF_DIR"/"EXECHELP_PROTECTED_APPS
@@ -148,7 +149,8 @@ extern int arg_debug_eh;		// print debug messages inside libexechelper
 extern int arg_nonetwork;	// --net=none
 extern int arg_command;	// -c
 extern int arg_overlay;		// overlay option
-extern int arg_overlay_keep;	// place overlay diff directory in ~/.firejail
+extern int arg_overlay_keep;	// place overlay diff directory in ~/Sandboxes/
+extern int arg_overlay_home;	// mount home as an OverlayFS too
 extern int arg_zsh;		// use zsh as default shell
 extern int arg_csh;		// use csh as default shell
 

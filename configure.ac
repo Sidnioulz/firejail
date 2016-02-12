@@ -61,6 +61,13 @@ AC_SUBST(X11_CFLAGS)
 AC_SUBST(X11_LIBS)
 AC_SUBST(HAVE_X11)
 
+# checking for libmount for OverlayFS
+PKG_CHECK_MODULES(MOUNT, [
+	mount >= 2.25
+])
+AC_SUBST(MOUNT_CFLAGS)
+AC_SUBST(MOUNT_LIBS)
+
 # checking for GTK+ for fireexecd
 PKG_CHECK_MODULES(GTK, [
 	glib-2.0 >= 2.40
