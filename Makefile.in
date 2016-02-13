@@ -153,6 +153,16 @@ install: all
 	install -c -m 0644 icons/emblems/48/emblem-protected.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/emblems/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/emblems/
 	install -c -m 0644 icons/emblems/symbolic/emblem-protected-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/emblems/
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/apps/
+	install -c -m 0644 icons/apps/16/firejail-workspaces.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/apps/
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/22x22/apps/
+	install -c -m 0644 icons/apps/24/firejail-workspaces.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/apps/
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/apps/
+	install -c -m 0644 icons/apps/32/firejail-workspaces.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/apps/
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/apps/
+	install -c -m 0644 icons/apps/48/firejail-workspaces.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/apps/
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/64x64/apps/
+	install -c -m 0644 icons/apps/64/firejail-workspaces.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/64x64/apps/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/actions/
 	install -c -m 0644 icons/actions/10/firejail-protect.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/actions/
 	install -c -m 0644 icons/actions/10/firejail-unprotect.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/actions/
@@ -254,6 +264,11 @@ uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/emblems/emblem-protected.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/emblems/emblem-protected.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/emblems/emblem-protected-symbolic.svg
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/apps/firejail-workspaces.svg
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/apps/firejail-workspaces.svg
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/apps/firejail-workspaces.svg
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/apps/firejail-workspaces.svg
+	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/48x48/apps/firejail-workspaces.svg
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/actions/firejail-protect.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/actions/firejail-unprotect.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/actions/firejail-link.png
