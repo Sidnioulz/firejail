@@ -699,7 +699,7 @@ $ ls -l sandboxlog*
 .TP
 \fB\-\-overlay
 Mount a filesystem overlay on top of the current filesystem. All filesystem modifications go into the overlay.
-The overlay is stored in $HOME/.firejail directory.
+The overlay is stored in $HOME/Sandboxes/ directory.
 .br
 
 .br
@@ -711,6 +711,18 @@ OverlayFS was officially introduced in Linux kernel version 3.18
 Example:
 .br
 $ firejail \-\-overlay firefox
+
+.TP
+\fB\-\-overlay\-private\-home
+Mount a filesystem overlay on top of the current filesystem. All filesystem modifications go into the overlay.
+The overlay is stored in $HOME/Sandboxes/ directory. The home directory is initialised with an empty folder
+stored at the same location rather than mirrored to the host system.
+.br
+
+.br
+OverlayFS support is required in Linux kernel for this option to work.
+OverlayFS was officially introduced in Linux kernel version 3.18
+.br
 
 .TP
 \fB\-\-overlay-tmpfs

@@ -27,6 +27,9 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <libmount.h>
+#include <sys/types.h>
+#include <pwd.h>
+
 
 int mkdir_if_not_exists(const char *pathname, mode_t mode)
 {
@@ -695,8 +698,12 @@ static void mount_automounts_into_overlay(const char *oroot, const char *basedir
           strncmp(dest, "/tmp/firejail", 13) == 0)
         continue;
 
+      /* home is only allowed if we don't create a special home directory */
+      if (strncmp(dest, "/home", 5) == 0 && arg_overlay_home == 0)
+        continue;
+
       /* typical data-containing mount points, make them writable in the overlayfs, by overlayfs'ing them too */
-      if (strncmp(dest, "/home", 5) == 0 ||
+      else if (strncmp(dest, "/home", 5) == 0 ||
           strncmp(dest, "/mnt", 4) == 0 ||
           strncmp(dest, "/media", 6) == 0 ||
           uid == getuid()) {
@@ -756,6 +763,57 @@ static void mount_automounts_into_overlay(const char *oroot, const char *basedir
   unlink(cpath);
 }
 
+static void
+make_home_into_overlay(const char *oroot, const char *basedir) {
+  char *odiff;
+  if(asprintf(&odiff, "%s/Users", basedir) == -1)
+	  errExit("asprintf");
+
+	if (mkdir_if_not_exists(odiff, S_IRWXU | S_IRWXG | S_IRWXO)) {
+		exechelp_logerrv("firejail", "Error: cannot create persistent diff directory in user home: %s\n", odiff);
+		exit(1);
+	}
+	if (chown(odiff, 0, 0) < 0)
+		errExit("chown");
+	if (chmod(odiff, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+		errExit("chmod");
+
+  struct passwd pwd;
+  struct passwd *result = NULL;
+  char buffer[8192];
+  if (getpwuid_r(getuid(), &pwd, buffer, sizeof(buffer), &result))
+    errExit("getpwuid_r");
+  if (!result || !pwd.pw_name)
+    errExit("getpwuid_r");
+
+  char *userdir;
+  if(asprintf(&userdir, "%s/%s", odiff, pwd.pw_name) == -1)
+	  errExit("asprintf");
+
+	if (mkdir_if_not_exists(userdir, S_IRWXU | S_IRWXG | S_IRWXO)) {
+		exechelp_logerrv("firejail", "Error: cannot create user home inside overlay: %s\n", userdir);
+		exit(1);
+	}
+	if (chown(userdir, getuid(), getgid()) < 0)
+		errExit("chown");
+	if (chmod(userdir, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+		errExit("chmod");
+
+
+  char *mountpt;
+  if(asprintf(&mountpt, "%s/home", oroot) == -1)
+	  errExit("asprintf");
+  if (mount(odiff, mountpt, "ext4", MS_RELATIME|MS_BIND|MS_REC, NULL) < 0) {
+    char *errmsg;
+    if (asprintf(&errmsg, "mounting %s", mountpt) == -1)
+      errExit("asprintf");
+    errExit(errmsg);
+  }
+
+  free(mountpt);
+  free(odiff);
+  free(userdir);
+}
 
 // to do: fix the code below; also, it might work without /dev; impose seccomp/caps filters when not root
 #include <sys/utsname.h>
@@ -907,12 +965,13 @@ void fs_overlayfs(void) {
 		errExit("asprintf");
   fs_overlayfs_dir(oroot, "/", basedir, oldkernel);
 
-  //FIXME arg for mounting dev in a special way!?
-  //FIXME might want to mount *some* /dev, esp /dev/shm
 	mount_automounts_into_overlay(oroot, basedir, oldkernel);
+
+  if (arg_overlay_home == 0)
+    make_home_into_overlay(oroot, basedir);
 	
 	// mount-bind dev directory
-	//FIXME should that really be a special case?
+  //FIXME might want to mount *some* /dev, esp /dev/shm
 	if (arg_debug)
 		printf("Mounting /dev\n");
 	char *dev;
