@@ -21,7 +21,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 #define _GNU_SOURCE
-#include "../include/exechelper-logger.h"
+#include "exechelper-logger.h"
 #include <errno.h>
 #include <stdio.h>
 #include <sys/types.h>
