@@ -116,6 +116,11 @@ void usage(void) {
 	printf("\t--join=name - join the sandbox identified by name.\n\n");
 	printf("\t--join=pid - join the sandbox identified by PID.\n\n");
 	printf("\t--list - list all sandboxes.\n\n");
+	printf("\t--lock-workspace - lock the client's X11 windows to workspaces that have\n");
+	printf("\t\tthe same name as the client. Use --name to set the name of the client.\n");
+	printf("\t\tOnly compatible with Xfwm. If the name of the workspace changes, or if\n");
+	printf("\t\tthe name parameter corresponds to no existing sandbox, the behavior \n");
+	printf("\t\tof the window manager is undefined.\n\n");
 	printf("\t--mac=xx:xx:xx:xx:xx:xx - set interface MAC address.\n\n");
 	printf("\t--name=name - set sandbox hostname.\n\n");
 	printf("\t--net=auto - enable a new network namespace, which will automatically\n");

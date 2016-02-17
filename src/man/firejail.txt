@@ -317,6 +317,13 @@ $ firejail \-\-list
 $ firejail \-\-dns.print=3272
 
 .TP
+\fB\-\-lock\-workspace
+Lock the client's X11 windows to workspaces that have the same name as the client. Use \-\-name to set the
+name of the client. Only compatible with Xfwm. If the name of the workspace changes, or if the name parameter
+corresponds to no existing sandbox, the behavior of the window manager is undefined.
+.br
+
+.TP
 \fB\-\-env=name=value
 Set environment variable in the new sandbox.
 .br

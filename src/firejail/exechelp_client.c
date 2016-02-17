@@ -82,6 +82,11 @@ void exechelp_propagate_sandbox_info_to_env(void) {
       errExit("setenv");
   }
 
+  if (cfg.hostname && cfg.lock_workspace) {
+    if (setenv(EXECHELP_SANDBOX_LOCK_WS_ENV, cfg.hostname, 1) < 0)
+      errExit("setenv");
+  }
+
   if (arg_debug_eh) {
     char *level;
     if (asprintf(&level, "%d", arg_debug) == -1)

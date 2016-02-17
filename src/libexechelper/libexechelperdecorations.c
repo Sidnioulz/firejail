@@ -68,11 +68,12 @@ Window XCreateWindow(Display *display, Window parent, int x, int y, unsigned int
       xcw = dlsym(RTLD_NEXT, "XCreateWindow");
   }
 
-  static Atom container_atom = 0, type_atom = 0, name_atom = 0;
+  static Atom container_atom = 0, type_atom = 0, name_atom = 0, ws_atom = 0;
   if (!container_atom) {
     container_atom = XInternAtom(display, "CONTAINER", False);
     type_atom      = XInternAtom(display, EXECHELP_SANDBOX_TYPE_ENV, False);
     name_atom      = XInternAtom(display, EXECHELP_SANDBOX_NAME_ENV, False);
+    ws_atom        = XInternAtom(display, EXECHELP_SANDBOX_LOCK_WS_ENV, False);
   }
 
   Window window = xcw(display, parent, x, y, width, height, border_width, depth, class, visual, valuemask, attributes);
@@ -85,9 +86,14 @@ Window XCreateWindow(Display *display, Window parent, int x, int y, unsigned int
   if (!name)
     name = "";
 
+  char *ws = getenv(EXECHELP_SANDBOX_LOCK_WS_ENV);
+  if (!ws)
+    ws = "";
+
   XChangeProperty(display, window, container_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) "firejail", 9);
   XChangeProperty(display, window, type_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) type, strlen(type)+1);
   XChangeProperty(display, window, name_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) name, strlen(name)+1);
+  XChangeProperty(display, window, ws_atom, XA_STRING, 8, PropModeReplace, (unsigned char *) ws, strlen(ws)+1);
 
   return window;
 }

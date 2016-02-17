@@ -116,6 +116,9 @@ typedef struct config_t {
 	// sandbox helper for cross-sandbox IPC
 	int helper;
 
+  // UI related options
+  int lock_workspace;
+
   // DBus IPC
 	int dbus;
   char *dbus_policy;

@@ -725,6 +725,9 @@ int main(int argc, char **argv) {
 			}
 			arg_overlay = 1;
 		}
+	  else if (strcmp(argv[i], "--lock-workspace") == 0) {
+	    cfg.lock_workspace = 1;
+	  }
 		else if (strncmp(argv[i], "--profile=", 10) == 0) {
 			if (arg_noprofile) {
 				exechelp_logerrv("firejail", "Error: --noprofile and --profile options are mutually exclusive\n");
