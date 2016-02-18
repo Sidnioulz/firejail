@@ -102,9 +102,16 @@ int name2pid(const char *name, pid_t *pid) {
 				free(cmd);
 				continue;
 			}
-			while (*ptr != ' ' && *ptr != '\t' && *ptr != '\0')
-				ptr++;
-			*ptr = '\0';
+			// set a NULL pointer on the next identified argument
+			char *next_for_sure = strstr(ptr, " --");
+			if (next_for_sure)
+		    *next_for_sure = '\0';
+			// else we can't allow spaces in the --name argument
+			else {
+			  while (*ptr != ' ' && *ptr != '\t' && *ptr != '\0')
+				  ptr++;
+			  *ptr = '\0';
+			}
 			int rv = strcmp(start + 7, name);
 			if (rv == 0) {
 				free(cmd);
