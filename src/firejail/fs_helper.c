@@ -116,19 +116,20 @@ void fs_helper_write_net_cleanup_file(const char *content)
 void fs_helper_generate_files(void) {
 	struct stat s;
 	fs_build_mnt_etc_dir();
+	fs_build_mnt_run_dir();
 	
-	// create /tmp/firejail/mnt/etc/firejail directory
-	if (stat(ETC_FJ_DIR, &s)) {
-	  int rv = mkdir(ETC_FJ_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
+	// create /tmp/firejail/mnt/run/firejail directory
+	if (stat(RUN_FJ_DIR, &s)) {
+	  int rv = mkdir(RUN_FJ_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1)
 		  errExit("mkdir");
-	  if (chown(ETC_FJ_DIR, 0, 0) < 0)
+	  if (chown(RUN_FJ_DIR, 0, 0) < 0)
 		  errExit("chown");
-	  if (chmod(ETC_FJ_DIR, 0755) < 0)
+	  if (chmod(RUN_FJ_DIR, 0755) < 0)
 		  errExit("chmod");
 	}
 	
-	// create /tmp/firejail/mnt/etc/firejail/self directory
+	// create /tmp/firejail/mnt/run/firejail/self directory
 	if (stat(SELF_DIR, &s)) {
 	  int rv = mkdir(SELF_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1)
@@ -450,7 +451,7 @@ static int fs_helper_overlay_etc(void) {
 	if(arg_debug)
 	  printf("OverlayFS configured in %s directory\n", SELF_OVERLAY_DIR);
 	
-	// create /etc/firejail/self equivalent in the OverlayFS
+	// create /run/firejail/self equivalent in the OverlayFS
 	struct stat s;
 	if (stat(SELF_OVERLAY_DIR"/oroot/firejail/self", &s)) {
 	  int rv = mkdir(SELF_OVERLAY_DIR"/oroot/firejail/self", S_IRWXU | S_IRWXG | S_IRWXO);
@@ -463,7 +464,7 @@ static int fs_helper_overlay_etc(void) {
 	}
 	
   if (arg_debug)
-	  printf("Mount-bind %s on top of OverlayFS equivalent of /etc/firejail/self\n", SELF_DIR);
+	  printf("Mount-bind %s on top of OverlayFS equivalent of /run/firejail/self\n", SELF_DIR);
   if (mount(SELF_DIR, SELF_OVERLAY_DIR"/oroot/firejail/self", NULL, MS_BIND|MS_REC, NULL) < 0)
 	  errExit("mount bind");
 	
@@ -488,48 +489,48 @@ void fs_helper_mount_self_dir(void) {
 
 	int must_overlay = 0;
 	
-	// create /etc/firejail
-	if (stat("/etc/firejail", &s)) {
-	  int rv = mkdir("/etc/firejail", S_IRWXU | S_IRWXG | S_IRWXO);
+	// create /run/firejail
+	if (stat("/run/firejail", &s)) {
+	  int rv = mkdir("/run/firejail", S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1) {
 	    must_overlay = 1;
     } else {
-	    if (chown("/etc/firejail", 0, 0) < 0)
+	    if (chown("/run/firejail", 0, 0) < 0)
 		    errExit("chown");
-	    if (chmod("/etc/firejail", 0755) < 0)
+	    if (chmod("/run/firejail", 0755) < 0)
 		    errExit("chmod");
     }
 	}
 	
-	// create /etc/firejail/self
-	if (!must_overlay && stat("/etc/firejail/self", &s)) {
-	  int rv = mkdir("/etc/firejail/self", S_IRWXU | S_IRWXG | S_IRWXO);
+	// create /run/firejail/self
+	if (!must_overlay && stat("/run/firejail/self", &s)) {
+	  int rv = mkdir("/run/firejail/self", S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1) {
 	    must_overlay = 1;
 	  }
 	}
 
-  // we must let all uids reach /etc/firejail/self for normal operation
+  // we must let all uids reach /run/firejail/self for normal operation
   if (!must_overlay) {
-    if (chmod("/etc/firejail", 0511) < 0)
+    if (chmod("/run/firejail", 0511) < 0)
 	    errExit("chmod");
-    if (chown("/etc/firejail/self", 0, 0) < 0)
+    if (chown("/run/firejail/self", 0, 0) < 0)
 	    errExit("chown");
-    if (chmod("/etc/firejail/self", 0755) < 0)
+    if (chmod("/run/firejail/self", 0755) < 0)
 	    errExit("chmod");
   }
 
-  // create an overlay fs of /etc to be able to make /etc/firejail/self
+  // create an overlay fs of /etc to be able to make /run/firejail/self
   if (must_overlay) {
     if(fs_helper_overlay_etc()) {
       errExit("helper overlay");
     }
   } else {
 	  if (arg_debug)
-		  printf("Mount-bind %s on top of /etc/firejail/self\n", SELF_DIR);
-	  if (mount(SELF_DIR, "/etc/firejail/self", NULL, MS_BIND|MS_REC, NULL) < 0) {
-	    fprintf(stderr, "Error: could not mount-bind %s on top of /etc/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
-	    exechelp_logv("firejail", "could not mount-bind %s on top of /etc/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
+		  printf("Mount-bind %s on top of /run/firejail/self\n", SELF_DIR);
+	  if (mount(SELF_DIR, "/run/firejail/self", NULL, MS_BIND|MS_REC|MS_RDONLY, NULL) < 0) {
+	    fprintf(stderr, "Error: could not mount-bind %s on top of /run/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
+	    exechelp_logv("firejail", "could not mount-bind %s on top of /run/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
 	  }
   }
 }

@@ -12,5 +12,6 @@ blacklist ${PATH}/xinput
 blacklist ${PATH}/strace
 
 # Prevent manipulation of firejail configuration
-blacklist /etc/firejail
-blacklist ${HOME}/.config/firejail
+read-only /etc/firejail
+noblacklist /etc/firejail/self
+read-only ${HOME}/.config/firejail

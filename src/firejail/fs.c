@@ -114,6 +114,24 @@ void fs_build_mnt_etc_dir(void) {
 			errExit("chmod");
 	}
 }
+void fs_build_mnt_run_dir(void) {
+	struct stat s;
+	fs_build_mnt_dir();
+	
+	// create /tmp/firejail directory
+	if (stat(RUN_DIR, &s)) {
+		if (arg_debug)
+			printf("Creating %s directory\n", RUN_DIR);
+		/* coverity[toctou] */
+		int rv = mkdir(RUN_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1)
+			errExit("mkdir");
+		if (chown(RUN_DIR, 0, 0) < 0)
+			errExit("chown");
+		if (chmod(RUN_DIR, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+}
 
 //***********************************************
 // process profile file
@@ -868,7 +886,7 @@ fs_overlayfs_dir(const char *oroot, const char *dest, const char *basedir, int o
 
 	  if(asprintf(&odiff, "%s/%s", basedir, tmp) == -1)
 		  errExit("asprintf");
-	  if(asprintf(&owork, "%s/.temp/%s", basedir, dest) == -1)
+	  if(asprintf(&owork, "%s/.temp/%s", basedir, tmp) == -1)
 		  errExit("asprintf");
 
     free(tmp);

@@ -30,8 +30,9 @@
 #define HOME_DIR	                "/tmp/firejail/mnt/home"
 #define SELF_OVERLAY_DIR          "/tmp/firejail/mnt/helperoverlay"
 #define ETC_DIR	                  "/tmp/firejail/mnt/etc"
-#define ETC_FJ_DIR                "/tmp/firejail/mnt/etc/firejail"
-#define SELF_DIR                  "/tmp/firejail/mnt/etc/firejail/self"
+#define RUN_DIR	                  "/tmp/firejail/mnt/run"
+#define RUN_FJ_DIR                "/tmp/firejail/mnt/run/firejail"
+#define SELF_DIR                  "/tmp/firejail/mnt/run/firejail/self"
 #define PULSE_DIR	                "/tmp/firejail/mnt/pulse"
 #define MOUNTS_FILE               "/proc/mounts"
 
@@ -236,6 +237,8 @@ void fs_build_firejail_dir(void);
 void fs_build_mnt_dir(void);
 // build /tmp/firejail/mnt/etc directory
 void fs_build_mnt_etc_dir(void);
+// build /tmp/firejail/mnt/run directory
+void fs_build_mnt_run_dir(void);
 // blacklist files or directoies by mounting empty files on top of them
 void fs_blacklist(const char *homedir);
 void fs_blacklist_file(const char *file);

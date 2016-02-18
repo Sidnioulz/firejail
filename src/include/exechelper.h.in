@@ -42,7 +42,7 @@ extern int arg_debug;
 #define EXECHELP_PROTECTED_APPS_BIN       "protected-apps.policy"
 #define EXECHELP_PROTECTED_FILES_BIN      "protected-files.policy"
 
-#define EXECHELP_CLIENT_ROOT              "/etc/firejail/self"
+#define EXECHELP_CLIENT_ROOT              "/run/firejail/self"
 #define EXECHELP_LINKED_APPS_PATH         EXECHELP_CLIENT_ROOT"/"EXECHELP_LINKED_APPS
 #define EXECHELP_PROTECTED_APPS_PATH      EXECHELP_CLIENT_ROOT"/"EXECHELP_PROTECTED_APPS
 #define EXECHELP_PROTECTED_FILES_PATH     EXECHELP_CLIENT_ROOT"/"EXECHELP_PROTECTED_FILES
