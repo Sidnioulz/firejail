@@ -560,6 +560,33 @@ void exechelp_build_run_dir(void) {
 	}
 }
 
+// build /run/firejail directory
+void exechelp_build_run_user_dir(pid_t pid) {
+  exechelp_build_run_dir();
+
+	struct stat s;
+  uid_t uid = getuid();
+  gid_t gid = getgid();
+
+  char *path;
+  if (asprintf(&path, "%s/%d", EXECHELP_RUN_DIR, pid) == -1)
+    errExit("asprintf");
+
+	if (stat(path, &s)) {
+		if (arg_debug)
+			printf("Creating %s directory\n", path);
+		/* coverity[toctou] */
+		int rv = mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO);
+		if (rv == -1)
+			errExit("mkdir");
+		if (chmod(path, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+			errExit("chmod");
+	}
+	if (chown(path, uid, gid) < 0)
+		errExit("chown");
+	free(path);
+}
+
 #define CAN_MODE_MASK (CAN_EXISTING | CAN_ALL_BUT_LAST | CAN_MISSING)
 #define AREAD_MAX_SIZE 4096
 #define IS_ABSOLUTE_FILE_NAME(F) ISSLASH ((F)[0])

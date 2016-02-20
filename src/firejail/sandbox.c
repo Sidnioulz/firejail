@@ -272,6 +272,21 @@ int sandbox(void* sandbox_arg) {
     exechelp_propagate_sandbox_info_to_env();
 	}
 
+#if 0
+  // block dbus session bus the hard way if necessary
+  if (cfg.dbus == 0) {
+    //FIXME DEBUG
+    char *dbus_path;
+		if (asprintf(&dbus_path, "/run/user/%d/bus", getuid()) == -1)
+			errExit("asprintf");
+    fs_blacklist_file(dbus_path);
+    free(dbus_path);
+    //END FIXME
+}
+#endif
+
+
+
 	//****************************
 	// install trace
 	//****************************
@@ -382,15 +397,15 @@ int sandbox(void* sandbox_arg) {
 	
 	// set environment
 	// fix qt 4.8
-	if (setenv("QT_X11_NO_MITSHM", "1", 1) < 0)
+	if (firejail_setenv("QT_X11_NO_MITSHM", "1", 1) < 0)
 		errExit("setenv");
-	if (setenv("container", "firejail", 1) < 0) // LXC sets container=lxc,
+	if (firejail_setenv("container", "firejail", 1) < 0) // LXC sets container=lxc,
 		errExit("setenv");
-	if (arg_zsh && setenv("SHELL", "/usr/bin/zsh", 1) < 0)
+	if (arg_zsh && firejail_setenv("SHELL", "/usr/bin/zsh", 1) < 0)
 		errExit("setenv");
-	if (arg_csh && setenv("SHELL", "/bin/csh", 1) < 0)
+	if (arg_csh && firejail_setenv("SHELL", "/bin/csh", 1) < 0)
 		errExit("setenv");
-	if (cfg.shell && setenv("SHELL", cfg.shell, 1) < 0)
+	if (cfg.shell && firejail_setenv("SHELL", cfg.shell, 1) < 0)
 		errExit("setenv");
 	if (cfg.helper)	{
     char *existing = getenv("LD_PRELOAD");
@@ -404,14 +419,14 @@ int sandbox(void* sandbox_arg) {
       preload = strdup(EXECHELP_LD_PRELOAD_PATH);
     }
 
-	  if (setenv("LD_PRELOAD", preload, 1) < 0)
+	  if (firejail_setenv("LD_PRELOAD", preload, 1) < 0)
 		  errExit("setenv");
 	  free(preload);
 	}
 
 	// set prompt color to green
 	//export PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
-	if (setenv("PROMPT_COMMAND", "export PS1=\"\\[\\e[1;32m\\][\\u@\\h \\W]\\$\\[\\e[0m\\] \"", 1) < 0)
+	if (firejail_setenv("PROMPT_COMMAND", "export PS1=\"\\[\\e[1;32m\\][\\u@\\h \\W]\\$\\[\\e[0m\\] \"", 1) < 0)
 		errExit("setenv");
 	// set user-supplied environment variables
 	env_apply();
@@ -443,6 +458,9 @@ int sandbox(void* sandbox_arg) {
 	// save cgroup in MNT_DIR/cgroup file
 	if (cfg.cgroup)
 		save_cgroup();
+
+  // save the sandbox's environment so other processes can adjust theirs when joining us
+  firejail_setenv_finalize();
 
 	//****************************************
 	// drop privileges or create a new user namespace

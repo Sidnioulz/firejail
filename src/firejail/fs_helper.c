@@ -61,10 +61,11 @@ static void write_helper_list_to_file(const char *path, const char *list)
   if (!filename)
     errExit("strrchr");
 
-  exechelp_build_run_dir();
+  exechelp_build_run_user_dir(sandbox_pid);
+
 
   char *runpath;
-  if (asprintf(&runpath, "%s/%d-%s", EXECHELP_RUN_DIR, sandbox_pid, filename+1) == -1)
+  if (asprintf(&runpath, "%s/%d/%s", EXECHELP_RUN_DIR, sandbox_pid, filename+1) == -1)
     errExit("asprintf");
 
   fd = open(runpath, O_WRONLY | O_CREAT, 0644);
@@ -90,10 +91,10 @@ void fs_helper_write_net_cleanup_file(const char *content)
   if(arg_debug)
     printf("Creating a file for fireexecd to know how to cleanup the child process's network stack...\n");
 
-  exechelp_build_run_dir();
+  exechelp_build_run_user_dir(sandbox_pid);
 
   char *runpath;
-  if (asprintf(&runpath, "%s/%d-%s", EXECHELP_RUN_DIR, sandbox_pid, NET_CLEANUP_FILE) == -1)
+  if (asprintf(&runpath, "%s/%d/%s", EXECHELP_RUN_DIR, sandbox_pid, NET_CLEANUP_FILE) == -1)
     errExit("asprintf");
 
   int fd = open(runpath, O_WRONLY | O_CREAT, 0600);

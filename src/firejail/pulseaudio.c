@@ -120,7 +120,7 @@ void pulseaudio_init(void) {
 		errExit("chown");
 
 	// set environment
-	if (setenv("PULSE_CLIENTCONFIG", pulsecfg, 1) < 0)
+	if (firejail_setenv("PULSE_CLIENTCONFIG", pulsecfg, 1) < 0)
 		errExit("setenv");
 
 	free(pulsecfg);

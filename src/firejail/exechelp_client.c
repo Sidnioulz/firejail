@@ -37,9 +37,181 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+#include <proc/readproc.h>
 
 
 static char *cmdsocketpath = NULL;
+
+static FILE *get_domain_env_w(const pid_t pid, int reset) {
+  static FILE *fp = NULL;
+
+  if (fp == NULL && !reset) {
+    char *env_path;
+    if (asprintf(&env_path, "%s/%d/%s", EXECHELP_RUN_DIR, pid, DOMAIN_ENV_FILE) == -1)
+      errExit("asprintf");
+
+    fp = fopen(env_path, "wb");
+    free(env_path);
+  } else if (fp && reset) {
+    fclose(fp);
+    fp = NULL;
+  }
+
+  return fp;
+}
+
+void load_domain_env(const pid_t pid) {
+  char *env_path;
+  if (asprintf(&env_path, "%s/%d/%s", EXECHELP_RUN_DIR, pid, DOMAIN_ENV_FILE) == -1)
+    errExit("asprintf");
+  FILE *fp = fopen(env_path, "rb");
+  if (!fp) {
+    exechelp_logerrv("firejail", "Error when loading environment variables list for Firejail domain '%d': %s\n", pid, strerror(errno));
+    exit(-1);
+  }
+
+  free(env_path);
+
+  char *buffer = NULL;
+  char *value;
+  size_t n = 0;
+  ssize_t linelen = 0;
+  errno = 0;
+  while ((linelen = getline(&buffer, &n, fp)) != -1) {
+    if (buffer[linelen-1] == '\n')
+      buffer[linelen-1] = '\0';
+
+    value = strchr(buffer, '=');
+    if (value) {
+      *value = 0;
+      value += 1;
+
+      if (arg_debug)
+        printf ("Setting environment variable %s to value '%s'\n", buffer, value);
+      setenv(buffer, value, 1);
+    } else {
+      fprintf(stderr, "Warning: the following line from firejail domain's %d list of environment variables was not recognised: %s\n", pid, buffer);
+    }
+  
+    free(buffer);
+    buffer = NULL;
+    n = 0;
+  }
+
+  fclose(fp);
+}
+
+static void load_relevant_env_variable(const char *name, const char *value) {
+  if (!name || !value)
+    return;
+
+  if (strcmp(name, EXECHELP_SANDBOX_TYPE_ENV) == 0 ||
+      strcmp(name, EXECHELP_SANDBOX_NAME_ENV) == 0 ||
+      strcmp(name, EXECHELP_SANDBOX_LOCK_WS_ENV) == 0 ||
+      strcmp(name, EXECHELP_DEBUG_ENV) == 0 ||
+      strcmp(name, EXECHELP_COMMANDS_SOCKET) == 0 ||
+      strcmp(name, EXECHELP_EXECUTION_POLICY) == 0 ||
+      strcmp(name, "container") == 0 ||
+      strcmp(name, "LD_PRELOAD") == 0 ||
+      strcmp(name, "LD_PRELOAD") == 0 ||
+      strcmp(name, "PULSE_CLIENTCONFIG") == 0 ||
+      strcmp(name, "QT_X11_NO_MITSHM") == 0 ||
+      strcmp(name, "DBUS_SESSION_BUS_ADDRESS") == 0) {
+      
+    if (arg_debug || 1) //FIXME
+      printf ("Setting environment variable %s to value '%s'\n", name, value);
+    if (setenv(name, value, 1))
+      errExit("setenv");
+  }
+}
+
+void load_domain_env_from_chroot_proc() {
+  uid_t uids[1] = {getuid()};
+  PROCTAB *pt;
+  proc_t *prt;
+  char *name;
+  char *value;
+  int found_real = 0;
+
+  if ((pt = openproc(PROC_FILLCOM | PROC_FILLENV | PROC_UID, uids, 1)) == NULL)
+    errExit("openproc");
+
+  // we scan through /proc until we find something else than dbus-run-session or dbus-daemon
+  while (!found_real) {
+    if ((prt = readproc(pt, NULL)) == NULL)
+      break;
+
+    if (prt->cmdline[0] && strncmp(prt->cmdline[0], "dbus-run-session", 16) && strncmp(prt->cmdline[0], "dbus-daemon", 11)) {
+      found_real = 1;
+      if (arg_debug)
+        printf ("Copying the environment variables of the original firejail client, identified by pid %d inside the sandbox\n", prt->tid);
+
+      for (int i=0; prt->environ[i]; i++) {
+        name = prt->environ[i];
+        value = strchr(name, '=');
+        if (value) {
+          *value = 0;
+          value += 1;
+          load_relevant_env_variable(name, value);
+        }
+      }
+    }
+
+    freeproc(prt);
+  }
+
+  closeproc(pt);
+
+}
+
+int firejail_setenv(const char *name, const char *value, int overwrite) {
+  if (!name || !value) {
+    errno = EINVAL;
+    return -1;
+  }
+
+  FILE *domain_env = get_domain_env_w(sandbox_pid, 0);
+  int exists = 0;
+
+  // set the environment variable first
+  int set = setenv(name, value, overwrite) == 0;
+
+  // if it worked and we have a file to write to, cache the environment
+  if (set && domain_env) {
+    // try and find an identical line if we mustn't overwrite
+    if (!overwrite) {
+      char *buffer = NULL;
+      size_t n = 0;
+      ssize_t linelen = 0;
+      size_t len = strlen(name);
+      while (!exists && (linelen = getline(&buffer, &n, domain_env)) != -1) {
+        if (strncmp(name, buffer, len) == 0)
+          exists = 1;
+        free(buffer);
+        buffer = NULL;
+        n = 0;
+      }
+    }
+
+    // do the write
+    if (overwrite || !exists) {
+        char *line;
+        if (asprintf(&line, "%s=%s\n", name, value) == -1)
+          errExit("asprintf");
+
+        errno = 0;
+        size_t written = fwrite(line, sizeof(char), strlen(line), domain_env);
+        if (errno)
+          errExit("fwrite");
+
+        free(line);
+    }
+  }
+}
+
+void firejail_setenv_finalize(void) {
+  get_domain_env_w(sandbox_pid, 1);
+}
 
 void exechelp_propagate_sandbox_info_to_env(void) {
   // check if the command to be run was originally a protected app
@@ -69,21 +241,21 @@ void exechelp_propagate_sandbox_info_to_env(void) {
   // set environment variables for libexechelper to intercept...
   if (protected) {
     exechelp_logv("firejail", "Declaring sandbox as protected\n");
-    if (setenv(EXECHELP_SANDBOX_TYPE_ENV, "protected", 1) < 0)
+    if (firejail_setenv(EXECHELP_SANDBOX_TYPE_ENV, "protected", 1) < 0)
       errExit("setenv");
   } else {
     exechelp_logv("firejail", "Declaring sandbox as untrusted\n");
-    if (setenv(EXECHELP_SANDBOX_TYPE_ENV, "untrusted", 1) < 0)
+    if (firejail_setenv(EXECHELP_SANDBOX_TYPE_ENV, "untrusted", 1) < 0)
       errExit("setenv");
   }
 
   if (cfg.hostname) {
-    if (setenv(EXECHELP_SANDBOX_NAME_ENV, cfg.hostname, 1) < 0)
+    if (firejail_setenv(EXECHELP_SANDBOX_NAME_ENV, cfg.hostname, 1) < 0)
       errExit("setenv");
   }
 
   if (cfg.hostname && cfg.lock_workspace) {
-    if (setenv(EXECHELP_SANDBOX_LOCK_WS_ENV, cfg.hostname, 1) < 0)
+    if (firejail_setenv(EXECHELP_SANDBOX_LOCK_WS_ENV, cfg.hostname, 1) < 0)
       errExit("setenv");
   }
 
@@ -91,38 +263,21 @@ void exechelp_propagate_sandbox_info_to_env(void) {
     char *level;
     if (asprintf(&level, "%d", arg_debug) == -1)
       errExit("asprintf");
-    if (setenv(EXECHELP_DEBUG_ENV, level, 1) < 0)
+    if (firejail_setenv(EXECHELP_DEBUG_ENV, level, 1) < 0)
       errExit("setenv");
     free(level);
   }
 }
 
 #define _EH_HASH_STR_LEN 12
-static char *exechelp_gen_socket_name(const char *socket_name, const uid_t uid, const gid_t gid, const pid_t pid) {
+static char *exechelp_gen_socket_name(const char *socket_name, const pid_t pid) {
   char str[_EH_HASH_STR_LEN + 1];
   str[_EH_HASH_STR_LEN] = '\0';
   int available, i;
 
   // get a file path of the form "/run/firejail/<pid>-commands-<rand>
-  char *path = NULL, *dir = NULL;
+  char *path = NULL;
   int fd;
-
-  if (asprintf(&dir, "/run/firejail/%d/", pid) == -1)
-    errExit("asprintf");
-
-  struct stat s;
-	if (stat(dir, &s)) {
-		if (arg_debug)
-			printf("Creating %s directory\n", dir);
-		/* coverity[toctou] */
-		int rv = mkdir(dir, S_IRWXU | S_IRWXG | S_IRWXO);
-		if (rv == -1)
-			errExit("mkdir");
-		if (chmod(dir, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
-			errExit("chmod");
-	}
-	if (chown(dir, uid, gid) < 0)
-		errExit("chown");
 
   // just in case there are leftovers in there...
   available = 0;
@@ -133,7 +288,7 @@ static char *exechelp_gen_socket_name(const char *socket_name, const uid_t uid, 
 
     // generate a file path
     free(path);
-    if (asprintf(&path, "/run/firejail/%d/%s-%s.sock", pid, socket_name, str) == -1)
+    if (asprintf(&path, "%s/%d/%s-%s.sock", EXECHELP_RUN_DIR, pid, socket_name, str) == -1)
       errExit("asprintf");
 
     // check the path is available for a socket (save for race conditions...)
@@ -151,12 +306,9 @@ static char *exechelp_gen_socket_name(const char *socket_name, const uid_t uid, 
 }
 
 void exechelp_install_socket(void) {
-  exechelp_build_run_dir();
+  exechelp_build_run_user_dir(sandbox_pid);
 
-  uid_t realuid = getuid();
-  gid_t realgid = getgid();
-
-  cmdsocketpath = exechelp_gen_socket_name("commands", realuid, realgid, sandbox_pid);
+  cmdsocketpath = exechelp_gen_socket_name("commands", sandbox_pid);
   if (!cmdsocketpath)
     errExit("exechelp_gen_socket_name");
   exechelp_set_socket_env_manually(cmdsocketpath);
@@ -164,7 +316,7 @@ void exechelp_install_socket(void) {
     printf("Created a socket at '%s' for client to inform fireexecd of commands it wants to run\n", cmdsocketpath);
 }
 
-void exechelp_set_socket_env_from_pid(pid_t pid) {
+void exechelp_set_socket_env_from_pid(const pid_t pid) {
   char *socketdir, *socketpath = NULL;
   if (asprintf(&socketdir, EXECHELP_RUN_DIR"/%d", pid-1) == -1)
     errExit("asprintf");
@@ -212,7 +364,7 @@ void exechelp_set_socket_env_manually(char *cmdsocketpath) {
   if(!cmdsocketpath)
     return;
 
-  if (setenv(EXECHELP_COMMANDS_SOCKET, cmdsocketpath, 1) < 0)
+  if (firejail_setenv(EXECHELP_COMMANDS_SOCKET, cmdsocketpath, 1) < 0)
     errExit("setenv");
 }
 
@@ -260,7 +412,7 @@ void exechelp_register_socket(void) {
         if (asprintf(&pol, "%d", EXECHELP_DEFAULT_POLICY) == -1)
           errExit("asprintf");
       }
-      if (setenv(EXECHELP_EXECUTION_POLICY, pol, 1) == -1)
+      if (firejail_setenv(EXECHELP_EXECUTION_POLICY, pol, 1) == -1)
         errExit("setenv");
 
       free(pol);

@@ -72,7 +72,7 @@ void env_apply(void) {
 	Env *env = envlist;
 	
 	while (env) {
-		setenv(env->name, env->value, 1);
+		firejail_setenv(env->name, env->value, 1);
 		env = env->next;
 	}
 }

@@ -65,6 +65,7 @@ extern int arg_debug;
 #define EXECHELP_POLICY_LINE_MAX_READ     8192
 
 #define NET_CLEANUP_FILE                  "network-cleanup.sh"
+#define DOMAIN_ENV_FILE                   "domain-env.list"
 
 #define EXECHELP_COMMAND_ANY              "*"
 #define EXECHELP_PROFILE_ANY              "*"
@@ -97,6 +98,7 @@ typedef enum _ExecHelpExecutionPolicy {
 
 /* Construct directories for fireexecd / libexechelper IPC */
 void exechelp_build_run_dir(void);
+void exechelp_build_run_user_dir(pid_t pid);
 
 
 

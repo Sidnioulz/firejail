@@ -83,16 +83,21 @@ fireexecd_client_t *client_new(pid_t pid,
 }
 
 static void client_exec_cleanup_file(fireexecd_client_t *cli, const char *path) {
+  // backups to restore process after script execution
+  char **envtmp = environ;
+  uid_t euid = geteuid();
+  uid_t ruid = getuid();
+
   DBGENTER(cli?cli->pid:0, "client_exec_cleanup_file");
   if (!path) {
     DBGERR("[n/a]\t\e[01;40;101mERROR:\e[0;0m asked to execute a cleanup file, but no path was provided. Aborting.\n");
     DBGLEAVE(cli?cli->pid:0, "client_exec_cleanup_file");
-    return;
+    goto unlink;
   }
   if (chmod(path, 0700) < 0) {
     DBGERR("[n/a]\t\e[01;40;101mERROR:\e[0;0m cannot mark cleanup file '%s' as executable\n", path);
     DBGLEAVE(cli?cli->pid:0, "client_exec_cleanup_file");
-    return;
+    goto unlink;
   }
 
   // noexec flag on /run in Ubuntu because of security theater. Bypassing it.
@@ -102,18 +107,12 @@ static void client_exec_cleanup_file(fireexecd_client_t *cli, const char *path) 
 
   DBGOUT("[%d]\tINFO:  Executing cleanup script '%s' and then deleting the script...\n", cli->pid, path);
 
-  // backups to restore process after script execution
-  char **envtmp = environ;
-  uid_t euid = geteuid();
-  uid_t ruid = getuid();
-
-  environ = NULL;
-
   // acquiring extra privileges
+  environ = NULL;
   if (setreuid(0, 0)) {
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to enforce the root identity before executing cleanup script '%s' (error: %s)\n", cli->pid, path, strerror(errno));
     DBGLEAVE(cli?cli->pid:-1, "client_exec_cleanup_file");
-    return;
+    goto unlink;
   }
 
   // executing the script
@@ -121,10 +120,11 @@ static void client_exec_cleanup_file(fireexecd_client_t *cli, const char *path) 
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to run cleanup script '%s' (error: %s)\n", cli->pid, path, strerror(errno));
     DBGLEAVE(cli?cli->pid:0, "client_exec_cleanup_file");
     free(cmd);
-    return;
+    goto unlink;
   }
   free(cmd);
 
+unlink:
   // removing the file
   if (unlink(path) == -1)
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's clean script '%s' (error: %s)\n", cli->pid, path, strerror(errno));
@@ -181,18 +181,10 @@ void client_delete_files(fireexecd_client_t *cli) {
 
   if (erasedcmd) {
     DBGOUT("[%d]\tINFO:  Deleting client's files in /run/firejail...\n", cli->pid);
-    // delete the linked/protected apps/files lists
     char *path = NULL;
-    if (asprintf(&path, "%s/%d", EXECHELP_RUN_DIR, cli->pid) == -1) {
-      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
-      DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
-      return;
-    }
-    if (rmdir(path) == -1)
-      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's socket directory '%s' (error: %s)\n", cli->pid, path, strerror(errno));
-    free(path);
 
-    if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_LINKED_APPS) == -1) {
+    // delete the linked/protected apps/files lists
+    if (asprintf(&path, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_LINKED_APPS) == -1) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
       return;
@@ -201,7 +193,7 @@ void client_delete_files(fireexecd_client_t *cli) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's linked apps file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
     free(path);
     
-    if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_PROTECTED_APPS) == -1) {
+    if (asprintf(&path, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_PROTECTED_APPS) == -1) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
       return;
@@ -210,7 +202,7 @@ void client_delete_files(fireexecd_client_t *cli) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's protected apps file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
     free(path);
     
-    if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_PROTECTED_FILES) == -1) {
+    if (asprintf(&path, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_PROTECTED_FILES) == -1) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
       return;
@@ -219,7 +211,7 @@ void client_delete_files(fireexecd_client_t *cli) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's protected files file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
     free(path);
     
-    if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_WHITELIST_APPS) == -1) {
+    if (asprintf(&path, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_WHITELIST_APPS) == -1) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
       return;
@@ -228,7 +220,17 @@ void client_delete_files(fireexecd_client_t *cli) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's whitelisted apps file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
     free(path);
     
-    if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_WHITELIST_FILES) == -1) {
+    if (asprintf(&path, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_WHITELIST_FILES) == -1) {
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
+      DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
+      return;
+    }
+    if (unlink(path) == -1)
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's whitelisted files file '%s' (error: %s)\n", cli->pid, path, strerror(errno));
+    free(path);
+
+    // env list cleanup
+    if (asprintf(&path, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, DOMAIN_ENV_FILE) == -1) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
       return;
@@ -238,16 +240,26 @@ void client_delete_files(fireexecd_client_t *cli) {
     free(path);
     
     // network cleanup
-    if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, NET_CLEANUP_FILE) == -1) {
+    if (asprintf(&path, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, NET_CLEANUP_FILE) == -1) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
       return;
     }
-    
+
     struct stat s;
     if(stat(path, &s) == 0) {
       client_exec_cleanup_file(cli, path);
     }
+    free(path);
+
+    // delete the sandbox's directory
+    if (asprintf(&path, "%s/%d", EXECHELP_RUN_DIR, cli->pid) == -1) {
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
+      DBGLEAVE(cli?cli->pid:-1, "client_delete_files");
+      return;
+    }
+    if (rmdir(path) == -1)
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m cannot delete client's socket directory '%s' (error: %s)\n", cli->pid, path, strerror(errno));
     free(path);
 
     DBGOUT("[%d]\tINFO:  Client successfully cleaned up\n", cli->pid);

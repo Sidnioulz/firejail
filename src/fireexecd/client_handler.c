@@ -186,7 +186,7 @@ static int execd_is_catalogued_generic_run(fireexecd_client_t *cli, const char *
   }
 
   char *path = NULL;
-  if (asprintf(&path, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, catalogue) == -1) {
+  if (asprintf(&path, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, catalogue) == -1) {
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
     DBGLEAVE(cli?cli->pid:-1, "execd_is_catalogued_generic_run");
     return 0;
@@ -566,7 +566,7 @@ static int client_check_has_protected_files(fireexecd_client_t       *cli,
   char                    *file_list           = NULL;
   int                      has_protected_files = 0;
 
-  if (asprintf(&policypath, "%s/%d-%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_PROTECTED_FILES) == -1) {
+  if (asprintf(&policypath, "%s/%d/%s", EXECHELP_RUN_DIR, cli->pid, EXECHELP_PROTECTED_FILES) == -1) {
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
     DBGLEAVE(cli?cli->pid:-1, "client_check_has_protected_files");
     return 0;

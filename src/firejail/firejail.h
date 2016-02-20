@@ -419,9 +419,13 @@ void fs_helper_mount_self_dir(void);
 char *fs_helper_list_files(void);
 
 // exechelp_client.c
+int firejail_setenv(const char *name, const char *value, int overwrite);
+void firejail_setenv_finalize(void);
+void load_domain_env(const pid_t pid);
+void load_domain_env_from_chroot_proc(void);
 void exechelp_propagate_sandbox_info_to_env(void);
 void exechelp_install_socket(void);
-void exechelp_set_socket_env_from_pid(pid_t pid);
+void exechelp_set_socket_env_from_pid(const pid_t pid);
 void exechelp_set_socket_env_manually(char *cmdsocketpath);
 void exechelp_register_socket(void);
 void exechelp_blacklist_protected(void);
