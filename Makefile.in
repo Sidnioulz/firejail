@@ -155,7 +155,7 @@ install: all
 	install -c -m 0644 icons/emblems/symbolic/emblem-protected-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/emblems/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/apps/
 	install -c -m 0644 icons/apps/16/firejail-workspaces.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/apps/
-	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/22x22/apps/
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/apps/
 	install -c -m 0644 icons/apps/24/firejail-workspaces.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/24x24/apps/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/apps/
 	install -c -m 0644 icons/apps/32/firejail-workspaces.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/32x32/apps/
