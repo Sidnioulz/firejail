@@ -65,6 +65,46 @@ static int command_execute(fireexecd_client_t *cli, const char *command, char *a
   return 0;
 }
 
+static char *get_profile_for_name(const char *profile) {
+  DBGENTER(cli?cli->pid:-1, "get_profile_for_name");
+
+  char *profiletxt;
+  struct stat s;
+
+  struct passwd *pw = getpwuid(getuid());
+  if (pw) {
+    const char *homedir = pw->pw_dir;
+
+    if (asprintf(&profiletxt, "--profile=%s/.config/firejail/%s.profile", homedir, profile) == -1) {
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
+      DBGLEAVE(cli?cli->pid:-1, "get_profile_for_name");
+      return NULL;
+    }
+
+    if(stat(profiletxt, &s) == 0) {
+      DBGLEAVE(cli?cli->pid:-1, "get_profile_for_name");
+      return profiletxt;
+    }
+    free(profiletxt);
+  }
+
+  char *profiletxt;
+  if (asprintf(&profiletxt, "--profile=/etc/firejail/%s.profile", profile) == -1) {
+    DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
+    DBGLEAVE(cli?cli->pid:-1, "get_profile_for_name");
+    return -1;
+  }
+
+  if(stat(profiletxt, &s) == 0) {
+    DBGLEAVE(cli?cli->pid:-1, "get_profile_for_name");
+    return profiletxt;
+  }
+  free(profiletxt);
+
+  DBGLEAVE(cli?cli->pid:-1, "get_profile_for_name");
+  return NULL;
+}
+
 int client_execute_sandboxed(fireexecd_client_t *cli,
                              const char *command,
                              char *argv[], int argc,
@@ -89,13 +129,14 @@ int client_execute_sandboxed(fireexecd_client_t *cli,
     sandboxargv[index++] = strdup("--debug");
 
   if (profile && strcmp(profile, EXECHELP_PROFILE_ANY)) {
-    char *profiletxt;
-    if (asprintf(&profiletxt, "--profile=/etc/firejail/%s.profile", profile) == -1) {
-      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
+    char *txt = get_profile_for_name(profile);
+    if (!txt) {
+      DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to find a profile matching name '%s' (error: %s)\n", cli->pid, profile, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_execute_sandboxed");
       return -1;
     }
-    sandboxargv[index++] = profiletxt;
+
+    sandboxargv[index++] = txt;
   }
 
   if (is_protected_app) {
@@ -470,7 +511,6 @@ static char *get_profiles_for_new_app (fireexecd_client_t *cli, const char *appn
   FILE *fp;
 
   // first check for a config file in ~
-  // TODO: add a cfg structure, a --home flag and update the manual
   struct passwd *pw = getpwuid(getuid());
   if (pw) {
     const char *homedir = pw->pw_dir;
