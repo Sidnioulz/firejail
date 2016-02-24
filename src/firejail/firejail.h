@@ -153,8 +153,8 @@ extern int arg_debug_eh;		// print debug messages inside libexechelper
 extern int arg_nonetwork;	// --net=none
 extern int arg_command;	// -c
 extern int arg_overlay;		// overlay option
-extern int arg_overlay_keep;	// place overlay diff directory in ~/Sandboxes/
 extern int arg_overlay_home;	// mount home as an OverlayFS too
+extern int arg_overlay_keep;	// place overlay diff directory in ~/Sandboxes/
 extern int arg_zsh;		// use zsh as default shell
 extern int arg_csh;		// use csh as default shell
 
@@ -163,6 +163,8 @@ extern char *arg_seccomp_list;//  optional seccomp list on top of default filter
 extern char *arg_seccomp_list_drop;		// seccomp drop list
 extern char *arg_seccomp_list_keep;		// seccomp keep list
 
+extern char *arg_hostname;	// --name=...
+extern char **arg_overlay_direct_access; // list of dirs to be directly sync'd with OS in OverlayFS sandbox
 extern char *arg_whitelist_apps;      // list of apps that can always be opened by this instance (bypass --helper)
 extern char *arg_whitelist_files;     // list of files that can always be opened by this instance (bypass --helper)
 

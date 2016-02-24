@@ -65,7 +65,8 @@ static int command_execute(fireexecd_client_t *cli, const char *command, char *a
   return 0;
 }
 
-static char *get_profile_for_name(const char *profile) {
+static char *get_profile_for_name(fireexecd_client_t *cli,
+                                  const char *profile) {
   DBGENTER(cli?cli->pid:-1, "get_profile_for_name");
 
   char *profiletxt;
@@ -82,20 +83,21 @@ static char *get_profile_for_name(const char *profile) {
     }
 
     if(stat(profiletxt, &s) == 0) {
+      free(profiletxt);
       DBGLEAVE(cli?cli->pid:-1, "get_profile_for_name");
       return profiletxt;
     }
     free(profiletxt);
   }
 
-  char *profiletxt;
   if (asprintf(&profiletxt, "--profile=/etc/firejail/%s.profile", profile) == -1) {
     DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to call asprintf() (error: %s)\n", cli->pid, strerror(errno));
     DBGLEAVE(cli?cli->pid:-1, "get_profile_for_name");
-    return -1;
+    return NULL;
   }
 
   if(stat(profiletxt, &s) == 0) {
+    free(profiletxt);
     DBGLEAVE(cli?cli->pid:-1, "get_profile_for_name");
     return profiletxt;
   }
@@ -129,7 +131,7 @@ int client_execute_sandboxed(fireexecd_client_t *cli,
     sandboxargv[index++] = strdup("--debug");
 
   if (profile && strcmp(profile, EXECHELP_PROFILE_ANY)) {
-    char *txt = get_profile_for_name(profile);
+    char *txt = get_profile_for_name(cli, profile);
     if (!txt) {
       DBGERR("[%d]\t\e[01;40;101mERROR:\e[0;0m failed to find a profile matching name '%s' (error: %s)\n", cli->pid, profile, strerror(errno));
       DBGLEAVE(cli?cli->pid:-1, "client_execute_sandboxed");

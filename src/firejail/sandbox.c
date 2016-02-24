@@ -462,6 +462,8 @@ int sandbox(void* sandbox_arg) {
   // save the sandbox's environment so other processes can adjust theirs when joining us
   firejail_setenv_finalize();
 
+  // TODO: blacklist ALL .config/firejail/ files except the exechelper policies (read-only)
+
 	//****************************************
 	// drop privileges or create a new user namespace
 	//****************************************

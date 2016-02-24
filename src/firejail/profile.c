@@ -92,6 +92,10 @@ int profile_check_line(char *ptr, int lineno) {
 		arg_seccomp = 1;
 		return 0;
 	}
+	else if (strncmp(ptr, "name ", 5) == 0) {
+	  arg_hostname = strdup(ptr + 5);
+		return 0;
+	}
 	else if (strcmp(ptr, "caps") == 0) {
 		arg_caps_default_filter = 1;
 		return 0;
@@ -116,11 +120,36 @@ int profile_check_line(char *ptr, int lineno) {
 		return 0;
 	}
 	else if (strcmp(ptr, "private") == 0) {
+	  if (arg_overlay_home == 1) {
+		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay-private-home' previously seen.\n", lineno);
+  		exit(1);  
+    }
+	  if (arg_overlay == 1) {
+		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay-private-home' previously seen.\n", lineno);
+  		exit(1);  
+    }
 		arg_private = 1;
 		return 0;
 	}
 	else if (strcmp(ptr, "private-dev") == 0) {
 		arg_private_dev = 1;
+		return 0;
+	}
+	else if (strcmp(ptr, "overlay") == 0) {
+	  if (arg_private == 1) {
+		  exechelp_logerrv("firejail", "Error: 'overlay' at line %d conflicts with 'private' previously seen.\n", lineno);
+  		exit(1);  
+    }
+    arg_overlay = 1;
+		return 0;
+	}
+	else if (strcmp(ptr, "overlay-private-home") == 0) {
+	  if (arg_private == 1) {
+		  exechelp_logerrv("firejail", "Error: 'overlay-private-home' at line %d conflicts with 'private' previously seen.\n", lineno);
+  		exit(1);  
+    }
+    arg_overlay = 1;
+    arg_overlay_home = 1;
 		return 0;
 	}
 	else if (strcmp(ptr, "nogroups") == 0) {

@@ -42,6 +42,52 @@ int mkdir_if_not_exists(const char *pathname, mode_t mode)
 }
 
 
+int mkdir_if_not_exists_recursive(const char *pathname, mode_t mode)
+{
+  if (!pathname) {
+    errno = EFAULT;
+    return -1;
+  }
+
+  char *path = strdup(pathname);
+  char* p;
+  int failure = 0;
+
+  for (p = strchr(path+1, '/'); !failure && p; p = strchr(p+1, '/')) {
+    *p = '\0';
+    failure = mkdir_if_not_exists(path, mode);
+    *p = '/';
+  }
+  free (path);
+
+  if (!failure)
+    failure = mkdir_if_not_exists(pathname, mode);
+
+  return failure;
+}
+
+static int clear_recursive(const char *dirpath) {
+	struct dirent *dir;
+  DIR *d = opendir(dirpath);
+  if (d == NULL)
+    return errno == ENOENT? 0:-1;
+
+  while ((dir = readdir(d))) {
+    if(strcmp(dir->d_name, "." ) == 0 || strcmp(dir->d_name, ".." ) == 0)
+	    continue;
+
+    if (dir->d_type == DT_DIR ) {
+      clear_recursive(dir->d_name);
+      rmdir(dir->d_name);
+    } else
+      unlink(dir->d_name);
+  }
+
+  closedir(d);
+  return 0;
+}
+
+
 // build /tmp/firejail directory
 void fs_build_firejail_dir(void) {
 	struct stat s;
@@ -782,7 +828,7 @@ static void mount_automounts_into_overlay(const char *oroot, const char *basedir
 }
 
 static void
-make_home_into_overlay(const char *oroot, const char *basedir) {
+build_private_home_into_overlay(const char *oroot, const char *basedir) {
   char *odiff;
   if(asprintf(&odiff, "%s/Users", basedir) == -1)
 	  errExit("asprintf");
@@ -976,8 +1022,18 @@ void fs_overlayfs(void) {
 			exechelp_logerrv("firejail", "Error: cannot create overlay directory in user home\n");
 			exit(1);
 		}
+	} else {
+	  if (asprintf(&basedir, "%s/overlayfs/%d", MNT_DIR, sandbox_pid) == -1)
+	    errExit("asprintf");
+		if (mkdir_if_not_exists_recursive(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
+			exechelp_logerrv("firejail", "Error: cannot create overlay directory in user home\n");
+			exit(1);
+		}
+    if (clear_recursive(basedir))
+      errExit("clear_recursive");
 	}
 
+  // build a root and a first directory for "/"
 	char *oroot;
 	if(asprintf(&oroot, "%s/oroot", MNT_DIR) == -1)
 		errExit("asprintf");
@@ -986,7 +1042,7 @@ void fs_overlayfs(void) {
 	mount_automounts_into_overlay(oroot, basedir, oldkernel);
 
   if (arg_overlay_home == 0)
-    make_home_into_overlay(oroot, basedir);
+    build_private_home_into_overlay(oroot, basedir);
 	
 	// mount-bind dev directory
   //FIXME might want to mount *some* /dev, esp /dev/shm
@@ -1013,14 +1069,27 @@ void fs_overlayfs(void) {
 	fs_var_cache();
 	fs_var_utmp();
 
+  free(basedir);
+
   /* don't let the inside of the box reach the base directory
    * (we here assume that it'll be mounted in the same place inside and outside
    * the box, this in practice is not correct if basedir is in /home/ and /home
    * is mounted in a different path inside the box; that should only happen if
    * a root-owned process changes mountpoints while we are launching firejail,
    * though) */
-  fs_blacklist(basedir);
-  free(basedir);
+  struct passwd pwd;
+  struct passwd *result = NULL;
+  char buffer[8192];
+  if (getpwuid_r(getuid(), &pwd, buffer, sizeof(buffer), &result))
+    errExit("getpwuid_r");
+  if (!result || !pwd.pw_dir)
+    errExit("getpwuid_r");
+
+  char *sdbdir;
+  if(asprintf(&sdbdir, "%s/Sandboxes", pwd.pw_dir) == -1)
+	  errExit("asprintf");
+  fs_blacklist_file(sdbdir);
+  free(sdbdir);
 
   //FIXME handle file sync, when you want to retrieve the global file
   //FIXME handle file version visibility

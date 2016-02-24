@@ -19,6 +19,7 @@
  */
 #include "firejail.h"
 #include "../include/pid.h"
+#include "../include/exechelper-datatypes.h"
 #include "../include/exechelper-logger.h"
 #define _GNU_SOURCE
 #include <sys/utsname.h>
@@ -56,8 +57,8 @@ int arg_slow = 0;				  // pause the program for a while to help debuggers attach
 int arg_nonetwork = 0;				// --net=none
 int arg_command = 0;				// -c
 int arg_overlay = 0;				// overlay option
-int arg_overlay_keep = 0;			// place overlay diff directory in ~/Sandboxes/
-int arg_overlay_home = 0;			// mount home as an OverlayFS too
+int arg_overlay_home = 1;			// mount home as an OverlayFS too
+int arg_overlay_keep = 1;			// place overlay diff directory in ~/Sandboxes/
 int arg_zsh = 0;				// use zsh as default shell
 int arg_csh = 0;				// use csh as default shell
 
@@ -66,6 +67,8 @@ char *arg_seccomp_list = NULL;		// optional seccomp list on top of default filte
 char *arg_seccomp_list_drop = NULL;		// seccomp drop list
 char *arg_seccomp_list_keep = NULL;		// seccomp keep list
 
+char *arg_hostname = NULL;	// --name=...
+char **arg_overlay_direct_access = NULL; // list of dirs to be directly sync'd with OS in OverlayFS sandbox
 char *arg_whitelist_apps = NULL;      // list of apps that can always be opened by this instance (bypass --helper)
 char *arg_whitelist_files = NULL;     // list of files that can always be opened by this instance (bypass --helper)
 
@@ -289,6 +292,20 @@ static void overlay_build_directory(void) {
   }
   	
   cfg.overlay_dir = dirname;
+}
+
+static void overlay_add_sync(char *folder) {
+	if (cfg.chrootdir) {
+		exechelp_logerrv("firejail", "Error: --overlay and --chroot options are mutually exclusive\n");
+		exit(1);
+	}
+
+  if (strlen(folder) == 0) {
+		exechelp_logerrv("firejail", "Error: please provide a directory name for the --arg_overlay_direct_access option\n");
+		exit(1);
+	}
+
+  string_list_append(&arg_overlay_direct_access, folder);
 }
 
 // exit commands
@@ -704,7 +721,6 @@ int main(int argc, char **argv) {
 				exit(1);
 			}
 			arg_overlay = 1;
-			arg_overlay_keep = 1;
 			arg_overlay_home = 1;
       exechelp_logv("firejail", "Running with an overlay filesystem\n");
 		}
@@ -714,16 +730,19 @@ int main(int argc, char **argv) {
 				exit(1);
 			}
 			arg_overlay = 1;
-			arg_overlay_keep = 1;
 			arg_overlay_home = 0;
-      exechelp_logv("firejail", "Running with an overlay filesystem and a private, persistent home\n");
+      exechelp_logv("firejail", "Running with an overlay filesystem and a private home\n");
 		}
-		else if (strcmp(argv[i], "--overlay-tmpfs") == 0) {
+		else if (strcmp(argv[i], "--overlay-tmpfs") == 0 || strcmp(argv[i], "--overlay-disposable") == 0) {
+			arg_overlay_keep = 0;
+      exechelp_logv("firejail", "Overlay filesystem is disposable, content will not be saved\n");
+		}
+		else if (strncmp(argv[i], "--overlay-sync=", 14) == 0) {
 			if (cfg.chrootdir) {
 				exechelp_logerrv("firejail", "Error: --overlay and --chroot options are mutually exclusive\n");
 				exit(1);
 			}
-			arg_overlay = 1;
+      overlay_add_sync(argv[i]+14);
 		}
 	  else if (strcmp(argv[i], "--lock-workspace") == 0) {
 	    cfg.lock_workspace = 1;
@@ -882,7 +901,7 @@ int main(int argc, char **argv) {
 		// hostname, etc
 		//*************************************
 		else if (strncmp(argv[i], "--name=", 7) == 0) {
-			cfg.hostname = argv[i] + 7;
+			arg_hostname = cfg.hostname = argv[i] + 7;
 			if (strlen(cfg.hostname) == 0) {
 				exechelp_logerrv("firejail", "Error: please provide a name for sandbox\n");
 				return 1;
@@ -1294,6 +1313,16 @@ int main(int argc, char **argv) {
 			exit(1);
 		}
 	}
+
+  // check that the main --overlay flag is on if needs be
+  if (!arg_overlay && arg_overlay_direct_access) {
+		exechelp_logerrv("firejail", "Error: --overlay-direct-access requires either of --overlay or --overlay-private-home to be passed.\n");
+		exit(1);
+  }
+  if (!arg_overlay && arg_overlay_keep) {
+		exechelp_logerrv("firejail", "Error: --overlay-disposable or --overlay-tmpfs requires either of --overlay or --overlay-private-home to be passed.\n");
+		exit(1);
+  }
 
   // build the overlay directory
   overlay_build_directory();
