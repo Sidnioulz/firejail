@@ -18,6 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "firejail.h"
+#include "../include/exechelper.h"
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <linux/limits.h>
@@ -879,6 +880,34 @@ build_private_home_into_overlay(const char *oroot, const char *basedir) {
   free(userdir);
 }
 
+void mount_direct_accesses_into_overlay(const char *oroot) {
+  if (!arg_overlay_direct_access)
+    return;
+
+  size_t i;
+  char *realpath;
+  char *newpath;
+
+  for (i = 0; arg_overlay_direct_access[i]; i++) {
+    realpath = exechelp_coreutils_realpath(arg_overlay_direct_access[i]);
+    if (!realpath) {
+		exechelp_logerrv("firejail", "Warning: cannot find path for argument %s passed to --overlay-sync, ignoring: %s\n", arg_overlay_direct_access[i], strerror(errno));
+      continue;
+    }
+
+		if (asprintf(&newpath, "%s%s", oroot, realpath) == -1)
+			errExit("asprintf");
+
+    if (arg_debug)
+      printf("Mounting %s into OverlayFS as a synchronised directory\n", realpath);
+	  if (mount(realpath, newpath, NULL, MS_BIND|MS_REC, NULL) < 0)
+		  errExit("mounting direct sync folder");
+
+    free(realpath);
+    free(newpath);
+  }
+}
+
 // to do: fix the code below; also, it might work without /dev; impose seccomp/caps filters when not root
 #include <sys/utsname.h>
 static void
@@ -1043,6 +1072,9 @@ void fs_overlayfs(void) {
 
   if (arg_overlay_home == 0)
     build_private_home_into_overlay(oroot, basedir);
+  free(basedir);
+
+  mount_direct_accesses_into_overlay(oroot);
 	
 	// mount-bind dev directory
   //FIXME might want to mount *some* /dev, esp /dev/shm
@@ -1069,14 +1101,7 @@ void fs_overlayfs(void) {
 	fs_var_cache();
 	fs_var_utmp();
 
-  free(basedir);
-
-  /* don't let the inside of the box reach the base directory
-   * (we here assume that it'll be mounted in the same place inside and outside
-   * the box, this in practice is not correct if basedir is in /home/ and /home
-   * is mounted in a different path inside the box; that should only happen if
-   * a root-owned process changes mountpoints while we are launching firejail,
-   * though) */
+  // don't let the inside of the box reach the Sandboxes folder
   struct passwd pwd;
   struct passwd *result = NULL;
   char buffer[8192];

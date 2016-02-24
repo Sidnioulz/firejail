@@ -294,20 +294,6 @@ static void overlay_build_directory(void) {
   cfg.overlay_dir = dirname;
 }
 
-static void overlay_add_sync(char *folder) {
-	if (cfg.chrootdir) {
-		exechelp_logerrv("firejail", "Error: --overlay and --chroot options are mutually exclusive\n");
-		exit(1);
-	}
-
-  if (strlen(folder) == 0) {
-		exechelp_logerrv("firejail", "Error: please provide a directory name for the --arg_overlay_direct_access option\n");
-		exit(1);
-	}
-
-  string_list_append(&arg_overlay_direct_access, folder);
-}
-
 // exit commands
 static void run_cmd_and_exit(int i, int argc, char **argv) {
 	//*************************************
@@ -737,12 +723,16 @@ int main(int argc, char **argv) {
 			arg_overlay_keep = 0;
       exechelp_logv("firejail", "Overlay filesystem is disposable, content will not be saved\n");
 		}
-		else if (strncmp(argv[i], "--overlay-sync=", 14) == 0) {
+		else if (strncmp(argv[i], "--overlay-sync=", 15) == 0) {
 			if (cfg.chrootdir) {
 				exechelp_logerrv("firejail", "Error: --overlay and --chroot options are mutually exclusive\n");
 				exit(1);
 			}
-      overlay_add_sync(argv[i]+14);
+      if (strlen(argv[i]+15) == 0) {
+		    exechelp_logerrv("firejail", "Error: please provide a directory name for the --arg_overlay_direct_access option\n");
+		    exit(1);
+	    }
+      string_list_append(&arg_overlay_direct_access, argv[i]+15);
 		}
 	  else if (strcmp(argv[i], "--lock-workspace") == 0) {
 	    cfg.lock_workspace = 1;

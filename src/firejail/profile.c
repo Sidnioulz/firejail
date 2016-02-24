@@ -152,6 +152,18 @@ int profile_check_line(char *ptr, int lineno) {
     arg_overlay_home = 1;
 		return 0;
 	}
+	//TODO overlay tmp and overlay sync
+	/*
+				if (cfg.chrootdir) {
+				exechelp_logerrv("firejail", "Error: --overlay and --chroot options are mutually exclusive\n");
+				exit(1);
+			}
+      if (strlen(argv[i]+14) == 0) {
+		    exechelp_logerrv("firejail", "Error: please provide a directory name for the --arg_overlay_direct_access option\n");
+		    exit(1);
+	    }
+      string_list_append(&arg_overlay_direct_access, argv[i]+14);
+*/
 	else if (strcmp(ptr, "nogroups") == 0) {
 		arg_nogroups = 1;
 		return 0;
