@@ -720,6 +720,7 @@ int main(int argc, char **argv) {
       exechelp_logv("firejail", "Running with an overlay filesystem and a private home\n");
 		}
 		else if (strcmp(argv[i], "--overlay-tmpfs") == 0 || strcmp(argv[i], "--overlay-disposable") == 0) {
+			arg_overlay = 1;
 			arg_overlay_keep = 0;
       exechelp_logv("firejail", "Overlay filesystem is disposable, content will not be saved\n");
 		}
@@ -729,7 +730,7 @@ int main(int argc, char **argv) {
 				exit(1);
 			}
       if (strlen(argv[i]+15) == 0) {
-		    exechelp_logerrv("firejail", "Error: please provide a directory name for the --arg_overlay_direct_access option\n");
+		    exechelp_logerrv("firejail", "Error: please provide a directory name for the --overlay-sync option\n");
 		    exit(1);
 	    }
       string_list_append(&arg_overlay_direct_access, argv[i]+15);
@@ -1306,11 +1307,7 @@ int main(int argc, char **argv) {
 
   // check that the main --overlay flag is on if needs be
   if (!arg_overlay && arg_overlay_direct_access) {
-		exechelp_logerrv("firejail", "Error: --overlay-direct-access requires either of --overlay or --overlay-private-home to be passed.\n");
-		exit(1);
-  }
-  if (!arg_overlay && arg_overlay_keep) {
-		exechelp_logerrv("firejail", "Error: --overlay-disposable or --overlay-tmpfs requires either of --overlay or --overlay-private-home to be passed.\n");
+		exechelp_logerrv("firejail", "Error: --overlay-sync requires the OverlayFS feature to be used (see --overlay).\n");
 		exit(1);
   }
 

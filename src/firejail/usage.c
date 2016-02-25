@@ -118,7 +118,7 @@ void usage(void) {
 	printf("\t--list - list all sandboxes.\n\n");
 	printf("\t--lock-workspace - lock the client's X11 windows to workspaces that have\n");
 	printf("\t\tthe same name as the client. Use --name to set the name of the client.\n");
-	printf("\t\tOnly compatible with Xfwm. If the name of the workspace changes, or if\n");
+	printf("\t\tOnly compatible with Xfce. If the name of the workspace changes, or if\n");
 	printf("\t\tthe name parameter corresponds to no existing sandbox, the behavior \n");
 	printf("\t\tof the window manager is undefined.\n\n");
 	printf("\t--mac=xx:xx:xx:xx:xx:xx - set interface MAC address.\n\n");
@@ -202,8 +202,13 @@ void usage(void) {
 	printf("\t\tand it is discarded when the sandbox is closed. (OverlayFS\n");
 	printf("\t\tsupport is required in Linux kernel for this option to work).\n\n");
 
+	printf("\t--overlay-disposable - alias to --overlay-tmpfs.\n\n");
 
-
+	printf("\t--overlay-sync=directory - when a filesystem overlay is in use (see\n");
+	printf("\t\t--overlay, --overlay-private-home and --overlay-tmpfs), mount\n");
+	printf("\t\tdirectory so that it is directly synchronised with the host system.\n");
+	printf("\t\tChanges made inside the directory are immediately applied to the\n");
+	printf("\t\thost system as well.\n\n");
 	 
 	printf("\t--private - mount new /root and /home/user directories in temporary\n");
 	printf("\t\tfilesystems. All modifications are discarded when the sandbox is\n");

@@ -120,12 +120,16 @@ int profile_check_line(char *ptr, int lineno) {
 		return 0;
 	}
 	else if (strcmp(ptr, "private") == 0) {
-	  if (arg_overlay_home == 1) {
+	  if (arg_overlay_home == 0) {
 		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay-private-home' previously seen.\n", lineno);
   		exit(1);  
     }
 	  if (arg_overlay == 1) {
-		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay-private-home' previously seen.\n", lineno);
+		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay' previously seen.\n", lineno);
+  		exit(1);  
+    }
+	  if (arg_overlay_keep == 0) {
+		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay-tmpfs' / 'overlay-disposable' previously seen.\n", lineno);
   		exit(1);  
     }
 		arg_private = 1;
@@ -149,21 +153,29 @@ int profile_check_line(char *ptr, int lineno) {
   		exit(1);  
     }
     arg_overlay = 1;
-    arg_overlay_home = 1;
+    arg_overlay_home = 0;
 		return 0;
 	}
-	//TODO overlay tmp and overlay sync
-	/*
-				if (cfg.chrootdir) {
-				exechelp_logerrv("firejail", "Error: --overlay and --chroot options are mutually exclusive\n");
-				exit(1);
-			}
-      if (strlen(argv[i]+14) == 0) {
-		    exechelp_logerrv("firejail", "Error: please provide a directory name for the --arg_overlay_direct_access option\n");
-		    exit(1);
-	    }
-      string_list_append(&arg_overlay_direct_access, argv[i]+14);
-*/
+	else if (strcmp(ptr, "overlay-tmpfs") == 0 || strcmp(ptr, "overlay-disposable") == 0) {
+	  if (arg_private == 1) {
+		  exechelp_logerrv("firejail", "Error: 'overlay-tmpfs' / 'overlay-disposable' at line %d conflicts with 'private' previously seen.\n", lineno);
+  		exit(1);  
+    }
+    arg_overlay = 1;
+    arg_overlay_keep = 0;
+		return 0;
+	}
+	else if (strncmp(ptr, "overlay-sync ", 13) == 0) {
+    if (strlen(ptr+13) == 0) {
+	    exechelp_logerrv("firejail", "Error: please provide a directory name for the overlay-sync option at line %d\n", lineno);
+	    exit(1);
+    }
+    char *dup = strdup(ptr+13);
+		if (!dup)
+			errExit("strdup");
+    string_list_append(&arg_overlay_direct_access, dup);
+		return 0;
+	}
 	else if (strcmp(ptr, "nogroups") == 0) {
 		arg_nogroups = 1;
 		return 0;
@@ -198,13 +210,13 @@ int profile_check_line(char *ptr, int lineno) {
 		return 0;
 	}
 	
-	if (strncmp(ptr, "env ", 4) == 0) {
+	else if (strncmp(ptr, "env ", 4) == 0) {
 		env_store(ptr + 4);
 		return 0;
 	}
 	
 	// seccomp drop list on top of default list
-	if (strncmp(ptr, "seccomp ", 8) == 0) {
+	else if (strncmp(ptr, "seccomp ", 8) == 0) {
 		arg_seccomp = 1;
 #ifdef HAVE_SECCOMP
 		arg_seccomp_list = strdup(ptr + 8);
@@ -215,7 +227,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	
 	// seccomp drop list without default list
-	if (strncmp(ptr, "seccomp.drop ", 13) == 0) {
+	else if (strncmp(ptr, "seccomp.drop ", 13) == 0) {
 		arg_seccomp = 1;
 #ifdef HAVE_SECCOMP
 		arg_seccomp_list_drop = strdup(ptr + 13);
@@ -226,7 +238,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 
 	// seccomp keep list
-	if (strncmp(ptr, "seccomp.keep ", 13) == 0) {
+	else if (strncmp(ptr, "seccomp.keep ", 13) == 0) {
 		arg_seccomp = 1;
 #ifdef HAVE_SECCOMP
 		arg_seccomp_list_keep= strdup(ptr + 13);
@@ -237,7 +249,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	
 	// caps drop list
-	if (strncmp(ptr, "caps.drop ", 10) == 0) {
+	else if (strncmp(ptr, "caps.drop ", 10) == 0) {
 		arg_caps_drop = 1;
 		arg_caps_list = strdup(ptr + 10);
 		if (!arg_caps_list)
@@ -249,7 +261,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	
 	// caps keep list
-	if (strncmp(ptr, "caps.keep ", 10) == 0) {
+	else if (strncmp(ptr, "caps.keep ", 10) == 0) {
 		arg_caps_keep = 1;
 		arg_caps_list = strdup(ptr + 10);
 		if (!arg_caps_list)
@@ -261,7 +273,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	
 	// dns
-	if (strncmp(ptr, "dns ", 4) == 0) {
+	else if (strncmp(ptr, "dns ", 4) == 0) {
 		uint32_t dns;
 		if (atoip(ptr + 4, &dns)) {
 			exechelp_logerrv("firejail", "Error: invalid DNS server IP address\n");
@@ -282,19 +294,19 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	
 	// cpu affinity
-	if (strncmp(ptr, "cpu ", 4) == 0) {
+	else if (strncmp(ptr, "cpu ", 4) == 0) {
 		read_cpu_list(ptr + 4);
 		return 0;
 	}
 	
 	// cgroup
-	if (strncmp(ptr, "cgroup ", 7) == 0) {
+	else if (strncmp(ptr, "cgroup ", 7) == 0) {
 		set_cgroup(ptr + 7);
 		return 0;
 	}
 	
 	// private directory
-	if (strncmp(ptr, "private ", 8) == 0) {
+	else if (strncmp(ptr, "private ", 8) == 0) {
 		cfg.home_private = ptr + 8;
 		fs_check_private_dir();
 		arg_private = 1;
@@ -302,7 +314,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 
 	// private home list of files and directories
-	if ((strncmp(ptr, "private.keep ", 13) == 0)
+	else if ((strncmp(ptr, "private.keep ", 13) == 0)
 	 || (strncmp(ptr, "private-home ", 13) == 0)) {
 		cfg.home_private_keep = ptr + 13;
 		fs_check_home_list();
@@ -311,7 +323,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	
 	// private /etc list of files and directories
-	if (strncmp(ptr, "private-etc ", 12) == 0) {
+	else if (strncmp(ptr, "private-etc ", 12) == 0) {
 		cfg.etc_private_keep = ptr + 12;
 		fs_check_etc_list();
 		arg_private_etc = 1;
@@ -319,7 +331,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 
 	// filesystem bind
-	if (strncmp(ptr, "bind ", 5) == 0) {
+	else if (strncmp(ptr, "bind ", 5) == 0) {
 		if (getuid() != 0) {
 			exechelp_logerrv("firejail", "Error: --bind option is available only if running as root\n");
 			exit(1);

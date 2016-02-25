@@ -51,6 +51,10 @@ _firejail()
             _filedir
             return 0
             ;;
+        --overlay-sync)
+            _filedir
+            return 0
+            ;;
         --shell)
             _filedir
             return 0

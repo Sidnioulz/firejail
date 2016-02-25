@@ -887,19 +887,56 @@ void mount_direct_accesses_into_overlay(const char *oroot) {
   size_t i;
   char *realpath;
   char *newpath;
-
+  char *ptr;
+  char *oldpath;
+  int failure;
+  struct stat st;
+  
   for (i = 0; arg_overlay_direct_access[i]; i++) {
     realpath = exechelp_coreutils_realpath(arg_overlay_direct_access[i]);
     if (!realpath) {
-		exechelp_logerrv("firejail", "Warning: cannot find path for argument %s passed to --overlay-sync, ignoring: %s\n", arg_overlay_direct_access[i], strerror(errno));
+		  exechelp_logerrv("firejail", "Warning: cannot find path for argument %s passed to --overlay-sync, ignoring: %s\n", arg_overlay_direct_access[i], strerror(errno));
       continue;
     }
 
-		if (asprintf(&newpath, "%s%s", oroot, realpath) == -1)
+		if (asprintf(&newpath, "%s%s/", oroot, realpath) == -1)
 			errExit("asprintf");
 
     if (arg_debug)
       printf("Mounting %s into OverlayFS as a synchronised directory\n", realpath);
+
+    // go through the original path and create directories one by one with appropriate owners and permissions
+    oldpath = newpath + strlen(oroot);
+    failure = 0;
+
+    for (ptr = strchr(newpath+strlen(oroot)+1, '/'); !failure && ptr; ptr = strchr(ptr+1, '/')) {
+      *ptr = '\0';
+      failure = mkdir_if_not_exists(newpath, S_IRWXU | S_IRWXG | S_IRWXO);
+      if (!failure) {
+        failure = stat(oldpath, &st);
+        if (!failure) {
+          failure = chown(newpath, st.st_uid, st.st_gid);
+          if (!failure) {
+            failure = chmod(newpath, st.st_mode & 07777);
+          }
+        }
+      }
+
+      if (arg_debug) {
+        if (!failure)
+          printf ("Path %s mounted with permissions %o and owner %d:%d\n", newpath, st.st_mode & 07777, st.st_uid, st.st_gid);
+        else
+          exechelp_logerrv("firejail", "Error: failed to create and configure partial path %s for synchronised folder %s: %s\n", newpath, arg_overlay_direct_access[i], strerror(errno));
+      }
+
+      *ptr = '/';
+    }
+
+    if (failure) {
+      exechelp_logerrv("firejail", "Warning: cannot mount path %s into sandbox as synchronised directory: %s\n", realpath, strerror(errno));
+      continue;
+    }
+  
 	  if (mount(realpath, newpath, NULL, MS_BIND|MS_REC, NULL) < 0)
 		  errExit("mounting direct sync folder");
 

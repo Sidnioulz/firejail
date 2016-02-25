@@ -437,7 +437,13 @@ $ firejail \-\-list
 .br
 7064:netblue:firejail \-\-noroot xterm 
 .br
-$ 
+$
+
+.TP
+\fB\-\-lock\-workspace
+Lock the client's X11 windows to workspaces that have the same name as the client. Use --name to set the name of the client. Only compatible with Xfce. If the name of the workspace changes, or if the name parameter corresponds to no existing sandbox, the behavior of the window manager is undefined.
+.br
+
 .TP
 \fB\-\-mac=address
 Assign MAC addresses to the last network interface defined by a \-\-net option.
@@ -742,10 +748,21 @@ OverlayFS support is required in Linux kernel for this option to work.
 OverlayFS was officially introduced in Linux kernel version 3.18
 .br
 
+.TP
+\fB\-\-overlay-disposable
+Alias to \-\-overlay\-tmpfs.
+.br
+
+.TP
+\fB\-\-overlay-sync=directory
+When a filesystem overlay is in use (see \-\-overlay, \-\-overlay\-private\-home and \-\-overlay\-tmpfs), mount directory so that it is directly synchronised with the host system. Changes made inside the directory are immediately applied to the host system as well.
+.br
+
 .br
 Example:
 .br
-$ firejail \-\-overlay-tmpfs firefox
+$ firejail \-\-overlay\-sync=/home/netblue/Downloads transmission-gtk
+.br
 
 .TP
 \fB\-\-private
