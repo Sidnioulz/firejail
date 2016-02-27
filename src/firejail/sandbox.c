@@ -430,6 +430,8 @@ int sandbox(void* sandbox_arg) {
 		errExit("setenv");
 	// set user-supplied environment variables
 	env_apply();
+  // save the sandbox's environment so other processes can adjust theirs when joining us
+  firejail_setenv_finalize();
 
 	// set capabilities
 	if (!arg_noroot)
@@ -458,9 +460,6 @@ int sandbox(void* sandbox_arg) {
 	// save cgroup in MNT_DIR/cgroup file
 	if (cfg.cgroup)
 		save_cgroup();
-
-  // save the sandbox's environment so other processes can adjust theirs when joining us
-  firejail_setenv_finalize();
 
   // TODO: blacklist ALL .config/firejail/ files except the exechelper policies (read-only)
 
