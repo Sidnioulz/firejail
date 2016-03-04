@@ -143,7 +143,7 @@ void fs_dev_shm(void) {
 			if (arg_debug)
 				printf("Mounting tmpfs on %s on behalf of /dev/shm\n", lnk);
 			if (mount("tmpfs", lnk, "tmpfs", MS_NOSUID | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
-				errExit("mounting /var/tmp");
+				errExit("mounting /dev/shm");
 			free(lnk);
 		}
 		else {
