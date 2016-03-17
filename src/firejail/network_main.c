@@ -305,7 +305,7 @@ int net_get_next_ip(Bridge *br, uint32_t *ip) {
 
       s = getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in), host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
       if (s != 0) {
-        exechelp_logerrv("firejail", "getnameinfo() failed on interface '%s': %s", ifa->ifa_name, gai_strerror(s));
+        exechelp_logerrv("firejail", FIREJAIL_WARNING, "getnameinfo() failed on interface '%s': %s", ifa->ifa_name, gai_strerror(s));
         continue;
       }
 
@@ -331,7 +331,7 @@ void net_configure_sandbox_ip(Bridge *br) {
 		// check network range
 		char *rv = in_netrange(br->ipsandbox, br->ip, br->mask);
 		if (rv) {
-			exechelp_logerrv("firejail", "%s", rv);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "%s", rv);
 			exit(1);
 		}
 		// send an ARP request and check if there is anybody on this IP address

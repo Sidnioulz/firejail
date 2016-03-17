@@ -363,7 +363,7 @@ int profile_check_line(char *ptr, int lineno) {
 		if (strncmp(ptr, "rlimit-nofile ", 14) == 0) {
 			ptr += 14;
 			if (not_unsigned(ptr)) {
-				exechelp_logerrv("firejail", "Invalid rlimit option on line %d\n", lineno);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Invalid rlimit option on line %d\n", lineno);
 				exit(1);
 			}
 			sscanf(ptr, "%u", &cfg.rlimit_nofile);
@@ -372,7 +372,7 @@ int profile_check_line(char *ptr, int lineno) {
 		else if (strncmp(ptr, "rlimit-nproc ", 13) == 0) {
 			ptr += 13;
 			if (not_unsigned(ptr)) {
-				exechelp_logerrv("firejail", "Invalid rlimit option on line %d\n", lineno);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Invalid rlimit option on line %d\n", lineno);
 				exit(1);
 			}
 			sscanf(ptr, "%u", &cfg.rlimit_nproc);
@@ -381,7 +381,7 @@ int profile_check_line(char *ptr, int lineno) {
 		else if (strncmp(ptr, "rlimit-fsize ", 13) == 0) {
 			ptr += 13;
 			if (not_unsigned(ptr)) {
-				exechelp_logerrv("firejail", "Invalid rlimit option on line %d\n", lineno);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Invalid rlimit option on line %d\n", lineno);
 				exit(1);
 			}
 			sscanf(ptr, "%u", &cfg.rlimit_fsize);
@@ -390,14 +390,14 @@ int profile_check_line(char *ptr, int lineno) {
 		else if (strncmp(ptr, "rlimit-sigpending ", 18) == 0) {
 			ptr += 18;
 			if (not_unsigned(ptr)) {
-				exechelp_logerrv("firejail", "Invalid rlimit option on line %d\n", lineno);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Invalid rlimit option on line %d\n", lineno);
 				exit(1);
 			}
 			sscanf(ptr, "%u", &cfg.rlimit_sigpending);
 			arg_rlimit_sigpending = 1;
 		}
 		else {
-			exechelp_logerrv("firejail", "Invalid rlimit option on line %d\n", lineno);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Invalid rlimit option on line %d\n", lineno);
 			exit(1);
 		}
 		

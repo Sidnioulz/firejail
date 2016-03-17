@@ -90,11 +90,11 @@ int rtnl_open_byproto(struct rtnl_handle *rth, unsigned subscriptions,
 		return -1;
 	}
 	if (addr_len != sizeof(rth->local)) {
-		exechelp_logerrv("firejail", "Wrong address length %d\n", addr_len);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Wrong address length %d\n", addr_len);
 		return -1;
 	}
 	if (rth->local.nl_family != AF_NETLINK) {
-		exechelp_logerrv("firejail", "Wrong address family %d\n", rth->local.nl_family);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Wrong address family %d\n", rth->local.nl_family);
 		return -1;
 	}
 	rth->seq = time(NULL);
@@ -165,7 +165,7 @@ int rtnl_send_check(struct rtnl_handle *rth, const void *buf, int len)
 		if (h->nlmsg_type == NLMSG_ERROR) {
 			struct nlmsgerr *err = (struct nlmsgerr*)NLMSG_DATA(h);
 			if (h->nlmsg_len < NLMSG_LENGTH(sizeof(struct nlmsgerr)))
-				exechelp_logerrv("firejail", "ERROR truncated\n");
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "ERROR truncated\n");
 			else 
 				errno = -err->error;
 			return -1;
@@ -226,13 +226,13 @@ int rtnl_dump_filter_l(struct rtnl_handle *rth,
 		if (status < 0) {
 			if (errno == EINTR || errno == EAGAIN)
 				continue;
-			exechelp_logerrv("firejail", "netlink receive error %s (%d)\n",
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "netlink receive error %s (%d)\n",
 				strerror(errno), errno);
 			return -1;
 		}
 
 		if (status == 0) {
-			exechelp_logerrv("firejail", "EOF on netlink\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "EOF on netlink\n");
 			return -1;
 		}
 
@@ -258,8 +258,7 @@ int rtnl_dump_filter_l(struct rtnl_handle *rth,
 				if (h->nlmsg_type == NLMSG_ERROR) {
 					struct nlmsgerr *err = (struct nlmsgerr*)NLMSG_DATA(h);
 					if (h->nlmsg_len < NLMSG_LENGTH(sizeof(struct nlmsgerr))) {
-						fprintf(stderr,
-							"ERROR truncated\n");
+						exechelp_logerrv("firejail", FIREJAIL_ERROR, "ERROR truncated\n");
 					} else {
 						errno = -err->error;
 						exechelp_perror("firejail", "RTNETLINK answers");
@@ -277,17 +276,16 @@ skip_it:
 
 		if (found_done) {
 			if (dump_intr)
-				fprintf(stderr,
-					"Dump was interrupted and may be inconsistent.\n");
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Dump was interrupted and may be inconsistent.\n");
 			return 0;
 		}
 
 		if (msg.msg_flags & MSG_TRUNC) {
-			exechelp_logerrv("firejail", "Message truncated\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Message truncated\n");
 			continue;
 		}
 		if (msglen) {
-			exechelp_logerrv("firejail", "!!!Remnant of size %d\n", msglen);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "!!!Remnant of size %d\n", msglen);
 			exit(1);
 		}
 	}
@@ -352,16 +350,16 @@ int rtnl_talk(struct rtnl_handle *rtnl, struct nlmsghdr *n, pid_t peer,
 		if (status < 0) {
 			if (errno == EINTR || errno == EAGAIN)
 				continue;
-			exechelp_logerrv("firejail", "netlink receive error %s (%d)\n",
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "netlink receive error %s (%d)\n",
 				strerror(errno), errno);
 			return -1;
 		}
 		if (status == 0) {
-			exechelp_logerrv("firejail", "EOF on netlink\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "EOF on netlink\n");
 			return -1;
 		}
 		if (msg.msg_namelen != sizeof(nladdr)) {
-			exechelp_logerrv("firejail", "sender address length == %d\n", msg.msg_namelen);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "sender address length == %d\n", msg.msg_namelen);
 			exit(1);
 		}
 		for (h = (struct nlmsghdr*)buf; status >= (int)sizeof(*h); ) {
@@ -370,10 +368,10 @@ int rtnl_talk(struct rtnl_handle *rtnl, struct nlmsghdr *n, pid_t peer,
 
 			if (l < 0 || len>status) {
 				if (msg.msg_flags & MSG_TRUNC) {
-					exechelp_logerrv("firejail", "Truncated message\n");
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "Truncated message\n");
 					return -1;
 				}
-				exechelp_logerrv("firejail", "!!!malformed message: len=%d\n", len);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "!!!malformed message: len=%d\n", len);
 				exit(1);
 			}
 
@@ -389,7 +387,7 @@ int rtnl_talk(struct rtnl_handle *rtnl, struct nlmsghdr *n, pid_t peer,
 			if (h->nlmsg_type == NLMSG_ERROR) {
 				struct nlmsgerr *err = (struct nlmsgerr*)NLMSG_DATA(h);
 				if (l < (int)sizeof(struct nlmsgerr)) {
-					exechelp_logerrv("firejail", "ERROR truncated\n");
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "ERROR truncated\n");
 				} else {
 					if (!err->error) {
 						if (answer)
@@ -397,7 +395,7 @@ int rtnl_talk(struct rtnl_handle *rtnl, struct nlmsghdr *n, pid_t peer,
 						return 0;
 					}
 
-					exechelp_logerrv("firejail", "RTNETLINK answers: %s\n", strerror(-err->error));
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "RTNETLINK answers: %s\n", strerror(-err->error));
 					errno = -err->error;
 				}
 				return -1;
@@ -407,17 +405,17 @@ int rtnl_talk(struct rtnl_handle *rtnl, struct nlmsghdr *n, pid_t peer,
 				return 0;
 			}
 
-			exechelp_logerrv("firejail", "Unexpected reply!!!\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Unexpected reply!!!\n");
 
 			status -= NLMSG_ALIGN(len);
 			h = (struct nlmsghdr*)((char*)h + NLMSG_ALIGN(len));
 		}
 		if (msg.msg_flags & MSG_TRUNC) {
-			exechelp_logerrv("firejail", "Message truncated\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Message truncated\n");
 			continue;
 		}
 		if (status) {
-			exechelp_logerrv("firejail", "!!!Remnant of size %d\n", status);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "!!!Remnant of size %d\n", status);
 			exit(1);
 		}
 	}
@@ -452,18 +450,18 @@ int rtnl_listen(struct rtnl_handle *rtnl,
 		if (status < 0) {
 			if (errno == EINTR || errno == EAGAIN)
 				continue;
-			exechelp_logerrv("firejail", "netlink receive error %s (%d)\n",
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "netlink receive error %s (%d)\n",
 				strerror(errno), errno);
 			if (errno == ENOBUFS)
 				continue;
 			return -1;
 		}
 		if (status == 0) {
-			exechelp_logerrv("firejail", "EOF on netlink\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "EOF on netlink\n");
 			return -1;
 		}
 		if (msg.msg_namelen != sizeof(nladdr)) {
-			exechelp_logerrv("firejail", "Sender address length == %d\n", msg.msg_namelen);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Sender address length == %d\n", msg.msg_namelen);
 			exit(1);
 		}
 		for (h = (struct nlmsghdr*)buf; status >= (int)sizeof(*h); ) {
@@ -473,10 +471,10 @@ int rtnl_listen(struct rtnl_handle *rtnl,
 
 			if (l<0 || len>status) {
 				if (msg.msg_flags & MSG_TRUNC) {
-					exechelp_logerrv("firejail", "Truncated message\n");
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "Truncated message\n");
 					return -1;
 				}
-				exechelp_logerrv("firejail", "!!!malformed message: len=%d\n", len);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "!!!malformed message: len=%d\n", len);
 				exit(1);
 			}
 
@@ -488,11 +486,11 @@ int rtnl_listen(struct rtnl_handle *rtnl,
 			h = (struct nlmsghdr*)((char*)h + NLMSG_ALIGN(len));
 		}
 		if (msg.msg_flags & MSG_TRUNC) {
-			exechelp_logerrv("firejail", "Message truncated\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Message truncated\n");
 			continue;
 		}
 		if (status) {
-			exechelp_logerrv("firejail", "!!!Remnant of size %d\n", status);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "!!!Remnant of size %d\n", status);
 			exit(1);
 		}
 	}
@@ -530,7 +528,7 @@ int rtnl_from_file(FILE *rtnl, rtnl_filter_t handler,
 		l = len - sizeof(*h);
 
 		if (l < 0 || len > (int)sizeof(buf)) {
-			exechelp_logerrv("firejail", "!!!malformed message: len=%d @%lu\n",
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "!!!malformed message: len=%d @%lu\n",
 				len, ftell(rtnl));
 			return -1;
 		}
@@ -542,7 +540,7 @@ int rtnl_from_file(FILE *rtnl, rtnl_filter_t handler,
 			return -1;
 		}
 		if (status < l) {
-			exechelp_logerrv("firejail", "rtnl-from_file: truncated message\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "rtnl-from_file: truncated message\n");
 			return -1;
 		}
 
@@ -621,7 +619,7 @@ printf("\tdata length: %d\n", alen);
 	struct rtattr *rta;
 
 	if ((int)(NLMSG_ALIGN(n->nlmsg_len) + RTA_ALIGN(len)) > maxlen) {
-		exechelp_logerrv("firejail", "addattr_l ERROR: message exceeded bound of %d\n",maxlen);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "addattr_l ERROR: message exceeded bound of %d\n",maxlen);
 		return -1;
 	}
 	rta = NLMSG_TAIL(n);
@@ -660,7 +658,7 @@ else
 	struct rtattr *rta;
 
 	if (NLMSG_ALIGN(n->nlmsg_len) + RTA_ALIGN(len) > maxlen) {
-		exechelp_logerrv("firejail", "addattr_l ERROR: message exceeded bound of %d\n",maxlen);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "addattr_l ERROR: message exceeded bound of %d\n",maxlen);
 		return -1;
 	}
 	rta = NLMSG_TAIL(n);
@@ -675,7 +673,7 @@ else
 int addraw_l(struct nlmsghdr *n, int maxlen, const void *data, int len)
 {
 	if ((int)(NLMSG_ALIGN(n->nlmsg_len) + NLMSG_ALIGN(len)) > maxlen) {
-		exechelp_logerrv("firejail", "addraw_l ERROR: message exceeded bound of %d\n",maxlen);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "addraw_l ERROR: message exceeded bound of %d\n",maxlen);
 		return -1;
 	}
 
@@ -724,7 +722,7 @@ int rta_addattr32(struct rtattr *rta, int maxlen, int type, __u32 data)
 	struct rtattr *subrta;
 
 	if (RTA_ALIGN(rta->rta_len) + len > maxlen) {
-		fprintf(stderr,"rta_addattr32: Error! max allowed bound %d exceeded\n",maxlen);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "rta_addattr32: Error! max allowed bound %d exceeded\n",maxlen);
 		return -1;
 	}
 	subrta = (struct rtattr*)(((char*)rta) + RTA_ALIGN(rta->rta_len));
@@ -742,7 +740,7 @@ int rta_addattr_l(struct rtattr *rta, int maxlen, int type,
 	int len = RTA_LENGTH(alen);
 
 	if (RTA_ALIGN(rta->rta_len) + RTA_ALIGN(len) > maxlen) {
-		fprintf(stderr,"rta_addattr_l: Error! max allowed bound %d exceeded\n",maxlen);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "rta_addattr_l: Error! max allowed bound %d exceeded\n",maxlen);
 		return -1;
 	}
 	subrta = (struct rtattr*)(((char*)rta) + RTA_ALIGN(rta->rta_len));
@@ -771,7 +769,7 @@ int parse_rtattr_flags(struct rtattr *tb[], int max, struct rtattr *rta,
 		rta = RTA_NEXT(rta,len);
 	}
 	if (len)
-		exechelp_logerrv("firejail", "!!!Deficit %d, rta_len=%d\n", len, rta->rta_len);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "!!!Deficit %d, rta_len=%d\n", len, rta->rta_len);
 	return 0;
 }
 
@@ -786,7 +784,7 @@ int parse_rtattr_byindex(struct rtattr *tb[], int max, struct rtattr *rta, int l
 		rta = RTA_NEXT(rta,len);
 	}
 	if (len)
-		exechelp_logerrv("firejail", "!!!Deficit %d, rta_len=%d\n", len, rta->rta_len);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "!!!Deficit %d, rta_len=%d\n", len, rta->rta_len);
 	return i;
 }
 
