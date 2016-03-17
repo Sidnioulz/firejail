@@ -48,7 +48,7 @@ int restricted_shell(const char *user) {
 		char *usr = ptr;
 		char *args = strchr(usr, ':');
 		if (args == NULL) {
-			exechelp_logerrv("firejail", "Error: users.conf line %d\n", lineno);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: users.conf line %d\n", lineno);
 			exit(1);
 		}
 		*args = '\0';
@@ -72,7 +72,7 @@ int restricted_shell(const char *user) {
 		    			*ptr ='\0';
 		    			fullargv[i] = strdup(fullargv[i]);
 		    			if (fullargv[i] == NULL) {
-		    				exechelp_logerrv("firejail", "Error: cannot allocate memory\n");
+		    				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot allocate memory\n");
 		    				exit(1);
 		    			}
 		    			ptr++;
@@ -85,7 +85,7 @@ int restricted_shell(const char *user) {
 				fclose(fp);
 		    		return i + 1;
 			}
-			exechelp_logerrv("firejail", "Error: too many program arguments in users.conf line %d\n", lineno);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: too many program arguments in users.conf line %d\n", lineno);
 			exit(1);
 		}
 	}

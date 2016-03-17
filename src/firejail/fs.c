@@ -107,7 +107,7 @@ void fs_build_firejail_dir(void) {
 	}
 	else { // check /tmp/firejail directory belongs to root end exit if doesn't!
 		if (s.st_uid != 0 || s.st_gid != 0) {
-			exechelp_logerrv("firejail", "Error: non-root %s directory, exiting...\n", FIREJAIL_DIR);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: non-root %s directory, exiting...\n", FIREJAIL_DIR);
 			exit(1);
 		}
 	}
@@ -255,7 +255,7 @@ static void disable_file(OPERATION op, const char *filename, const char *emptydi
 		if ((strcmp(fname, "/bin") == 0 || strcmp(fname, "/usr/bin") == 0) &&
 		      is_link(filename) &&
 		      S_ISDIR(s.st_mode)) {
-			exechelp_logerrv("firejail", "Warning: %s directory link was not blacklisted\n", filename);
+			exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: %s directory link was not blacklisted\n", filename);
 		}
 			
 		else {
@@ -343,7 +343,7 @@ static void globbing(OPERATION op, const char *pattern, const char *noblacklist[
 	// GLOB_NOCHECK makes that okay.
 	int globerr = linksmartglob(pattern, GLOB_NOCHECK | GLOB_NOSORT, NULL, &globbuf);
 	if (globerr) {
-		exechelp_logerrv("firejail", "Error: failed to glob pattern %s\n", pattern);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: failed to glob pattern %s\n", pattern);
 		exit(1);
 	}
 	
@@ -362,7 +362,7 @@ static void globbing(OPERATION op, const char *pattern, const char *noblacklist[
 				break;
 			}
 			else {
-				exechelp_logerrv("firejail", "Error: failed to compare path %s with pattern %s\n", path, noblacklist[j]);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: failed to compare path %s with pattern %s\n", path, noblacklist[j]);
 				exit(1);
 			}
 		}
@@ -396,18 +396,18 @@ void fs_blacklist(const char *homedir) {
 			char *dname1 = entry->data + 5;
 			char *dname2 = split_comma(dname1);
 			if (dname2 == NULL) {
-				exechelp_logerrv("firejail", "Error: second directory missing in bind command\n");
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: second directory missing in bind command\n");
 				entry = entry->next;
 				continue;
 			}
 			struct stat s;
 			if (stat(dname1, &s) == -1) {
-				exechelp_logerrv("firejail", "Error: cannot find directories for bind command\n");
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find directories for bind command\n");
 				entry = entry->next;
 				continue;
 			}
 			if (stat(dname2, &s) == -1) {
-				exechelp_logerrv("firejail", "Error: cannot find directories for bind command\n");
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find directories for bind command\n");
 				entry = entry->next;
 				continue;
 			}
@@ -455,7 +455,7 @@ void fs_blacklist(const char *homedir) {
 			op = MOUNT_TMPFS;
 		}			
 		else {
-			exechelp_logerrv("firejail", "Error: invalid profile line %s\n", entry->data);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid profile line %s\n", entry->data);
 			entry = entry->next;
 			continue;
 		}
@@ -528,7 +528,7 @@ void fs_rdonly_noexit(const char *dir) {
 		if (mount(NULL, dir, NULL, MS_BIND|MS_REMOUNT|MS_RDONLY|MS_REC, NULL) < 0)
 			merr = 1;
 		if (merr)
-			exechelp_logerrv("firejail", "Warning: cannot mount %s read-only\n", dir); 
+			exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot mount %s read-only\n", dir); 
 	}
 }
 
@@ -553,10 +553,10 @@ void fs_proc_sys_dev_boot(void) {
 	if (arg_debug)
 		printf("Remounting /sys directory\n");
 	if (umount2("/sys", MNT_DETACH) < 0) {
-		exechelp_logerrv("firejail", "Warning: failed to unmount /sys\n");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: failed to unmount /sys\n");
 	}
 	if (mount("sysfs", "/sys", "sysfs", MS_RDONLY|MS_NOSUID|MS_NOEXEC|MS_NODEV|MS_REC, NULL) < 0) {
-		exechelp_logerrv("firejail", "Warning: failed to mount /sys\n");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: failed to mount /sys\n");
 	}
 
 //	if (mount("sysfs", "/sys", "sysfs", MS_RDONLY|MS_NOSUID|MS_NOEXEC|MS_NODEV|MS_REC, NULL) < 0)
@@ -664,7 +664,8 @@ void fs_basic_fs(void) {
 	fs_rdonly("/lib64");
 	fs_rdonly("/usr");
 	fs_rdonly("/etc");
-	fs_rdonly("/var");
+	if (!cfg.var_rw)
+    fs_rdonly("/var");
 
 	// update /var directory in order to support multiple sandboxes running on the same root directory
 	if (!arg_private_dev)
@@ -720,14 +721,14 @@ static void mount_automounts_into_overlay(const char *oroot, const char *basedir
   /* get the /proc/mounts pseudo-file and cache it somewhere */
   FILE *mounts = fopen(MOUNTS_FILE, "rb");
   if (!mounts) {
-		exechelp_logerrv("firejail", "Error: could not open the mounts file used for --overlay mode to produce a fully-working system, expecting further issues: %s (%s)\n", MOUNTS_FILE, strerror(errno));
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: could not open the mounts file used for --overlay mode to produce a fully-working system, expecting further issues: %s (%s)\n", MOUNTS_FILE, strerror(errno));
     return;
   }
 
   char *cpath = MNT_DIR"/mounts";
   FILE *cached = fopen(cpath, "w+");
   if (!cached) {
-		exechelp_logerrv("firejail", "Error: could not create a temporary file to process mount units, needed for --overlay mode to produce a fully-working system, expecting further issues: %s (%s)\n", cpath, strerror(errno));
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: could not create a temporary file to process mount units, needed for --overlay mode to produce a fully-working system, expecting further issues: %s (%s)\n", cpath, strerror(errno));
     return;
   }
 
@@ -765,6 +766,10 @@ static void mount_automounts_into_overlay(const char *oroot, const char *basedir
 
       /* home is only allowed if we don't create a special home directory */
       if (strncmp(dest, "/home", 5) == 0 && arg_overlay_home == 0)
+        continue;
+
+      /* we might need to mount the original /var for some apps to work (e.g. Dropbox) */
+      if (strncmp(dest, "/var", 4) == 0 && cfg.var_rw)
         continue;
 
       /* typical data-containing mount points, make them writable in the overlayfs, by overlayfs'ing them too */
@@ -805,7 +810,7 @@ static void mount_automounts_into_overlay(const char *oroot, const char *basedir
 	        errExit("asprintf");
 
         if (mnt_optstr_get_flags(opt, &mountflags, mnt_get_builtin_optmap(MNT_LINUX_MAP))) {
-	        exechelp_logerrv("firejail", "Error: mnt_optstr_get_flags: failed to process mount flags for %s\n", dest);
+	        exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: mnt_optstr_get_flags: failed to process mount flags for %s\n", dest);
 	        continue;
         }
 
@@ -835,7 +840,7 @@ build_private_home_into_overlay(const char *oroot, const char *basedir) {
 	  errExit("asprintf");
 
 	if (mkdir_if_not_exists(odiff, S_IRWXU | S_IRWXG | S_IRWXO)) {
-		exechelp_logerrv("firejail", "Error: cannot create persistent diff directory in user home: %s\n", odiff);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create persistent diff directory in user home: %s\n", odiff);
 		exit(1);
 	}
 	if (chown(odiff, 0, 0) < 0)
@@ -856,7 +861,7 @@ build_private_home_into_overlay(const char *oroot, const char *basedir) {
 	  errExit("asprintf");
 
 	if (mkdir_if_not_exists(userdir, S_IRWXU | S_IRWXG | S_IRWXO)) {
-		exechelp_logerrv("firejail", "Error: cannot create user home inside overlay: %s\n", userdir);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create user home inside overlay: %s\n", userdir);
 		exit(1);
 	}
 	if (chown(userdir, getuid(), getgid()) < 0)
@@ -895,7 +900,7 @@ void mount_direct_accesses_into_overlay(const char *oroot) {
   for (i = 0; arg_overlay_direct_access[i]; i++) {
     realpath = exechelp_coreutils_realpath(arg_overlay_direct_access[i]);
     if (!realpath) {
-		  exechelp_logerrv("firejail", "Warning: cannot find path for argument %s passed to --overlay-sync, ignoring: %s\n", arg_overlay_direct_access[i], strerror(errno));
+		  exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot find path for argument %s passed to --overlay-sync, ignoring: %s\n", arg_overlay_direct_access[i], strerror(errno));
       continue;
     }
 
@@ -926,14 +931,14 @@ void mount_direct_accesses_into_overlay(const char *oroot) {
         if (!failure)
           printf ("Path %s mounted with permissions %o and owner %d:%d\n", newpath, st.st_mode & 07777, st.st_uid, st.st_gid);
         else
-          exechelp_logerrv("firejail", "Error: failed to create and configure partial path %s for synchronised folder %s: %s\n", newpath, arg_overlay_direct_access[i], strerror(errno));
+          exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: failed to create and configure partial path %s for synchronised folder %s: %s\n", newpath, arg_overlay_direct_access[i], strerror(errno));
       }
 
       *ptr = '/';
     }
 
     if (failure) {
-      exechelp_logerrv("firejail", "Warning: cannot mount path %s into sandbox as synchronised directory: %s\n", realpath, strerror(errno));
+      exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot mount path %s into sandbox as synchronised directory: %s\n", realpath, strerror(errno));
       continue;
     }
   
@@ -954,7 +959,7 @@ fs_overlayfs_dir(const char *oroot, const char *dest, const char *basedir, int o
 
   /* first ensure that oroot exists */
 	if (mkdir_if_not_exists(oroot, S_IRWXU | S_IRWXG | S_IRWXO)) {
-		exechelp_logerrv("firejail", "Error: cannot create overlay directory in temporary mountpoint: %s\n", oroot);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay directory in temporary mountpoint: %s\n", oroot);
 		exit(1);
 	}
 	if (chown(oroot, 0, 0) < 0)
@@ -966,7 +971,7 @@ fs_overlayfs_dir(const char *oroot, const char *dest, const char *basedir, int o
   if(asprintf(&baseworkdir, "%s/.temp", basedir) == -1)
 	  errExit("asprintf");
 	if (mkdir_if_not_exists(baseworkdir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
-		exechelp_logerrv("firejail", "Error: cannot create overlay work directory in user home: %s\n", baseworkdir);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay work directory in user home: %s\n", baseworkdir);
 		exit(1);
 	}
 	free(baseworkdir);
@@ -1005,7 +1010,7 @@ fs_overlayfs_dir(const char *oroot, const char *dest, const char *basedir, int o
   }
 
 	if (mkdir_if_not_exists(odiff, S_IRWXU | S_IRWXG | S_IRWXO)) {
-		exechelp_logerrv("firejail", "Error: cannot create overlay persistent diff directory in user home: %s\n", odiff);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay persistent diff directory in user home: %s\n", odiff);
 		exit(1);
 	}
 	if (chown(odiff, 0, 0) < 0)
@@ -1014,7 +1019,7 @@ fs_overlayfs_dir(const char *oroot, const char *dest, const char *basedir, int o
 		errExit("chmod");
 
 	if (mkdir_if_not_exists(owork, S_IRWXU | S_IRWXG | S_IRWXO)) {
-		exechelp_logerrv("firejail", "Error: cannot create overlay work directory in user home: %s\n", owork);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay work directory in user home: %s\n", owork);
 		exit(1);
 	}
 	if (chown(owork, 0, 0) < 0)
@@ -1056,7 +1061,7 @@ void fs_overlayfs(void) {
 	int major;
 	int minor;
 	if (2 != sscanf(u.release, "%d.%d", &major, &minor)) {
-		exechelp_logerrv("firejail", "Error: cannot extract Linux kernel version: %s\n", u.version);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot extract Linux kernel version: %s\n", u.version);
 		exit(1);
 	}
 	
@@ -1064,7 +1069,7 @@ void fs_overlayfs(void) {
 		printf("Linux kernel version %d.%d\n", major, minor);
 	int oldkernel = 0;
 	if (major < 3) {
-		exechelp_logerrv("firejail", "Error: minimum kernel version required 3.x\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: minimum kernel version required 3.x\n");
 		exit(1);
 	}
 	if (major == 3 && minor < 18)
@@ -1072,7 +1077,7 @@ void fs_overlayfs(void) {
 
  // old Ubuntu/OpenSUSE kernels
 	if (oldkernel && arg_overlay_keep) {
-		exechelp_logerrv("firejail", "Error: option --overlay= not available for kernels older than 3.18\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: option --overlay= not available for kernels older than 3.18\n");
 		exit(1);
 	}
 
@@ -1085,14 +1090,14 @@ void fs_overlayfs(void) {
 		// set base for working and diff directories
 		basedir = cfg.overlay_dir;
 		if (mkdir_if_not_exists(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
-			exechelp_logerrv("firejail", "Error: cannot create overlay directory in user home\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay directory in user home\n");
 			exit(1);
 		}
 	} else {
 	  if (asprintf(&basedir, "%s/overlayfs/%d", MNT_DIR, sandbox_pid) == -1)
 	    errExit("asprintf");
 		if (mkdir_if_not_exists_recursive(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
-			exechelp_logerrv("firejail", "Error: cannot create overlay directory in user home\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay directory in user home\n");
 			exit(1);
 		}
     if (clear_recursive(basedir))
@@ -1105,12 +1110,19 @@ void fs_overlayfs(void) {
 		errExit("asprintf");
   fs_overlayfs_dir(oroot, "/", basedir, oldkernel);
 
+  // mount other mount points as overlayfs filesystems
 	mount_automounts_into_overlay(oroot, basedir, oldkernel);
 
+  // but if home ought to be private, then use an empty dir instead
   if (arg_overlay_home == 0)
     build_private_home_into_overlay(oroot, basedir);
   free(basedir);
 
+  // if /var ought to be read-write, add it to the list of sync'd directories
+  if (cfg.var_rw)
+    string_list_append(&arg_overlay_direct_access, "/var");
+
+  // mount directories directly sync'd with the system
   mount_direct_accesses_into_overlay(oroot);
 	
 	// mount-bind dev directory
@@ -1131,12 +1143,18 @@ void fs_overlayfs(void) {
 	// update /var directory in order to support multiple sandboxes running on the same root directory
 	if (!arg_private_dev)
 		fs_dev_shm();
-	fs_var_lock();
-	fs_var_tmp();
-	fs_var_log();
-	fs_var_lib();
-	fs_var_cache();
-	fs_var_utmp();
+	if (!cfg.var_rw)
+  	fs_var_lock();
+	if (!cfg.var_rw)
+  	fs_var_tmp();
+	if (!cfg.var_rw)
+  	fs_var_log();
+	if (!cfg.var_rw)
+  	fs_var_lib();
+	if (!cfg.var_rw)
+  	fs_var_cache();
+	if (!cfg.var_rw)
+	  fs_var_utmp();
 
   // don't let the inside of the box reach the Sandboxes folder
   struct passwd pwd;
@@ -1174,7 +1192,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/dev", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		exechelp_logerrv("firejail", "Error: cannot find /dev in chroot directory\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find /dev in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -1183,7 +1201,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/var/tmp", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		exechelp_logerrv("firejail", "Error: cannot find /var/tmp in chroot directory\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find /var/tmp in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -1192,7 +1210,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/proc", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		exechelp_logerrv("firejail", "Error: cannot find /proc in chroot directory\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find /proc in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -1201,7 +1219,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/tmp", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		exechelp_logerrv("firejail", "Error: cannot find /tmp in chroot directory\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find /tmp in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -1210,7 +1228,7 @@ int fs_check_chroot_dir(const char *rootdir) {
 	if (asprintf(&name, "%s/bin/bash", rootdir) == -1)
 		errExit("asprintf");
 	if (stat(name, &s) == -1) {
-		exechelp_logerrv("firejail", "Error: cannot find /bin/bash in chroot directory\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find /bin/bash in chroot directory\n");
 		return 1;
 	}
 	free(name);
@@ -1256,7 +1274,7 @@ void fs_chroot(const char *rootdir) {
 	if (arg_debug)
 		printf("Updating /etc/resolv.conf in %s\n", fname);
 	if (copy_file("/etc/resolv.conf", fname) == -1) {
-		exechelp_logerrv("firejail", "Warning: /etc/resolv.conf not initialized\n");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: /etc/resolv.conf not initialized\n");
 	}
 		
 	// chroot into the new directory

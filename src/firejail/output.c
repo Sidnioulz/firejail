@@ -35,7 +35,7 @@ void check_output(int argc, char **argv) {
 
 			// do not accept directories, links, and files with ".."
 			if (strstr(outfile, "..") || is_link(outfile) || is_dir(outfile)) {
-				exechelp_logerrv("firejail", "Error: invalid output file. Links, directories and files with \"..\" are not allowed.\n");
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid output file. Links, directories and files with \"..\" are not allowed.\n");
 				exit(1);
 			}
 			
@@ -43,13 +43,13 @@ void check_output(int argc, char **argv) {
 			if (stat(outfile, &s) == 0) {
 				// check permissions
 				if (s.st_uid != getuid() || s.st_gid != getgid()) {
-					exechelp_logerrv("firejail", "Error: the output file needs to be owned by the current user.\n");
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: the output file needs to be owned by the current user.\n");
 					exit(1);
 				}
 				
 				// check hard links
 				if (s.st_nlink != 1) {
-					exechelp_logerrv("firejail", "Error: no hard links allowed.\n");
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: no hard links allowed.\n");
 					exit(1);
 				}
 			}
@@ -59,7 +59,7 @@ void check_output(int argc, char **argv) {
 			/* coverity[toctou] */
 			FILE *fp = fopen(outfile, "a");
 			if (!fp) {
-				exechelp_logerrv("firejail", "Error: cannot open output file %s\n", outfile);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open output file %s\n", outfile);
 				exit(1);
 			}
 			fclose(fp);

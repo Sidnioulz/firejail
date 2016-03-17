@@ -66,7 +66,7 @@ void load_domain_env(const pid_t pid) {
     errExit("asprintf");
   FILE *fp = fopen(env_path, "rb");
   if (!fp) {
-    exechelp_logerrv("firejail", "Error when loading environment variables list for Firejail domain '%d': %s\n", pid, strerror(errno));
+    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error when loading environment variables list for Firejail domain '%d': %s\n", pid, strerror(errno));
     exit(-1);
   }
 
@@ -90,7 +90,7 @@ void load_domain_env(const pid_t pid) {
         printf ("Setting environment variable %s to value '%s'\n", buffer, value);
       setenv(buffer, value, 1);
     } else {
-      fprintf(stderr, "Warning: the following line from firejail domain's %d list of environment variables was not recognised: %s\n", pid, buffer);
+      exechelp_logerrv("firejail", FIREJAIL_WARNING, "Warning: the following line from firejail domain's %d list of environment variables was not recognised: %s\n", pid, buffer);
     }
   
     free(buffer);
@@ -333,7 +333,7 @@ void exechelp_set_socket_env_from_pid(const pid_t pid) {
 
   while(!found) {
     if (readdir_r(dir, entry, &result)) {
-      exechelp_logerrv("firejail", "Error when reading runtime directory %s to find child process's socket: %s\n", socketdir, strerror(errno));
+      exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error when reading runtime directory %s to find child process's socket: %s\n", socketdir, strerror(errno));
       continue;
     }
 
@@ -355,7 +355,7 @@ void exechelp_set_socket_env_from_pid(const pid_t pid) {
     exechelp_set_socket_env_manually(socketpath);
     free(socketpath);
   } else {
-    exechelp_logerrv("firejail", "Could not find any socket in child process's runtime directory, aborting\n");
+    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Could not find any socket in child process's runtime directory, aborting\n");
     exit(-1);
   }
 }
@@ -370,7 +370,7 @@ void exechelp_set_socket_env_manually(char *cmdsocketpath) {
 
 void exechelp_register_socket(void) {
   if (!cmdsocketpath) {
-    exechelp_logerrv("firejail", "Error: exechelp_register_socket called before its socket was initialised, check the firejail source code.\n");
+    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: exechelp_register_socket called before its socket was initialised, check the firejail source code.\n");
     exit (-1);
   }
 
@@ -384,7 +384,7 @@ void exechelp_register_socket(void) {
   strcpy(remote.sun_path, EXECHELP_REGISTRATION_SOCKET);
   socklen_t len = strlen(remote.sun_path) + sizeof(remote.sun_family);
   if (connect(s, (struct sockaddr *)&remote, len) == -1) {
-    exechelp_logerrv("firejail", "Error: no execution helper daemon is running. Please run 'fireexecd' prior to running firejail, or use the '--disable-helper' option to run firejail without execution helper (can help to circumvent bugs).\n");
+    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: no execution helper daemon is running. Please run 'fireexecd' prior to running firejail, or use the '--disable-helper' option to run firejail without execution helper (can help to circumvent bugs).\n");
     errExit("connect"); 
   }
 
@@ -405,7 +405,7 @@ void exechelp_register_socket(void) {
       reply[received] = '\0';
       char *pol = NULL;
       if(strcmp("ACK", reply) != 0) {
-        exechelp_logerrv("firejail", "Warning: the execution helper daemon did not allow us to proceed with sending commands for remote execution, setting a client policy that allows all executions internally.\n");
+        exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: the execution helper daemon did not allow us to proceed with sending commands for remote execution, setting a client policy that allows all executions internally.\n");
         if (asprintf(&pol, "%d", SANDBOX_ITSELF) == -1)
           errExit("asprintf");
       } else {
@@ -420,7 +420,7 @@ void exechelp_register_socket(void) {
       if (received < 0)
         errExit("recv");
       else {
-        exechelp_logerrv("firejail", "Error: the execution helper daemon should be running but sent data we could not receive. 'fireexecd' might have crashed. Use the '--disable-helper' option to run firejail without execution helper (can help to circumvent bugs).\n");
+        exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: the execution helper daemon should be running but sent data we could not receive. 'fireexecd' might have crashed. Use the '--disable-helper' option to run firejail without execution helper (can help to circumvent bugs).\n");
         exit(1);
       }
   }

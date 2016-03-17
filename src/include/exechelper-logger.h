@@ -27,11 +27,15 @@
 #include <sys/time.h>
 #include <time.h>
 
+#define FIREJAIL_WARNING 0
+#define FIREJAIL_ERROR   1
+
+void exechelp_logv_init(int notifications_available);
 void exechelp_log_force_unlock(void);
 ssize_t exechelp_log(const char *id, const char *fmt, va_list args);
 ssize_t exechelp_logv(const char *id, const char *fmt, ...);
-ssize_t exechelp_logerr(const char *id, const char *fmt, va_list args);
-ssize_t exechelp_logerrv(const char *id, const char *fmt, ...);
+ssize_t exechelp_logerr(const char *id, int level, const char *fmt, va_list args);
+ssize_t exechelp_logerrv(const char *id, int level, const char *fmt, ...);
 void exechelp_perror(const char *id, const char *str);
 void exechelp_log_close(void);
 

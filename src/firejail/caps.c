@@ -195,7 +195,7 @@ static int caps_find_name(const char *name) {
 int caps_check_list(const char *clist, void (*callback)(int)) {
 	// don't allow empty lists
 	if (clist == NULL || *clist == '\0') {
-		exechelp_logerrv("firejail", "Error: empty capabilities lists are not allowed\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: empty capabilities lists are not allowed\n");
 		return -1;
 	}
 
@@ -213,7 +213,7 @@ int caps_check_list(const char *clist, void (*callback)(int)) {
 			*ptr = '\0';
 			int nr = caps_find_name(start);
 			if (nr == -1) {
-				exechelp_logerrv("firejail", "Error: capability %s not found\n", start);
+				exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: capability %s not found\n", start);
 				free(str);
 				return -1;
 			}
@@ -227,7 +227,7 @@ int caps_check_list(const char *clist, void (*callback)(int)) {
 	if (*start != '\0') {
 		int nr = caps_find_name(start);
 		if (nr == -1) {
-			exechelp_logerrv("firejail", "Error: capability %s not found\n", start);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: capability %s not found\n", start);
 			free(str);	
 			return -1;
 		}
@@ -265,42 +265,42 @@ void caps_print(void) {
 int caps_default_filter(void) {
 	// drop capabilities
 	if (prctl(PR_CAPBSET_DROP, CAP_SYS_MODULE, 0, 0, 0) && arg_debug)
-		exechelp_logerrv("firejail", "Warning: cannot drop CAP_SYS_MODULE");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot drop CAP_SYS_MODULE");
 	else if (arg_debug)
 		printf("Drop CAP_SYS_MODULE\n");
 
 	if (prctl(PR_CAPBSET_DROP, CAP_SYS_RAWIO, 0, 0, 0) && arg_debug)
-		exechelp_logerrv("firejail", "Warning: cannot drop CAP_SYS_RAWIO");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot drop CAP_SYS_RAWIO");
 	else if (arg_debug)
 		printf("Drop CAP_SYS_RAWIO\n");
 
 	if (prctl(PR_CAPBSET_DROP, CAP_SYS_BOOT, 0, 0, 0) && arg_debug)
-		exechelp_logerrv("firejail", "Warning: cannot drop CAP_SYS_BOOT");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot drop CAP_SYS_BOOT");
 	else if (arg_debug)
 		printf("Drop CAP_SYS_BOOT\n");
 
 	if (prctl(PR_CAPBSET_DROP, CAP_SYS_NICE, 0, 0, 0) && arg_debug)
-		exechelp_logerrv("firejail", "Warning: cannot drop CAP_SYS_NICE");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot drop CAP_SYS_NICE");
 	else if (arg_debug)
 		printf("Drop CAP_SYS_NICE\n");
 
 	if (prctl(PR_CAPBSET_DROP, CAP_SYS_TTY_CONFIG, 0, 0, 0) && arg_debug)
-		exechelp_logerrv("firejail", "Warning: cannot drop CAP_SYS_TTY_CONFIG");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot drop CAP_SYS_TTY_CONFIG");
 	else if (arg_debug)
 		printf("Drop CAP_SYS_TTY_CONFIG\n");
 
 	if (prctl(PR_CAPBSET_DROP, CAP_SYSLOG, 0, 0, 0) && arg_debug)
-		exechelp_logerrv("firejail", "Warning: cannot drop CAP_SYSLOG");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot drop CAP_SYSLOG");
 	else if (arg_debug)
 		printf("Drop CAP_SYSLOG\n");
 
 	if (prctl(PR_CAPBSET_DROP, CAP_MKNOD, 0, 0, 0) && arg_debug)
-		exechelp_logerrv("firejail", "Warning: cannot drop CAP_MKNOD");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot drop CAP_MKNOD");
 	else if (arg_debug)
 		printf("Drop CAP_MKNOD\n");
 
 	if (prctl(PR_CAPBSET_DROP, CAP_SYS_ADMIN, 0, 0, 0) && arg_debug)
-		exechelp_logerrv("firejail", "Warning: cannot drop CAP_SYS_ADMIN");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot drop CAP_SYS_ADMIN");
 	else if (arg_debug)
 		printf("Drop CAP_SYS_ADMIN\n");
 
@@ -395,12 +395,12 @@ static uint64_t extract_caps(int pid) {
 
 void caps_print_filter_name(const char *name) {
 	if (!name || strlen(name) == 0) {
-		exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid sandbox name\n");
 		exit(1);
 	}
 	pid_t pid;
 	if (name2pid(name, &pid)) {
-		exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", name);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find sandbox %s\n", name);
 		exit(1);
 	}
 

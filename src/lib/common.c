@@ -40,13 +40,13 @@ int join_namespace(pid_t pid, char *type) {
 	int fd = open(path, O_RDONLY);
 	if (fd < 0) {
 		free(path);
-		exechelp_logerrv("firejail", "Error: cannot open /proc/%u/ns/%s.\n", pid, type);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open /proc/%u/ns/%s.\n", pid, type);
 		return -1;
 	}
 
 	if (syscall(__NR_setns, fd, 0) < 0) {
 		free(path);
-		exechelp_logerrv("firejail", "Error: cannot join namespace %s.\n", type);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot join namespace %s.\n", type);
 		close(fd);
 		return -1;
 	}
@@ -65,7 +65,7 @@ int name2pid(const char *name, pid_t *pid) {
 		// sleep 2 seconds and try again
 		sleep(2);
 		if (!(dir = opendir("/proc"))) {
-			exechelp_logerrv("firejail", "Error: cannot open /proc directory\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open /proc directory\n");
 			exit(1);
 		}
 	}

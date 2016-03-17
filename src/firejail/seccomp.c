@@ -338,7 +338,7 @@ static void write_seccomp_file(void) {
 	errno = 0;
 	ssize_t sz = write(fd, sfilter, sfilter_index * sizeof(struct sock_filter));
 	if (sz != (ssize_t)(sfilter_index * sizeof(struct sock_filter))) {
-		exechelp_logerrv("firejail", "Error: cannot save seccomp filter\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot save seccomp filter\n");
 		exit(1);
 	}
 	close(fd);
@@ -362,12 +362,12 @@ static void read_seccomp_file(char *file_name) {
 	// check file
 	struct stat s;
 	if (stat(fname, &s) == -1) {
-		exechelp_logerrv("firejail", "Error: seccomp file not found\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: seccomp file not found\n");
 		exit(1);
 	}
 	ssize_t sz = s.st_size;
 	if (sz == 0 || (sz % sizeof(struct sock_filter)) != 0) {
-		exechelp_logerrv("firejail", "Error: invalid seccomp file\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid seccomp file\n");
 		exit(1);
 	}
 	sfilter = malloc(sz);
@@ -382,7 +382,7 @@ static void read_seccomp_file(char *file_name) {
 	errno = 0;		
 	ssize_t size = read(fd, sfilter, sz);
 	if (size != sz) {
-		exechelp_logerrv("firejail", "Error: invalid seccomp file\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid seccomp file\n");
 		exit(1);
 	}
 	sfilter_index = sz / sizeof(struct sock_filter);
@@ -488,14 +488,14 @@ int seccomp_filter_drop(void) {
 	// default seccomp filter with additional drop list
 	if (arg_seccomp_list && arg_seccomp_list_drop == NULL) {
 		if (syscall_check_list(arg_seccomp_list, filter_add_blacklist)) {
-			exechelp_logerrv("firejail", "Error: cannot load seccomp filter\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot load seccomp filter\n");
 			exit(1);
 		}
 	}
 	// drop list
 	else if (arg_seccomp_list == NULL && arg_seccomp_list_drop) {
 		if (syscall_check_list(arg_seccomp_list_drop, filter_add_blacklist)) {
-			exechelp_logerrv("firejail", "Error: cannot load seccomp filter\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot load seccomp filter\n");
 			exit(1);
 		}
 	}
@@ -516,7 +516,7 @@ int seccomp_filter_drop(void) {
 	};
 
 	if (prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog) || prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
-		exechelp_logerrv("firejail", "Warning: seccomp disabled, it requires a Linux kernel version 3.5 or newer.\n");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: seccomp disabled, it requires a Linux kernel version 3.5 or newer.\n");
 		return 1;
 	}
 	else if (arg_debug) {
@@ -539,7 +539,7 @@ int seccomp_filter_keep(void) {
 	// apply keep list
 	if (arg_seccomp_list_keep) {
 		if (syscall_check_list(arg_seccomp_list_keep, filter_add_whitelist)) {
-			exechelp_logerrv("firejail", "Error: cannot load seccomp filter\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot load seccomp filter\n");
 			exit(1);
 		}
 	}
@@ -559,7 +559,7 @@ int seccomp_filter_keep(void) {
 	};
 
 	if (prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog) || prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
-		exechelp_logerrv("firejail", "Warning: seccomp disabled, it requires a Linux kernel version 3.5 or newer.\n");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: seccomp disabled, it requires a Linux kernel version 3.5 or newer.\n");
 		return 1;
 	}
 	else if (arg_debug) {
@@ -582,7 +582,7 @@ void seccomp_set(void) {
 	};
 	
 	if (prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &prog) || prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
-		exechelp_logerrv("firejail", "Warning: seccomp disabled, it requires a Linux kernel version 3.5 or newer.\n");
+		exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: seccomp disabled, it requires a Linux kernel version 3.5 or newer.\n");
 		return;
 	}
 	else if (arg_debug) {
@@ -592,12 +592,12 @@ void seccomp_set(void) {
 
 void seccomp_print_filter_name(const char *name) {
 	if (!name || strlen(name) == 0) {
-		exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid sandbox name\n");
 		exit(1);
 	}
 	pid_t pid;
 	if (name2pid(name, &pid)) {
-		exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", name);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find sandbox %s\n", name);
 		exit(1);
 	}
 

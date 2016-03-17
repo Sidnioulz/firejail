@@ -40,13 +40,13 @@ static char *client_filter =
 
 void check_netfilter_file(const char *fname) {
 	if (is_dir(fname) || is_link(fname) || strstr(fname, "..")) {
-		exechelp_logerrv("firejail", "Error: invalid network filter file\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid network filter file\n");
 		exit(1);
 	}
 
 	// access call checks as real UID/GID, not as effective UID/GID
 	if (access(fname, R_OK)) {
-		exechelp_logerrv("firejail", "Error: cannot access network filter file\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot access network filter file\n");
 		exit(1);
 	}
 }
@@ -62,7 +62,7 @@ void netfilter(const char *fname) {
 		// buffer the filter
 		struct stat s;
 		if (stat(fname, &s) == -1) {
-			exechelp_logerrv("firejail", "Error: cannot find network filter file\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find network filter file\n");
 			exit(1);
 		}
 
@@ -74,13 +74,13 @@ void netfilter(const char *fname) {
 		/* coverity[toctou] */
 		FILE *fp = fopen(fname, "r");
 		if (!fp) {
-			exechelp_logerrv("firejail", "Error: cannot open network filter file\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open network filter file\n");
 			exit(1);
 		}
 
 		size_t sz = fread(filter, 1, s.st_size, fp);
 		if ((off_t)sz != s.st_size) {
-			exechelp_logerrv("firejail", "Error: cannot read network filter file\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot read network filter file\n");
 			exit(1);
 		}
 		fclose(fp);
@@ -94,7 +94,7 @@ void netfilter(const char *fname) {
 	// create the filter file
 	FILE *fp = fopen("/tmp/netfilter", "w");
 	if (!fp) {
-		exechelp_logerrv("firejail", "Error: cannot open /tmp/netfilter file\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open /tmp/netfilter file\n");
 		exit(1);
 	}
 	fprintf(fp, "%s\n", filter);
@@ -113,7 +113,7 @@ void netfilter(const char *fname) {
 		iptables_restore = "/usr/sbin/iptables-restore";
 	}
 	if (iptables == NULL || iptables_restore == NULL) {
-		exechelp_logerrv("firejail", "Error: iptables command not found\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: iptables command not found\n");
 		goto doexit;
 	}
 

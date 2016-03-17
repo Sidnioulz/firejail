@@ -132,7 +132,7 @@ int net_get_if_addr(const char *bridge, uint32_t *ip, uint32_t *mask, uint8_t ma
 // bring interface up
 void net_if_up(const char *ifname) {
 	if (strlen(ifname) > IFNAMSIZ) {
-		exechelp_logerrv("firejail", "Error: invalid network device name %s\n", ifname);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid network device name %s\n", ifname);
 		exit(1);
 	}
 	
@@ -188,7 +188,7 @@ void net_if_up(const char *ifname) {
 // configure interface
 void net_if_ip(const char *ifname, uint32_t ip, uint32_t mask) {
 	if (strlen(ifname) > IFNAMSIZ) {
-		exechelp_logerrv("firejail", "Error: invalid network device name %s\n", ifname);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid network device name %s\n", ifname);
 		exit(1);
 	}
 
@@ -260,7 +260,7 @@ int net_add_route(uint32_t ip, uint32_t mask, uint32_t gw) {
 // add a veth device to a bridge
 void net_bridge_add_interface(const char *bridge, const char *dev) {
 	if (strlen(bridge) > IFNAMSIZ) {
-		exechelp_logerrv("firejail", "Error: invalid network device name %s\n", bridge);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid network device name %s\n", bridge);
 		exit(1);
 	}
 

@@ -91,6 +91,7 @@ typedef struct config_t {
 	char *etc_private_keep;	// keep list for private etc directory
 	char *cwd;		// current working directory
 	char *overlay_dir;
+	uint8_t var_rw;
 
 	// networking
 	char *hostname;

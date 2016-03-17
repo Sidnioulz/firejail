@@ -71,9 +71,9 @@ static void check_file_name(char *ptr, int lineno) {
 	// file globbing ('*') is allowed
 	if (strcspn(ptr, "\\&!?\"'<>%^(){}[];,") != (size_t)len) {
 		if (lineno == 0)
-			exechelp_logerrv("firejail", "Error: \"%s\" is an invalid filename\n", ptr);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: \"%s\" is an invalid filename\n", ptr);
 		else
-			exechelp_logerrv("firejail", "Error: line %d in the custom profile is invalid\n", lineno);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: line %d in the custom profile is invalid\n", lineno);
 		exit(1);
 	}
 }
@@ -121,15 +121,15 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	else if (strcmp(ptr, "private") == 0) {
 	  if (arg_overlay_home == 0) {
-		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay-private-home' previously seen.\n", lineno);
+		  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: 'private' at line %d conflicts with 'overlay-private-home' previously seen.\n", lineno);
   		exit(1);  
     }
 	  if (arg_overlay == 1) {
-		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay' previously seen.\n", lineno);
+		  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: 'private' at line %d conflicts with 'overlay' previously seen.\n", lineno);
   		exit(1);  
     }
 	  if (arg_overlay_keep == 0) {
-		  exechelp_logerrv("firejail", "Error: 'private' at line %d conflicts with 'overlay-tmpfs' / 'overlay-disposable' previously seen.\n", lineno);
+		  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: 'private' at line %d conflicts with 'overlay-tmpfs' / 'overlay-disposable' previously seen.\n", lineno);
   		exit(1);  
     }
 		arg_private = 1;
@@ -141,7 +141,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	else if (strcmp(ptr, "overlay") == 0) {
 	  if (arg_private == 1) {
-		  exechelp_logerrv("firejail", "Error: 'overlay' at line %d conflicts with 'private' previously seen.\n", lineno);
+		  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: 'overlay' at line %d conflicts with 'private' previously seen.\n", lineno);
   		exit(1);  
     }
     arg_overlay = 1;
@@ -149,7 +149,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	else if (strcmp(ptr, "overlay-private-home") == 0) {
 	  if (arg_private == 1) {
-		  exechelp_logerrv("firejail", "Error: 'overlay-private-home' at line %d conflicts with 'private' previously seen.\n", lineno);
+		  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: 'overlay-private-home' at line %d conflicts with 'private' previously seen.\n", lineno);
   		exit(1);  
     }
     arg_overlay = 1;
@@ -158,7 +158,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	else if (strcmp(ptr, "overlay-tmpfs") == 0 || strcmp(ptr, "overlay-disposable") == 0) {
 	  if (arg_private == 1) {
-		  exechelp_logerrv("firejail", "Error: 'overlay-tmpfs' / 'overlay-disposable' at line %d conflicts with 'private' previously seen.\n", lineno);
+		  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: 'overlay-tmpfs' / 'overlay-disposable' at line %d conflicts with 'private' previously seen.\n", lineno);
   		exit(1);  
     }
     arg_overlay = 1;
@@ -167,7 +167,7 @@ int profile_check_line(char *ptr, int lineno) {
 	}
 	else if (strncmp(ptr, "overlay-sync ", 13) == 0) {
     if (strlen(ptr+13) == 0) {
-	    exechelp_logerrv("firejail", "Error: please provide a directory name for the overlay-sync option at line %d\n", lineno);
+	    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: please provide a directory name for the overlay-sync option at line %d\n", lineno);
 	    exit(1);
     }
     char *dup = strdup(ptr+13);
@@ -276,7 +276,7 @@ int profile_check_line(char *ptr, int lineno) {
 	else if (strncmp(ptr, "dns ", 4) == 0) {
 		uint32_t dns;
 		if (atoip(ptr + 4, &dns)) {
-			exechelp_logerrv("firejail", "Error: invalid DNS server IP address\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid DNS server IP address\n");
 			return 1;
 		}
 		
@@ -287,7 +287,7 @@ int profile_check_line(char *ptr, int lineno) {
 		else if (cfg.dns3 == 0)
 			cfg.dns3 = dns;
 		else {
-			exechelp_logerrv("firejail", "Error: up to 3 DNS servers can be specified\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: up to 3 DNS servers can be specified\n");
 			return 1;
 		}
 		return 0;
@@ -333,7 +333,7 @@ int profile_check_line(char *ptr, int lineno) {
 	// filesystem bind
 	else if (strncmp(ptr, "bind ", 5) == 0) {
 		if (getuid() != 0) {
-			exechelp_logerrv("firejail", "Error: --bind option is available only if running as root\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: --bind option is available only if running as root\n");
 			exit(1);
 		}
 
@@ -341,7 +341,7 @@ int profile_check_line(char *ptr, int lineno) {
 		char *dname1 = ptr + 5;
 		char *dname2 = split_comma(dname1); // this inserts a '0 to separate the two dierctories
 		if (dname2 == NULL) {
-			exechelp_logerrv("firejail", "Error: mising second directory for bind\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: mising second directory for bind\n");
 			exit(1);
 		}
 		
@@ -349,7 +349,7 @@ int profile_check_line(char *ptr, int lineno) {
 		check_file_name(dname1, lineno);
 		check_file_name(dname2, lineno);
 		if (strstr(dname1, "..") || strstr(dname2, "..")) {
-			exechelp_logerrv("firejail", "Error: invalid file name.\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid file name.\n");
 			exit(1);
 		}
 		
@@ -415,9 +415,9 @@ int profile_check_line(char *ptr, int lineno) {
 		ptr += 6;
 	else {
 		if (lineno == 0)
-			exechelp_logerrv("firejail", "Error: \"%s\" as a command line option is invalid\n", ptr);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: \"%s\" as a command line option is invalid\n", ptr);
 		else
-			exechelp_logerrv("firejail", "Error: line %d in the custom profile is invalid\n", lineno);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: line %d in the custom profile is invalid\n", lineno);
 		exit(1);
 	}
 
@@ -425,9 +425,9 @@ int profile_check_line(char *ptr, int lineno) {
 	check_file_name(ptr, lineno);
 	if (strstr(ptr, "..")) {
 		if (lineno == 0)
-			exechelp_logerrv("firejail", "Error: \"%s\" is an invalid filename\n", ptr);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: \"%s\" is an invalid filename\n", ptr);
 		else
-			exechelp_logerrv("firejail", "Error: line %d in the custom profile is invalid\n", lineno);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: line %d in the custom profile is invalid\n", lineno);
 		exit(1);
 	}
 	return 1;
@@ -458,23 +458,23 @@ static int include_level = 0;
 void profile_read(const char *fname, const char *skip1, const char *skip2) {
 	// exit program if maximum include level was reached
 	if (include_level > MAX_INCLUDE_LEVEL) {
-		exechelp_logerrv("firejail", "Error: maximum profile include level was reached\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: maximum profile include level was reached\n");
 		exit(1);	
 	}
 
 	if (strlen(fname) == 0) {
-		exechelp_logerrv("firejail", "Error: invalid profile file\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid profile file\n");
 		exit(1);
 	}
 
 	// open profile file:
 	FILE *fp = fopen(fname, "r");
 	if (fp == NULL) {
-		exechelp_logerrv("firejail", "Error: cannot open profile file\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open profile file\n");
 		exit(1);
 	}
 
-	exechelp_logerrv("firejail", "Reading profile %s\n", fname);
+	exechelp_logv("firejail", "Reading profile %s\n", fname);
 
 	// read the file line by line
 	char buf[MAX_READ + 1];

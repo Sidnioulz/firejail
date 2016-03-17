@@ -58,23 +58,23 @@ void net_nat_bridge(Bridge *br) {
 	// set a range of IPs and a mask to use if none were given
 	if (!br->iprange_start || !br->iprange_end) {
 	  if (atoip("10.1.1.0", &br->iprange_start)) {
-			exechelp_logerrv("firejail", "Error:  internal atoip() error\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error:  internal atoip() error\n");
 			exit(1);
 		}
 	  if (atoip("10.253.253.253", &br->iprange_end)) {
-			exechelp_logerrv("firejail", "Error:  internal atoip() error\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error:  internal atoip() error\n");
 			exit(1);
 		}
 	}
   if (!br->mask) {
     if (atoip("255.255.255.254", &br->mask)) {
-		  exechelp_logerrv("firejail", "Error:  internal atoip() error\n");
+		  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error:  internal atoip() error\n");
 		  exit(1);
 	  }
   }
 	// this software is not supported for /31 networks
   else if ((~br->mask + 1) < 4) {
-		exechelp_logerrv("firejail", "Error: the software is not supported for /31 networks\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: the software is not supported for /31 networks\n");
 		exit(1);
 	}
 
@@ -88,7 +88,7 @@ void net_nat_bridge(Bridge *br) {
 
       // we exhausted all the options
       if (!first || !second) {
-			  exechelp_logerrv("firejail", "Error: cannot find two available IP addresses in the same range (/%d), cannot instantiate the network namespace\n", mask2bits(br->mask));
+			  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find two available IP addresses in the same range (/%d), cannot instantiate the network namespace\n", mask2bits(br->mask));
 			  exit(1);
       }
 
@@ -241,13 +241,13 @@ void net_configure_bridge(Bridge *br, char *dev_name) {
 			br->devsandbox = newname;
 		}			
 		else {
-			exechelp_logerrv("firejail", "Error: cannot find network device %s\n", br->dev);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find network device %s\n", br->dev);
 			exit(1);
 		}
 	}
 
 	if (net_get_if_addr(br->dev, &br->ip, &br->mask, br->mac)) {
-		exechelp_logerrv("firejail", "Error: interface %s is not configured\n", br->dev);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: interface %s is not configured\n", br->dev);
 		exit(1);
 	}
 	if (arg_debug) {
@@ -262,7 +262,7 @@ void net_configure_bridge(Bridge *br, char *dev_name) {
 	uint32_t range = ~br->mask + 1;		  // the number of potential addresses
 	// this software is not supported for /31 networks
 	if (range < 4) {
-		exechelp_logerrv("firejail", "Error: the software is not supported for /31 networks\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: the software is not supported for /31 networks\n");
 		exit(1);
 	}
 	br->configured = 1;
@@ -280,12 +280,12 @@ int net_get_next_ip(Bridge *br, uint32_t *ip) {
   char host[NI_MAXHOST];
 
   if (getifaddrs(&ifaddr) == -1) {
-    exechelp_logerrv("firejail", "Error: call to getifaddrs() failed, cannot calculate an IP for the sandbox's network namespace\n");
+    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: call to getifaddrs() failed, cannot calculate an IP for the sandbox's network namespace\n");
     errExit("getifaddrs");
 	}
 	
 	if (!br->iprange_start || !br->iprange_end) {
-    exechelp_logerrv("firejail", "Error: the automatic NAT interface requires an IP range to be set\n");
+    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: the automatic NAT interface requires an IP range to be set\n");
     return -1;
 	}
 
@@ -336,7 +336,7 @@ void net_configure_sandbox_ip(Bridge *br) {
 		}
 		// send an ARP request and check if there is anybody on this IP address
 		if (arp_check(br->dev, br->ipsandbox, br->ip)) {
-			exechelp_logerrv("firejail", "Error: IP address %d.%d.%d.%d is already in use\n", PRINT_IP(br->ipsandbox));
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: IP address %d.%d.%d.%d is already in use\n", PRINT_IP(br->ipsandbox));
 			exit(1);
 		}
 	}
@@ -401,7 +401,7 @@ void check_default_gw(uint32_t defaultgw) {
 			return;
 	}
 
-	exechelp_logerrv("firejail", "Error: default gateway %d.%d.%d.%d is not in the range of any network\n", PRINT_IP(defaultgw));
+	exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: default gateway %d.%d.%d.%d is not in the range of any network\n", PRINT_IP(defaultgw));
 	exit(1);
 }
 
@@ -418,7 +418,7 @@ void net_check_cfg(void) {
 
 	// --defaultgw requires a network
 	if (cfg.defaultgw && net_configured == 0) {
-		exechelp_logerrv("firejail", "Error: option --defaultgw requires at least one network to be configured\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: option --defaultgw requires at least one network to be configured\n");
 		exit(1);
 	}
 
@@ -427,7 +427,7 @@ void net_check_cfg(void) {
 
 	// --net=none
 	if (arg_nonetwork && net_configured) {
-		exechelp_logerrv("firejail", "Error: --net and --net=none are mutually exclusive\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: --net and --net=none are mutually exclusive\n");
 		exit(1);
 	}
 
@@ -455,12 +455,12 @@ void net_check_cfg(void) {
 
 void net_dns_print_name(const char *name) {
 	if (!name || strlen(name) == 0) {
-		exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid sandbox name\n");
 		exit(1);
 	}
 	pid_t pid;
 	if (name2pid(name, &pid)) {
-		exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", name);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find sandbox %s\n", name);
 		exit(1);
 	}
 
@@ -495,7 +495,7 @@ void net_dns_print(pid_t pid) {
 	// access /etc/resolv.conf
 	FILE *fp = fopen(fname, "r");
 	if (!fp) {
-		exechelp_logerrv("firejail", "Error: cannot access /etc/resolv.conf\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot access /etc/resolv.conf\n");
 		exit(1);
 	}
 	

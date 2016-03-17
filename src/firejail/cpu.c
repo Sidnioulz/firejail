@@ -28,7 +28,7 @@ static void set_cpu(const char *str) {
 	
 	int val = atoi(str);
 	if (val < 0 || val >= 32) {
-		exechelp_logerrv("firejail", "Error: invalid cpu number. Accepted values are between 0 and 31.\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid cpu number. Accepted values are between 0 and 31.\n");
 		exit(1);
 	}
 	
@@ -48,7 +48,7 @@ void read_cpu_list(const char *str) {
 		if (*ptr == ',' || isdigit(*ptr))
 			;
 		else {
-			exechelp_logerrv("firejail", "Error: invalid cpu list\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid cpu list\n");
 			exit(1);
 		}
 		ptr++;
@@ -83,7 +83,7 @@ void save_cpu(void) {
 			errExit("chown");
 	}
 	else {
-		exechelp_logerrv("firejail", "Error: cannot save cpu affinity mask\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot save cpu affinity mask\n");
 		free(fname);
 		exit(1);
 	}
@@ -104,7 +104,7 @@ void load_cpu(const char *fname) {
 		fclose(fp);
 	}
 	else
-		exechelp_logerrv("firejail", "Warning: cannot load cpu affinity mask\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot load cpu affinity mask\n");
 }
 
 void set_cpu_affinity(void) {
@@ -120,18 +120,14 @@ void set_cpu_affinity(void) {
 	}
 	
         	if (sched_setaffinity(0, sizeof(mask), &mask) == -1) {
-        		exechelp_logerrv("firejail", "Warning: cannot set cpu affinity\n");
-        		exechelp_logerrv("firejail", "  ");
-        		exechelp_perror("firejail", "sched_setaffinity");
+        		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot set cpu affinity   %s\n", strerror(errno));
         	}
         	
         	// verify cpu affinity
 	cpu_set_t mask2;
 	CPU_ZERO(&mask2);
         	if (sched_getaffinity(0, sizeof(mask2), &mask2) == -1) {
-        		exechelp_logerrv("firejail", "Warning: cannot verify cpu affinity\n");
-        		exechelp_logerrv("firejail", "   ");
-        		exechelp_perror("firejail", "sched_getaffinity");
+        		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot verify cpu affinity   %s\n", strerror(errno));
         	}
         	else {
 	        	if (CPU_EQUAL(&mask, &mask2))

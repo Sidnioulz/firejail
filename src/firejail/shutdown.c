@@ -25,13 +25,13 @@
 
 void shut_name(const char *name) {
 	if (!name || strlen(name) == 0) {
-		exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid sandbox name\n");
 		exit(1);
 	}
 	
 	pid_t pid;
 	if (name2pid(name, &pid)) {
-		exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", name);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find sandbox %s\n", name);
 		exit(1);
 	}
 
@@ -67,7 +67,7 @@ void shut(pid_t pid) {
 		if (stat(dir, &s) < 0)
 			errExit("stat");
 		if (s.st_uid != uid) {
-			exechelp_logerrv("firejail", "Error: permission is denied to shutdown a sandbox created by a different user.\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: permission is denied to shutdown a sandbox created by a different user.\n");
 			exit(1);
 		}
 	}

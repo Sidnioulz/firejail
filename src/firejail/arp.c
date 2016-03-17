@@ -43,7 +43,7 @@ typedef struct arp_hdr_t {
 // returns 0 if the address is not in use, -1 otherwise
 int arp_check(const char *dev, uint32_t destaddr, uint32_t srcaddr) {
 	if (strlen(dev) > IFNAMSIZ) {
-		exechelp_logerrv("firejail", "Invalid network device name %s\n", dev);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: Invalid network device name %s\n", dev);
 		exit(1);
 	}
 	
@@ -278,7 +278,7 @@ uint32_t arp_assign(const char *dev, Bridge *br) {
 	
 	// print result
 	if (!ip) {
-		exechelp_logerrv("firejail", "Error: cannot assign an IP address; it looks like all of them are in use.\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot assign an IP address; it looks like all of them are in use.\n");
 		logerr("Cannot assign an IP address; it looks like all of them are in use.");
 		exit(1);
 	}
@@ -295,7 +295,7 @@ void arp_scan(const char *dev, uint32_t ifip, uint32_t ifmask) {
 //		dev, PRINT_IP(ifip & ifmask), mask2bits(ifmask));
 			
 	if (strlen(dev) > IFNAMSIZ) {
-		exechelp_logerrv("firejail", "Error: invalid network device name %s\n", dev);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid network device name %s\n", dev);
 		exit(1);
 	}
 	
@@ -320,7 +320,7 @@ void arp_scan(const char *dev, uint32_t ifip, uint32_t ifmask) {
 	uint32_t range = ~ifmask + 1; // the number of potential addresses
 	// this software is not supported for /31 networks
 	if (range < 4) {
-		exechelp_logerrv("firejail", "Warning: this option is not supported for /31 networks\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: this option is not supported for /31 networks\n");
 		close(sock);
 		return;
 	}

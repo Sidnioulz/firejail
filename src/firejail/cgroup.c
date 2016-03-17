@@ -39,7 +39,7 @@ void save_cgroup(void) {
 			errExit("chown");
 	}
 	else {
-		exechelp_logerrv("firejail", "Error: cannot save cgroup\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot save cgroup\n");
 		free(fname);
 		exit(1);
 	}
@@ -66,7 +66,7 @@ void load_cgroup(const char *fname) {
 		return;
 	}
 errout:
-	exechelp_logerrv("firejail", "Warrning: cannot load control group\n");
+	exechelp_logerrv("firejail", FIREJAIL_WARNING, "Warrning: cannot load control group\n");
 	if (fp)
 		fclose(fp);
 }
@@ -110,9 +110,9 @@ void set_cgroup(const char *path) {
 	return;
 
 errout:		
-	exechelp_logerrv("firejail", "Error: invalid cgroup\n");
+	exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid cgroup\n");
 	exit(1);
 errout2:		
-	exechelp_logerrv("firejail", "Error: you don't have permissions to use this control group\n");
+	exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: you don't have permissions to use this control group\n");
 	exit(1);
 }

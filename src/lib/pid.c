@@ -361,7 +361,7 @@ void pid_read(pid_t mon_pid) {
 					ptr++;
 				}
 				if (*ptr == '\0') {
-					exechelp_logerrv("firejail", "Error: cannot read /proc file\n");
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot read /proc file\n");
 					exit(1);
 				}
 				unsigned parent = atoi(ptr);

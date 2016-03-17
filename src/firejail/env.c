@@ -63,7 +63,7 @@ void env_store(const char *str) {
 	return;
 	
 errexit:
-	exechelp_logerrv("firejail", "Error: invalid --env setting\n");
+	exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid --env setting\n");
 	exit(1);
 }
 

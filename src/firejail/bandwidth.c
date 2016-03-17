@@ -125,7 +125,7 @@ void shm_create_firejail_dir(void) {
 	}
 	else { // check /dev/shm/firejail directory belongs to root end exit if doesn't!
 		if (s.st_uid != 0 || s.st_gid != 0) {
-			exechelp_logerrv("firejail", "Error: non-root %s directory, exiting...\n", "/dev/shm/firejail");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: non-root %s directory, exiting...\n", "/dev/shm/firejail");
 			exit(1);
 		}
 	}
@@ -157,7 +157,7 @@ static void shm_create_bandwidth_file(pid_t pid) {
 			errExit("chown");
 	}
 	else {
-		exechelp_logerrv("firejail", "Error: cannot create bandwidth file in /dev/shm/firejail directory\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create bandwidth file in /dev/shm/firejail directory\n");
 		exit(1);
 	}
 	
@@ -207,7 +207,7 @@ void network_shm_set_file(pid_t pid) {
 			errExit("chown");
 	}
 	else {
-		exechelp_logerrv("firejail", "Error: cannot create network map file in /dev/shm/firejail directory\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create network map file in /dev/shm/firejail directory\n");
 		exit(1);
 	}
 	
@@ -268,7 +268,7 @@ void shm_write_bandwidth_file(pid_t pid) {
 		fclose(fp);
 	}
 	else {
-		exechelp_logerrv("firejail", "Error: cannot write bandwidht file %s\n", fname);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot write bandwidht file %s\n", fname);
 		exit(1);
 	}
 }
@@ -340,12 +340,12 @@ void bandwidth_shm_set(pid_t pid, const char *dev, int down, int up) {
 //***********************************
 void bandwidth_name(const char *name, const char *command, const char *dev, int down, int up) {
 	if (!name || strlen(name) == 0) {
-		exechelp_logerrv("firejail", "Error: invalid sandbox name\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid sandbox name\n");
 		exit(1);
 	}
 	pid_t pid;
 	if (name2pid(name, &pid)) {
-		exechelp_logerrv("firejail", "Error: cannot find sandbox %s\n", name);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find sandbox %s\n", name);
 		exit(1);
 	}
 
@@ -358,7 +358,7 @@ void bandwidth_pid(pid_t pid, const char *command, const char *dev, int down, in
 	//************************
 	char *comm = pid_proc_comm(pid);
 	if (!comm) {
-		exechelp_logerrv("firejail", "Error: cannot find sandbox\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find sandbox\n");
 		exit(1);
 	}
 
@@ -367,7 +367,7 @@ void bandwidth_pid(pid_t pid, const char *command, const char *dev, int down, in
 	if (ptr)
 		*ptr = '\0';
 	if (strcmp(comm, "firejail") != 0) {
-		exechelp_logerrv("firejail", "Error: cannot find sandbox\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find sandbox\n");
 		exit(1);
 	}
 	free(comm);
@@ -375,7 +375,7 @@ void bandwidth_pid(pid_t pid, const char *command, const char *dev, int down, in
 	// check network namespace
 	char *cmd = pid_proc_cmdline(pid);
 	if (!cmd || strstr(cmd, "--net") == NULL) {
-		exechelp_logerrv("firejail", "Error: the sandbox doesn't use a new network namespace\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: the sandbox doesn't use a new network namespace\n");
 		exit(1);
 	}
 	free(cmd);
@@ -386,11 +386,11 @@ void bandwidth_pid(pid_t pid, const char *command, const char *dev, int down, in
 	//************************
 	pid_t child;
 	if (find_child(pid, &child) == -1) {
-		exechelp_logerrv("firejail", "Error: cannot join the network namespace\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot join the network namespace\n");
 		exit(1);
 	}
 	if (join_namespace(child, "net")) {
-		exechelp_logerrv("firejail", "Error: cannot join the network namespace\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot join the network namespace\n");
 		exit(1);
 	}
 
@@ -411,7 +411,7 @@ void bandwidth_pid(pid_t pid, const char *command, const char *dev, int down, in
 			errExit("asprintf");
 		FILE *fp = fopen(fname, "r");
 		if (!fp) {
-			exechelp_logerrv("firejail", "Error: cannot read network map file %s\n", fname);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot read network map file %s\n", fname);
 			exit(1);
 		}
 		
@@ -431,7 +431,7 @@ void bandwidth_pid(pid_t pid, const char *command, const char *dev, int down, in
 					errExit("strdup");
 				// check device in namespace
 				if (if_nametoindex(devname) == 0) {
-					exechelp_logerrv("firejail", "Error: cannot find network device %s\n", devname);
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find network device %s\n", devname);
 					exit(1);
 				}
 				break;

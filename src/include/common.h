@@ -37,7 +37,7 @@
 #define DEFAULT_USER_PROFILE	"generic"
 #define DEFAULT_ROOT_PROFILE	"server"
 
-#define errExit(msg)    do { char msgout[500]; snprintf(msgout, 500, "Error %s:%s(%d)", msg, __FUNCTION__, __LINE__); exechelp_logerrv("firejail", "Error: %s: %s\n", msgout, strerror(errno)); perror(msgout); exit(1);} while (0)
+#define errExit(msg)    do { char msgout[500]; snprintf(msgout, 500, "Error %s:%s(%d)", msg, __FUNCTION__, __LINE__); exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: %s: %s\n", msgout, strerror(errno)); perror(msgout); exit(1);} while (0)
 
 // macro to print ip addresses in a printf statement
 #define PRINT_IP(A) \

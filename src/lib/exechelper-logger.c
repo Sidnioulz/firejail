@@ -32,6 +32,11 @@
 #include <time.h>
 #include <unistd.h>
 
+static int firejail_use_notifications = 0;
+void exechelp_logv_init(int notifications_available) {
+  firejail_use_notifications = notifications_available;
+}
+
 static pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void exechelp_log_force_unlock(void) {
@@ -188,16 +193,39 @@ ssize_t exechelp_logv(const char *id, const char *fmt, ...) {
   return ret;
 }
 
-ssize_t exechelp_logerr(const char *id, const char *fmt, va_list args) {
+ssize_t exechelp_logerr(const char *id, int level, const char *fmt, va_list args) {
   vfprintf(stderr, fmt, args);
+  if (firejail_use_notifications) {
+#ifdef USING_NOTIFICATIONS
+//TODO
+#endif
+  }
   return exechelp_log(id, fmt, args);
 }
 
-ssize_t exechelp_logerrv(const char *id, const char *fmt, ...) {
+ssize_t exechelp_logerrv(const char *id, int level, const char *fmt, ...) {
   va_list args;
 
   va_start(args, fmt);
   ssize_t ret = exechelp_log(id, fmt, args);
+  va_end(args);
+
+  va_start(args, fmt);
+  if (firejail_use_notifications && level == FIREJAIL_ERROR) {
+#ifdef USING_NOTIFICATIONS
+    char *error_text;
+    if (asprintf(&error_text, fmt, args) != -1) {
+
+      char *system_text;
+      if (asprintf(&system_text, "notify-send -i firejail-error \"Firejail Sandbox Error\" \"%s\"", error_text) != -1) {
+        int ignore = system(system_text); // make compilers quiet about ignoring return values
+        ignore -= ignore; // make compilers quiet about unused variables
+        free(system_text);
+      }
+      free(error_text);
+    }
+#endif
+  }
   va_end(args);
 
   va_start(args, fmt);

@@ -15,14 +15,14 @@ H_FILE_LIST       = $(wildcard *.[h])
 C_FILE_LIST       = $(wildcard *.c)
 OBJS = $(C_FILE_LIST:.c=.o)
 BINOBJS =  $(foreach file, $(OBJS), $file)
-CFLAGS += -ggdb $(HAVE_FATAL_WARNINGS) $(MOUNT_CFLAGS) -O2 -DVERSION='"$(VERSION)"' -DPREFIX='"$(PREFIX)"' $(HAVE_SECCOMP) $(HAVE_SECCOMP_H) $(HAVE_CHROOT) $(HAVE_BIND) -fstack-protector-all -D_FORTIFY_SOURCE=2 -fPIE -pie -Wformat -Wformat-security -std=gnu11
+CFLAGS += -ggdb $(HAVE_FATAL_WARNINGS) $(MOUNT_CFLAGS) -DUSING_NOTIFICATIONS=1 -O2 -DVERSION='"$(VERSION)"' -DPREFIX='"$(PREFIX)"' $(HAVE_SECCOMP) $(HAVE_SECCOMP_H) $(HAVE_CHROOT) $(HAVE_BIND) -fstack-protector-all -D_FORTIFY_SOURCE=2 -fPIE -pie -Wformat -Wformat-security -std=gnu11
 LDFLAGS += $(MOUNT_LIBS) -Wl,-z,relro -Wl,-z,now -pthread -lprocps
 
 %.o : %.c $(H_FILE_LIST)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
-firejail: $(OBJS) ../lib/libnetlink.o ../lib/common.o ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-logger.o
-	$(CC)  -o $@ $(OBJS) ../lib/libnetlink.o ../lib/common.o  ../lib/exechelper.o ../lib/exechelper-datatypes.o ../lib/exechelper-logger.o $(LIBS) $(LDFLAGS)
+firejail: $(OBJS) ..
+	$(CC)  -o $@ $(OBJS) $(LIBS) $(LDFLAGS)
 
 clean:; rm -f *.o firejail firejail.1 firejail.1.gz
 
