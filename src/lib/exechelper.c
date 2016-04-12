@@ -560,6 +560,27 @@ void exechelp_build_run_dir(void) {
 	}
 }
 
+static int clear_recursive(const char *dirpath) {
+	struct dirent *dir;
+  DIR *d = opendir(dirpath);
+  if (d == NULL)
+    return errno == ENOENT? 0:-1;
+
+  while ((dir = readdir(d))) {
+    if(strcmp(dir->d_name, "." ) == 0 || strcmp(dir->d_name, ".." ) == 0)
+	    continue;
+
+    if (dir->d_type == DT_DIR ) {
+      clear_recursive(dir->d_name);
+      rmdir(dir->d_name);
+    } else
+      unlink(dir->d_name);
+  }
+
+  closedir(d);
+  return 0;
+}
+
 // build /run/firejail directory
 void exechelp_build_run_user_dir(pid_t pid) {
   exechelp_build_run_dir();
@@ -582,7 +603,8 @@ void exechelp_build_run_user_dir(pid_t pid) {
 		if (chmod(path, S_IRWXU) < 0)
 			errExit("chmod");
 	} else {
-	  //TODO empty it
+    /* Delete everything inside */
+    clear_recursive(path);
 	}
 
   /* Take ownership of the directory since we own the corresponding pid */
