@@ -579,9 +579,13 @@ void exechelp_build_run_user_dir(pid_t pid) {
 		int rv = mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO);
 		if (rv == -1)
 			errExit("mkdir");
-		if (chmod(path, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+		if (chmod(path, S_IRWXU) < 0)
 			errExit("chmod");
+	} else {
+	  //TODO empty it
 	}
+
+  /* Take ownership of the directory since we own the corresponding pid */
 	if (chown(path, uid, gid) < 0)
 		errExit("chown");
 	free(path);

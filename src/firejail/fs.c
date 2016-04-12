@@ -259,7 +259,7 @@ static void disable_file(OPERATION op, const char *filename, const char *emptydi
 		}
 			
 		else {
-			if (arg_debug)
+			if (arg_debug && strncmp (fname, EXECHELP_RUN_DIR, strlen (EXECHELP_RUN_DIR)))
 				printf("Disable %s\n", fname);
 			if (S_ISDIR(s.st_mode)) {
 				if (mount(emptydir, fname, "none", MS_BIND, "mode=400,gid=0") < 0)

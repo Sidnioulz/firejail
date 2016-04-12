@@ -21,6 +21,8 @@
 #include "firejail.h"
 #include "../include/exechelper.h"
 #include "../include/exechelper-logger.h"
+#include "../include/pid.h"
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/mount.h>
@@ -491,33 +493,30 @@ void fs_helper_mount_self_dir(void) {
 	int must_overlay = 0;
 	
 	// create /run/firejail
-	if (stat("/run/firejail", &s)) {
-	  int rv = mkdir("/run/firejail", S_IRWXU | S_IRWXG | S_IRWXO);
+	if (stat(EXECHELP_RUN_DIR, &s)) {
+	  int rv = mkdir(EXECHELP_RUN_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1) {
 	    must_overlay = 1;
     } else {
-	    if (chown("/run/firejail", 0, 0) < 0)
+	    if (chown(EXECHELP_RUN_DIR, 0, 0) < 0)
 		    errExit("chown");
-	    if (chmod("/run/firejail", 0755) < 0)
+	    if (chmod(EXECHELP_RUN_DIR, 0755) < 0)
 		    errExit("chmod");
     }
 	}
 	
 	// create /run/firejail/self
-	if (!must_overlay && stat("/run/firejail/self", &s)) {
-	  int rv = mkdir("/run/firejail/self", S_IRWXU | S_IRWXG | S_IRWXO);
+	if (!must_overlay && stat(EXECHELP_CLIENT_ROOT, &s)) {
+	  int rv = mkdir(EXECHELP_CLIENT_ROOT, S_IRWXU | S_IRWXG | S_IRWXO);
 	  if (rv == -1) {
 	    must_overlay = 1;
 	  }
 	}
 
-  // we must let all uids reach /run/firejail/self for normal operation
   if (!must_overlay) {
-    if (chmod("/run/firejail", 0511) < 0)
-	    errExit("chmod");
-    if (chown("/run/firejail/self", 0, 0) < 0)
+    if (chown(EXECHELP_CLIENT_ROOT, 0, 0) < 0)
 	    errExit("chown");
-    if (chmod("/run/firejail/self", 0755) < 0)
+    if (chmod(EXECHELP_CLIENT_ROOT, 0755) < 0)
 	    errExit("chmod");
   }
 
@@ -529,10 +528,49 @@ void fs_helper_mount_self_dir(void) {
   } else {
 	  if (arg_debug)
 		  printf("Mount-bind %s on top of /run/firejail/self\n", SELF_DIR);
-	  if (mount(SELF_DIR, "/run/firejail/self", NULL, MS_BIND|MS_REC|MS_RDONLY, NULL) < 0) {
+	  if (mount(SELF_DIR, EXECHELP_CLIENT_ROOT, NULL, MS_BIND|MS_REC|MS_RDONLY, NULL) < 0) {
 	    fprintf(stderr, "Error: could not mount-bind %s on top of /run/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
 	    exechelp_logv("firejail", "could not mount-bind %s on top of /run/firejail/self (error: %s)\n", SELF_DIR, strerror(errno));
 	  }
   }
 }
 
+void fs_helper_disable_other_run_subdirs(void) {
+  DIR *dir;
+  if (!(dir = opendir(EXECHELP_RUN_DIR))) {
+	  // sleep 2 seconds and try again
+	  sleep(2);
+	  if (!(dir = opendir(EXECHELP_RUN_DIR))) {
+		  exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open /run/firejail directory\n");
+		  exit(1);
+	  }
+  }
+
+  struct dirent *entry;
+  char *end;
+  char *path;
+  while ((entry = readdir(dir))) {
+	  pid_t newpid = strtol(entry->d_name, &end, 10);
+	  if (end == entry->d_name || *end)
+		  continue;
+	  if (newpid == sandbox_pid)
+		  continue;
+
+    if (asprintf(&path, "/run/firejail/%d/", newpid) == -1)
+      continue;
+
+	  fs_blacklist_file(path);
+	  free(path);
+  }
+
+  closedir(dir);
+
+  for (int i = 0; i < max_pids; i++) {
+    if (asprintf(&path, "/run/firejail/%d/", i) == -1)
+      continue;
+
+    mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO);
+	  fs_blacklist_file(path);
+	  free(path);
+  }
+}

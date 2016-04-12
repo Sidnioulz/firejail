@@ -420,6 +420,7 @@ void fs_helper_fix_gtk3_windows(void);
 void fs_helper_generate_files(void);
 void fs_helper_mount_self_dir(void);
 char *fs_helper_list_files(void);
+void fs_helper_disable_other_run_subdirs(void);
 
 // exechelp_client.c
 int firejail_setenv(const char *name, const char *value, int overwrite);
