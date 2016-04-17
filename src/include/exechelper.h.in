@@ -42,7 +42,8 @@ extern int arg_debug;
 #define EXECHELP_PROTECTED_APPS_BIN       "protected-apps.policy"
 #define EXECHELP_PROTECTED_FILES_BIN      "protected-files.policy"
 
-#define EXECHELP_CLIENT_ROOT              "/run/firejail/self"
+#define EXECHELP_CLIENT_ROOT_DIRNAME      "firejail-client"
+#define EXECHELP_CLIENT_ROOT              "/run/"EXECHELP_CLIENT_ROOT_DIRNAME
 #define EXECHELP_LINKED_APPS_PATH         EXECHELP_CLIENT_ROOT"/"EXECHELP_LINKED_APPS
 #define EXECHELP_PROTECTED_APPS_PATH      EXECHELP_CLIENT_ROOT"/"EXECHELP_PROTECTED_APPS
 #define EXECHELP_PROTECTED_FILES_PATH     EXECHELP_CLIENT_ROOT"/"EXECHELP_PROTECTED_FILES
@@ -56,7 +57,7 @@ extern int arg_debug;
 #define EXECHELP_LD_PRELOAD_DECO_ONLY     "@prefix@/lib/firejail/libexechelperdecorations.so"
 
 #define EXECHELP_RUN_DIR                  "/run/firejail"
-#define EXECHELP_REGISTRATION_SOCKET      "/run/firejail/execd-register.sock"
+#define EXECHELP_REGISTRATION_SOCKET      "/run/firejail-execd-register.sock"
 #define EXECHELP_COMMANDS_SOCKET          "EXECHELP_COMMANDS_SOCKET"
 #define EXECHELP_EXECUTION_POLICY         "EXECHELP_EXECUTION_POLICY"
 // 256 for each socket path, 12 for the pid, 12 for the message syntax

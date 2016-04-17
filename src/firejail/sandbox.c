@@ -433,8 +433,8 @@ int sandbox(void* sandbox_arg) {
   // save the sandbox's environment so other processes can adjust theirs when joining us
   firejail_setenv_finalize();
 
-  // now blacklist other subdirs in /run/firejail as we're done touching it; only /run/firejail/self remains
-  fs_helper_disable_other_run_subdirs();
+  // now blacklist other subdirs in /run/firejail as we're done touching it
+  fs_blacklist_file(EXECHELP_RUN_DIR);
 
 	// set capabilities
 	if (!arg_noroot)

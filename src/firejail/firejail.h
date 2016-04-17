@@ -32,7 +32,7 @@
 #define ETC_DIR	                  "/tmp/firejail/mnt/etc"
 #define RUN_DIR	                  "/tmp/firejail/mnt/run"
 #define RUN_FJ_DIR                "/tmp/firejail/mnt/run/firejail"
-#define SELF_DIR                  "/tmp/firejail/mnt/run/firejail/self"
+#define SELF_DIR                  "/tmp/firejail/mnt/run/firejail-client"
 #define PULSE_DIR	                "/tmp/firejail/mnt/pulse"
 #define MOUNTS_FILE               "/proc/mounts"
 
@@ -420,7 +420,6 @@ void fs_helper_fix_gtk3_windows(void);
 void fs_helper_generate_files(void);
 void fs_helper_mount_self_dir(void);
 char *fs_helper_list_files(void);
-void fs_helper_disable_other_run_subdirs(void);
 
 // exechelp_client.c
 int firejail_setenv(const char *name, const char *value, int overwrite);
