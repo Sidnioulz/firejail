@@ -1,3 +1,220 @@
+firejail (0.9.44-1) vivid; urgency=medium
+
+  * Multiple new icons
+  * Relocated run directory for better security
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 21 Apr 2016 10:42:08 +0100
+
+firejail (0.9.43-2) wily; urgency=medium
+
+  * Wily package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 17 Mar 2016 15:00:17 +0000
+
+firejail (0.9.43-1) vivid; urgency=medium
+
+  * Updates to new logging API
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 17 Mar 2016 14:59:44 +0000
+
+firejail (0.9.42-2) wily; urgency=medium
+
+  * Wily package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 17 Mar 2016 14:49:05 +0000
+
+firejail (0.9.42-1) vivid; urgency=medium
+
+  * Various bug fixes
+  * Better support for X11 decorations
+  * Better error notification (libnotify)
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 17 Mar 2016 14:47:41 +0000
+
+firejail (0.9.41-2) wily; urgency=medium
+
+  * Wily package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sat, 27 Feb 2016 03:51:29 +0000
+
+firejail (0.9.41-1) vivid; urgency=medium
+
+  * Secure workspace icons
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sat, 27 Feb 2016 03:50:37 +0000
+
+firejail (0.9.40-2) vivid; urgency=medium
+
+  * Vivid pkg
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sun, 21 Feb 2016 22:56:17 +0000
+
+firejail (0.9.40-1) wily; urgency=medium
+
+  * Fixing a typo in a Makefile...
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sun, 21 Feb 2016 22:52:03 +0000
+
+firejail (0.9.39-4) vivid; urgency=medium
+
+  * Vivid pkg
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sun, 21 Feb 2016 22:39:38 +0000
+
+firejail (0.9.39-3) wily; urgency=medium
+
+  * Adding a libprocps3-dev dep
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sun, 21 Feb 2016 22:39:09 +0000
+
+firejail (0.9.39-2) vivid; urgency=medium
+
+  * Vivid pkg
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sun, 21 Feb 2016 20:49:45 +0000
+
+firejail (0.9.39-1) wily; urgency=medium
+
+  * Secure Workspace support
+  * Fixing include errors in some public headers
+  * Fixing name2pid space support
+  * Persistent overlay
+  * Private home with OverlayFS
+  * Unified environment for processes joining a sandboxed
+  * More robust error handling in non critical code paths
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sun, 21 Feb 2016 20:40:48 +0000
+
+firejail (0.9.38-2) vivid; urgency=medium
+
+  * Vivid pkg
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 28 Jan 2016 04:28:50 +0000
+
+firejail (0.9.38-1) wily; urgency=medium
+
+  * Missing file #2...
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 28 Jan 2016 04:28:06 +0000
+
+firejail (0.9.37-2) vivid; urgency=medium
+
+  * vivid package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 28 Jan 2016 03:20:21 +0000
+
+firejail (0.9.37-1) wily; urgency=medium
+
+  * Missing file
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 28 Jan 2016 03:19:17 +0000
+
+firejail (0.9.36-2) vivid; urgency=medium
+
+  * Vivid package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 28 Jan 2016 03:08:59 +0000
+
+firejail (0.9.36-1) wily; urgency=medium
+
+  * Bug fixing (--bandwidth)
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 28 Jan 2016 03:08:11 +0000
+
+firejail (0.9.35-2) vivid; urgency=medium
+
+  * Vivid package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 28 Jan 2016 02:45:56 +0000
+
+firejail (0.9.35-1) wily; urgency=medium
+
+  * Better handling of debug in libexechelper (--debug-helper)
+  * --nosound option!
+  * profiles: parole, disable-devel
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 28 Jan 2016 02:44:41 +0000
+
+firejail (0.9.34-2) vivid; urgency=medium
+
+  * Vivid package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Wed, 27 Jan 2016 16:23:39 +0000
+
+firejail (0.9.34-1) wily; urgency=medium
+
+  * Improving cleanup scripts for --net=auto
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Wed, 27 Jan 2016 16:19:33 +0000
+
+firejail (0.9.33-2) vivid; urgency=medium
+
+  * Vivid package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Tue, 26 Jan 2016 01:19:31 +0000
+
+firejail (0.9.33-1) wily; urgency=medium
+
+  * Adding --net=auto
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Tue, 26 Jan 2016 01:16:07 +0000
+
+firejail (0.9.32-2) vivid; urgency=medium
+
+  * Vivid package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Sat, 16 Jan 2016 00:36:07 +0000
+
+firejail (0.9.32-1) wily; urgency=medium
+
+  * Adding --dbus-full and --dbus=none
+  * --helper enabled by default, adding --disable-helper
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Fri, 15 Jan 2016 23:52:33 +0000
+
+firejail (0.9.31-2) vivid; urgency=medium
+
+  * Vivid release
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Thu, 14 Jan 2016 02:11:00 +0000
+
+firejail (0.9.31-1) wily; urgency=medium
+
+  * We keep hacking version numbers... including policy files and manual fixes
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Wed, 13 Jan 2016 22:09:35 +0000
+
+firejail (0.9.30-4) wily; urgency=medium
+
+  * Wily package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Tue, 05 Jan 2016 11:31:08 +0000
+
+firejail (0.9.30-3) vivid; urgency=medium
+
+  * Adding missing include for pid_t in exechelper.h (ubuntu specific)
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Tue, 05 Jan 2016 11:30:39 +0000
+
+firejail (0.9.30-2) wily; urgency=medium
+
+  * Wily package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Tue, 05 Jan 2016 11:09:12 +0000
+
+firejail (0.9.30-1) vivid; urgency=medium
+
+  * Upstream changes (multiple policy bug fixes)
+  * Hacking version number to allow uploads, but this is 0.9.29git...
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Tue, 05 Jan 2016 10:55:10 +0000
+
+firejail (0.9.29-7) wily; urgency=medium
+
+  * Wily package
+
+ -- Steve Dodier-Lazaro <sidnioulz@gmail.com>  Fri, 18 Dec 2015 10:50:12 +0000
+
 firejail (0.9.29-6) vivid; urgency=medium
 
   * gtk-update-icon-cache build dep
