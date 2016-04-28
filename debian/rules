@@ -42,3 +42,6 @@ override_dh_auto_install:
 	# documentation will be installed by debhelper
 	rm --verbose -rf debian/firejail-common/usr/share/doc/firejail
 
+# Add dependencies to generate files from the debian/*.in ones
+build-indep: $(call dh_subst_files,$(DEB_INDEP_PACKAGES))
+build-arch: $(call dh_subst_files,$(DEB_ARCH_PACKAGES))
