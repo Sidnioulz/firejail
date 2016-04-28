@@ -9,7 +9,7 @@ VERSION=@PACKAGE_VERSION@
 NAME=@PACKAGE_NAME@
 PACKAGE_TARNAME=@PACKAGE_TARNAME@
 DOCDIR=@docdir@
-
+libdir?=@prefix@/lib
 
 .PHONY: mylibs $(MYLIBS)
 mylibs: $(MYLIBS)
@@ -65,9 +65,11 @@ install: all
 	chmod u+s $(DESTDIR)/$(PREFIX)/bin/fireexecd
 	# libraries and plugins
 	strip src/libtrace/libtrace.so
-	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail
-	install -c -m 0644 src/libtrace/libtrace.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
+	mkdir -p gfirejail
+	mkdir -p $(DESTDIR)/$(libdir)/firejail/
+	install -c -m 0644 src/libtrace/libtrace.so $(DESTDIR)/$(libdir)/firejail/.
 	strip src/ftee/ftee
+	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/
 	install -c -m 0755 src/ftee/ftee $(DESTDIR)/$(PREFIX)/lib/firejail/.
 	install -c -m 0755 src/fshaper/fshaper.sh $(DESTDIR)/$(PREFIX)/lib/firejail/.
 	# documents
@@ -123,13 +125,11 @@ install: all
 	# libexechelper
 	strip src/libexechelper/libexechelper.so
 	strip src/libexechelper/libexechelperdecorations.so
-	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/
-	install -c -m 0755 src/libexechelper/libexechelper.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
-	install -c -m 0755 src/libexechelper/libexechelperdecorations.so $(DESTDIR)/$(PREFIX)/lib/firejail/.
+	install -c -m 0755 src/libexechelper/libexechelper.so $(DESTDIR)/$(libdir)/firejail/.
+	install -c -m 0755 src/libexechelper/libexechelperdecorations.so $(DESTDIR)/$(libdir)/firejail/.
 	# libexechelperutils
 	strip src/lib/libexechelperutils.so
-	mkdir -p $(DESTDIR)/$(PREFIX)/lib/firejail/
-	install -c -m 0755 src/lib/libexechelperutils.so $(DESTDIR)/$(PREFIX)/lib/.
+	install -c -m 0755 src/lib/libexechelperutils.so $(DESTDIR)/$(libdir)/.
 	mkdir -p $(DESTDIR)/$(PREFIX)/include/firejail/
 	install -c -m 0644 src/include/common.h $(DESTDIR)/$(PREFIX)/include/firejail/.
 	install -c -m 0644 src/include/exechelper-datatypes.h $(DESTDIR)/$(PREFIX)/include/firejail/.
@@ -137,8 +137,8 @@ install: all
 	install -c -m 0644 src/include/exechelper.h $(DESTDIR)/$(PREFIX)/include/firejail/.
 	install -c -m 0644 src/include/libnetlink.h $(DESTDIR)/$(PREFIX)/include/firejail/.
 	install -c -m 0644 src/include/pid.h $(DESTDIR)/$(PREFIX)/include/firejail/.
-	mkdir -p $(DESTDIR)/$(PREFIX)/share/pkgconfig/
-	install -c -m 0644 data/libexechelperutils.pc $(DESTDIR)/$(PREFIX)/share/pkgconfig/.
+	mkdir -p $(DESTDIR)/$(libdir)/pkgconfig/
+	install -c -m 0644 data/libexechelperutils.pc $(DESTDIR)/$(libdir)/pkgconfig/.
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/emblems/
 	install -c -m 0644 icons/emblems/10/emblem-protected.png $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/emblems/
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/emblems/
@@ -261,10 +261,10 @@ uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/bin/firejail
 	rm -f $(DESTDIR)/$(PREFIX)/bin/firemon
 	rm -f $(DESTDIR)/$(PREFIX)/bin/fireexecd
-	rm -fr $(DESTDIR)/$(PREFIX)/lib/firejail
+	rm -fr $(DESTDIR)/$(libdir)/firejail
 	rm -fr $(DESTDIR)/$(PREFIX)/include/firejail
 	rm -fr $(DESTDIR)/$(PREFIX)/share/doc/firejail
-	rm -f $(DESTDIR)/$(PREFIX)/lib/libexechelperutils.so
+	rm -f $(DESTDIR)/$(libdir)/libexechelperutils.so
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firejail.1*
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firemon.1*
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/fireexecd.1*
@@ -273,7 +273,7 @@ uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/firejail
 	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/firemon
 	rm -f $(DESTDIR)/$(PREFIX)/share/bash-completion/completions/fireexecd
-	rm -f $(DESTDIR)/$(PREFIX)/share/pkgconfig/libexechelperutils.pc
+	rm -f $(DESTDIR)/$(libdir)/pkgconfig/libexechelperutils.pc
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/emblems/emblem-protected.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/16x16/emblems/emblem-protected.png
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/22x22/emblems/emblem-protected.png

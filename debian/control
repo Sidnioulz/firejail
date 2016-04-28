@@ -1,7 +1,7 @@
 Source: firejail
 Section: utils
 Priority: optional
-Maintainer: Reiner Herrmann <reiner@reiner-h.de>
+Maintainer: Steve Dodier-Lazaro <sidi@xfce.org>
 Build-Depends: debhelper (>= 9), autotools-dev,
  libgtk-3-dev, libx11-dev, libmount-dev, libgtk2.0-bin, libprocps3-dev
 Standards-Version: 3.9.6
@@ -9,7 +9,8 @@ Homepage: http://firejail.sourceforge.net
 
 Package: firejail
 Architecture: linux-any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}, libfirejail-0, firejail-common,
 Description: sandbox to restrict the application environment
  Firejail is a SUID security sandbox program that reduces the risk of
  security breaches by restricting the running environment of untrusted
@@ -17,3 +18,25 @@ Description: sandbox to restrict the application environment
  process and all its descendants to have their own private view of the
  globally shared kernel resources, such as the network stack, process
  table, mount table.
+ 
+Package: libfirejail-0
+Section: libs
+Architecture: linux-any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}, firejail-common
+Description: Library components of the Firejail package
+
+Package: libfirejail-dev
+Section: libdevel
+Architecture: linux-any
+Multi-Arch: same
+Depends: libfirejail-0 (= ${binary:Version}), ${misc:Depends}
+Description: Development files for libfirejail
+
+Package: firejail-common
+Section: utils
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: libfirejail-0, firejail, devhelp
+Description: common files for Firejail
+
