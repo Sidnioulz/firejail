@@ -23,7 +23,7 @@ Package: libfirejail-0
 Section: libs
 Architecture: linux-any
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, firejail-common
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Library components of the Firejail package
 
 Package: libfirejail-dev
@@ -36,6 +36,7 @@ Description: Development files for libfirejail
 Package: firejail-common
 Section: utils
 Architecture: all
+Build-Depends: libfirejail-dev
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: libfirejail-0, firejail, devhelp
 Description: common files for Firejail
