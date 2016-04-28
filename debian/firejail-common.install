@@ -1,0 +1,6 @@
+usr/lib/firejail/fshaper.sh
+usr/lib/firejail/ftee
+usr/share/doc/firejail/*
+usr/share/bash-completion/completions/*
+usr/share/icons/*
+usr/share/man/*

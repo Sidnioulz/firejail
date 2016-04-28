@@ -1,0 +1,6 @@
+usr/include/firejail/*
+usr/@LIBDIR@*/firejail/libexechelperdecorations.so
+usr/@LIBDIR@*/firejail/libexechelper.so
+usr/@LIBDIR@*/firejail/libtrace.so
+usr/@LIBDIR@*/libexechelperutils.so
+usr/@LIBDIR@*/pkgconfig/libexechelperutils.pc
