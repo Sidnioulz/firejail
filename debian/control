@@ -11,6 +11,7 @@ Package: firejail
 Architecture: linux-any
 Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}, libfirejail-0, firejail-common,
+  libfirejail-dev
 Description: sandbox to restrict the application environment
  Firejail is a SUID security sandbox program that reduces the risk of
  security breaches by restricting the running environment of untrusted
