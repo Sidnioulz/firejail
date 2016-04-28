@@ -9,6 +9,7 @@ VERSION=@PACKAGE_VERSION@
 NAME=@PACKAGE_NAME@
 PACKAGE_TARNAME=@PACKAGE_TARNAME@
 DOCDIR=@docdir@
+libdir=@libdir@
 libdir?=@prefix@/lib
 
 .PHONY: mylibs $(MYLIBS)
