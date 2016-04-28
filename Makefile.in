@@ -11,6 +11,8 @@ PACKAGE_TARNAME=@PACKAGE_TARNAME@
 DOCDIR=@docdir@
 libdir=@libdir@
 libdir?=@prefix@/lib
+includedir=@includedir@
+includedir?=@prefix@/includedir
 
 .PHONY: mylibs $(MYLIBS)
 mylibs: $(MYLIBS)
@@ -130,13 +132,13 @@ install: all
 	# libexechelperutils
 	strip src/lib/libexechelperutils.so
 	install -c -m 0755 src/lib/libexechelperutils.so $(DESTDIR)/$(libdir)/.
-	mkdir -p $(DESTDIR)/$(PREFIX)/include/firejail/
-	install -c -m 0644 src/include/common.h $(DESTDIR)/$(PREFIX)/include/firejail/.
-	install -c -m 0644 src/include/exechelper-datatypes.h $(DESTDIR)/$(PREFIX)/include/firejail/.
-	install -c -m 0644 src/include/exechelper-logger.h $(DESTDIR)/$(PREFIX)/include/firejail/.
-	install -c -m 0644 src/include/exechelper.h $(DESTDIR)/$(PREFIX)/include/firejail/.
-	install -c -m 0644 src/include/libnetlink.h $(DESTDIR)/$(PREFIX)/include/firejail/.
-	install -c -m 0644 src/include/pid.h $(DESTDIR)/$(PREFIX)/include/firejail/.
+	mkdir -p $(DESTDIR)/$(includedir)/firejail/
+	install -c -m 0644 src/include/common.h $(DESTDIR)/$(includedir)/firejail/.
+	install -c -m 0644 src/include/exechelper-datatypes.h $(DESTDIR)/$(includedir)/firejail/.
+	install -c -m 0644 src/include/exechelper-logger.h $(DESTDIR)/$(includedir)/firejail/.
+	install -c -m 0644 src/include/exechelper.h $(DESTDIR)/$(includedir)/firejail/.
+	install -c -m 0644 src/include/libnetlink.h $(DESTDIR)/$(includedir)/firejail/.
+	install -c -m 0644 src/include/pid.h $(DESTDIR)/$(includedir)/firejail/.
 	mkdir -p $(DESTDIR)/$(libdir)/pkgconfig/
 	install -c -m 0644 data/libexechelperutils.pc $(DESTDIR)/$(libdir)/pkgconfig/.
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/icons/hicolor/10x10/emblems/
@@ -262,7 +264,7 @@ uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/bin/firemon
 	rm -f $(DESTDIR)/$(PREFIX)/bin/fireexecd
 	rm -fr $(DESTDIR)/$(libdir)/firejail
-	rm -fr $(DESTDIR)/$(PREFIX)/include/firejail
+	rm -fr $(DESTDIR)/$(includedir)/firejail
 	rm -fr $(DESTDIR)/$(PREFIX)/share/doc/firejail
 	rm -f $(DESTDIR)/$(libdir)/libexechelperutils.so
 	rm -f $(DESTDIR)/$(PREFIX)/share/man/man1/firejail.1*

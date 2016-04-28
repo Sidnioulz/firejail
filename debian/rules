@@ -5,9 +5,11 @@
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 LIBDIR := usr/lib/$(DEB_HOST_MULTIARCH)
+INCLUDEDIR := usr/include/$(DEB_HOST_MULTIARCH)
 
 DEB_CONFIGURE_EXTRA_FLAGS = \
-			--libdir=/$(LIBDIR)
+			--libdir=/$(LIBDIR) \
+			--includedir=/$(INCLUDEDIR)
 
 #FIXME
 #BUILDDIR := debian/build
@@ -20,10 +22,11 @@ debian/%: debian/%.in
 	dh_testdir
 	sed \
 		-e "s#@LIBDIR@#$(LIBDIR)#g" \
+		-e "s#@INCLUDEDIR@#$(INCLUDEDIR)#g" \
 		$@.in > $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- --libdir=/$(LIBDIR)
+	dh_auto_configure -- --libdir=/$(LIBDIR) --includedir=/$(INCLUDEDIR)
 
 override_dh_fixperms:
 	dh_fixperms

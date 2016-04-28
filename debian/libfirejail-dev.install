@@ -1,4 +1,4 @@
-usr/include/firejail/*
+usr/include/*/firejail/*
 usr/lib/*/firejail/libexechelperdecorations.so
 usr/lib/*/firejail/libexechelper.so
 usr/lib/*/firejail/libtrace.so
