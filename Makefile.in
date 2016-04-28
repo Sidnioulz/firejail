@@ -65,7 +65,6 @@ install: all
 	chmod u+s $(DESTDIR)/$(PREFIX)/bin/fireexecd
 	# libraries and plugins
 	strip src/libtrace/libtrace.so
-	mkdir -p gfirejail
 	mkdir -p $(DESTDIR)/$(libdir)/firejail/
 	install -c -m 0644 src/libtrace/libtrace.so $(DESTDIR)/$(libdir)/firejail/.
 	strip src/ftee/ftee
