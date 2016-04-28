@@ -231,7 +231,7 @@ install: all
 	install -c -m 0644 icons/actions/symbolic/firejail-protect-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/
 	install -c -m 0644 icons/actions/symbolic/firejail-run-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/
 	install -c -m 0644 icons/actions/symbolic/firejail-unprotect-symbolic.svg $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/
-	gtk-update-icon-cache --ignore-theme-index $(DESTDIR)/$(PREFIX)/share/icons/hicolor
+	#gtk-update-icon-cache --ignore-theme-index $(DESTDIR)/$(PREFIX)/share/icons/hicolor
 	# man pages
 	rm -f firejail.1.gz
 	gzip -9n firejail.1
@@ -341,7 +341,7 @@ uninstall:
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/firejail-protect-symbolic.svg
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/firejail-run-symbolic.svg
 	rm -f $(DESTDIR)/$(PREFIX)/share/icons/hicolor/symbolic/actions/firejail-unprotect-symbolic.svg
-	gtk-update-icon-cache --ignore-theme-index $(DESTDIR)/$(PREFIX)/share/icons/hicolor
+	#gtk-update-icon-cache --ignore-theme-index $(DESTDIR)/$(PREFIX)/share/icons/hicolor
 	
 dist:
 	make distclean
