@@ -30,12 +30,12 @@ override_dh_auto_configure:
 
 override_dh_fixperms:
 	dh_fixperms
-	chmod 4755 debian/tmp/usr/bin/firejail
-	chmod 4755 debian/tmp/usr/bin/fireexecd
-	chmod 0755 debian/tmp/$(LIBDIR)/libexechelperutils.so
-	chmod 0755 debian/tmp/$(LIBDIR)/firejail/libexechelper.so
-	chmod 0755 debian/tmp/$(LIBDIR)/firejail/libexechelperdecorations.so
-	chmod 0755 debian/tmp/$(LIBDIR)/firejail/libtrace.so
+	chmod 4755 debian/firejail/usr/bin/firejail
+	chmod 4755 debian/firejail/usr/bin/fireexecd
+	chmod 0755 debian/libfirejail-dev/$(LIBDIR)/libexechelperutils.so
+	chmod 0755 debian/libfirejail-dev/$(LIBDIR)/firejail/libexechelper.so
+	chmod 0755 debian/libfirejail-dev/$(LIBDIR)/firejail/libexechelperdecorations.so
+	chmod 0755 debian/libfirejail-dev/$(LIBDIR)/firejail/libtrace.so
 
 override_dh_installchangelogs:
 	dh_installchangelogs RELNOTES upstream
