@@ -91,9 +91,11 @@ void pulseaudio_init(void) {
 		return;
 
 	// crate the new user pulseaudio directory
-	int rv = mkdir(PULSE_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
-	if (rv == -1)
-		errExit("mkdir");
+	if (stat(PULSE_DIR, &s) == -1) {
+	  int rv = mkdir(PULSE_DIR, S_IRWXU | S_IRWXG | S_IRWXO);
+	  if (rv == -1)
+		  errExit("mkdir");
+	}
 	if (chown(PULSE_DIR, getuid(), getgid()) < 0)
 		errExit("chown");
 	if (chmod(PULSE_DIR, 0700) < 0)
