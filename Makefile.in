@@ -94,12 +94,14 @@ install: all
 	install -c -m 0644 etc/chromium-browser.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/chromium.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/disable-mgmt.inc $(DESTDIR)/etc/firejail/.
+	install -c -m 0644 etc/disable-programs.inc $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/disable-secret.inc $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/disable-common.inc $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/disable-history.inc $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/disable-devel.inc $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/dropbox.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/opera.profile $(DESTDIR)/etc/firejail/.
+	install -c -m 0644 etc/skype.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/thunderbird.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/transmission-gtk.profile $(DESTDIR)/etc/firejail/.
 	install -c -m 0644 etc/transmission-qt.profile $(DESTDIR)/etc/firejail/.
