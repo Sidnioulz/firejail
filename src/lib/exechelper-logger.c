@@ -214,7 +214,7 @@ ssize_t exechelp_logerrv(const char *id, int level, const char *fmt, ...) {
   if (firejail_use_notifications && level == FIREJAIL_ERROR) {
 #ifdef USING_NOTIFICATIONS
     char *error_text;
-    if (asprintf(&error_text, fmt, args) != -1) {
+    if (vasprintf(&error_text, fmt, args) != -1) {
 
       char *system_text;
       if (asprintf(&system_text, "notify-send -i firejail-error \"Firejail Sandbox Error\" \"%s\"", error_text) != -1) {
