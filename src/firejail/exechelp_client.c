@@ -384,8 +384,8 @@ void exechelp_register_socket(void) {
   strcpy(remote.sun_path, EXECHELP_REGISTRATION_SOCKET);
   socklen_t len = strlen(remote.sun_path) + sizeof(remote.sun_family);
   if (connect(s, (struct sockaddr *)&remote, len) == -1) {
-    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: no execution helper daemon is running. Please run 'fireexecd' prior to running firejail, or use the '--disable-helper' option to run firejail without execution helper (can help to circumvent bugs).\n");
-    errExit("connect"); 
+    exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: could not connect to execution helper daemon: %s. Please run 'fireexecd' prior to running firejail, or use the '--disable-helper' option to run firejail without execution helper (can help to circumvent bugs).\n", strerror (errno));
+    exit(-1);
   }
 
   // message fireexecd to register the socket paths
