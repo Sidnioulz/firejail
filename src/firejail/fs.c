@@ -1041,6 +1041,14 @@ fs_overlayfs_dir(const char *oroot, const char *dest, const char *basedir, int o
 		if (asprintf(&option, "lowerdir=%s,upperdir=%s,workdir=%s", dest, odiff, owork) == -1)
 			errExit("asprintf");
 
+  if (arg_debug)
+  {
+		printf("The root  directory is %s\n", oroot);
+		printf("The lower directory is %s\n", dest);
+		printf("The upper directory is %s\n", odiff);
+		printf("The work  directory is %s\n", owork);
+  }
+
 		if (mount("overlay", oroot, "overlay", MS_MGC_VAL, option) < 0)
 			errExit("mounting overlayfs");
 	}
