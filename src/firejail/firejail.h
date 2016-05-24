@@ -26,6 +26,7 @@
 #define FIREJAIL_DIR	            "/tmp/firejail"
 #define RO_DIR		                "/tmp/firejail/firejail.ro.dir"
 #define RO_FILE		                "/tmp/firejail/firejail.ro.file"
+#define OVERLAY_ROOT_DIR          "/tmp/firejail/overlayfs"
 #define MNT_DIR		                "/tmp/firejail/mnt"
 #define HOME_DIR	                "/tmp/firejail/mnt/home"
 #define SELF_OVERLAY_DIR          "/tmp/firejail/mnt/helperoverlay"

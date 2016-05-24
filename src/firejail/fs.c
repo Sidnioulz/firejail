@@ -1102,7 +1102,7 @@ void fs_overlayfs(void) {
 			exit(1);
 		}
 	} else {
-	  if (asprintf(&basedir, "%s/overlayfs/%d", MNT_DIR, sandbox_pid) == -1)
+	  if (asprintf(&basedir, "%s/%d", OVERLAY_ROOT_DIR, sandbox_pid) == -1)
 	    errExit("asprintf");
 		if (mkdir_if_not_exists_recursive(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
 			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay directory in user home\n");
