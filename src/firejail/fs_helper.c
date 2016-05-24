@@ -353,9 +353,8 @@ void fs_helper_fix_gtk3_windows(void) {
                     "  margin: 0;\n" \
                     "  border-radius: 0;\n" \
                     "}\n\n" \
-                    ".titlebar {\n" \
-                    "  border-radius: 0;\n" \
-                    "}\n";
+                    ".titlebar { border-radius: 0; }\n\n" \
+                    "window.background.csd decoration { box-shadow: none; margin: 0;}";
 
   size_t len = strlen(border_fix);
   ssize_t written = write(fd, border_fix, len);
