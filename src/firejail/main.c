@@ -243,25 +243,29 @@ void check_user_namespace(void) {
 }
 
 static void overlay_build_directory(void) {
-	// create ~/.firejail directory
+	// create the ~/Sandboxes/ or the /tmp/firejail/overlayfs directory
+
+	char *base;
 	char *dirname;
-	if (asprintf(&dirname, "%s/Sandboxes/", cfg.homedir) == -1)
-		errExit("asprintf");
+	if (arg_overlay_keep == 0)
+	  base = strdup (OVERLAY_ROOT_DIR);
+	else
+	  if (asprintf(&base, "%s/Sandboxes/", cfg.homedir) == -1)
+		  errExit("asprintf");
+
 	struct stat s;
-	if (stat(dirname, &s) == -1) {
-		if (mkdir(dirname, S_IRWXU | S_IRWXG | S_IRWXO))
+	if (stat(base, &s) == -1) {
+		if (mkdir(base, S_IRWXU | S_IRWXG | S_IRWXO))
 			errExit("mkdir");
-		if (chown(dirname, getuid(), getgid()) < 0)
+		if (chown(base, getuid(), getgid()) < 0)
 			errExit("chown");
-		if (chmod(dirname, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
+		if (chmod(base, S_IRWXU  | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) < 0)
 			errExit("chmod");
 	}
-	free(dirname);
-
 
 	// if the sandbox is named, look up the name of the sandbox and try to reuse its contents
   if (cfg.hostname) {
-	  if (asprintf(&dirname, "%s/Sandboxes/%s", cfg.homedir, cfg.hostname) == -1)
+	  if (asprintf(&dirname, "%s/%s", base, cfg.hostname) == -1)
       errExit("asprintf");
   }
 	// else, come up with a name based on the date and current PID
@@ -276,12 +280,12 @@ static void overlay_build_directory(void) {
     char *execname = strrchr(cfg.original_argv[cfg.original_program_index], '/');
     execname = execname? execname+1 : cfg.original_argv[cfg.original_program_index];
 
-	  if (asprintf(&dirname, "%s/Sandboxes/%s %s", cfg.homedir, date, execname) == -1)
+	  if (asprintf(&dirname, "%s/%s %s", base, date, execname) == -1)
       errExit("asprintf");
 
     if (stat(dirname, &s) == 0) {
       free(dirname);
-      if (asprintf(&dirname, "%s/Sandboxes/%s %s (pid %d)", cfg.homedir, date, execname, getpid()) == -1)
+      if (asprintf(&dirname, "%s/%s %s (pid %d)", base, date, execname, getpid()) == -1)
         errExit("asprintf");
       
       if (stat(dirname, &s) == 0) {
@@ -290,7 +294,8 @@ static void overlay_build_directory(void) {
       }
 	  }
   }
-  	
+
+	free(base);
   cfg.overlay_dir = dirname;
 }
 

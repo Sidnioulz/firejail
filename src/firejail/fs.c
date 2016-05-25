@@ -1092,23 +1092,16 @@ void fs_overlayfs(void) {
 	// build overlay directories
 	fs_build_mnt_dir();
 	
-  /* then determine where we'll keep the odiff and owork folders */
-	char *basedir = MNT_DIR;
-	if (arg_overlay_keep) {
-		// set base for working and diff directories
-		basedir = cfg.overlay_dir;
-		if (mkdir_if_not_exists(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
-			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay directory in user home\n");
-			exit(1);
-		}
-	} else {
-	  if (asprintf(&basedir, "%s/%d", OVERLAY_ROOT_DIR, sandbox_pid) == -1)
-	    errExit("asprintf");
-		if (mkdir_if_not_exists_recursive(basedir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
-			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay directory in user home\n");
-			exit(1);
-		}
-    if (clear_recursive(basedir))
+
+	// set base for working and diff directories, the location was set in main.c:overlay_build_directory
+	if (mkdir_if_not_exists(cfg.overlay_dir, S_IRWXU | S_IRWXG | S_IRWXO) != 0) {
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create overlay directory at %s\n", cfg.overlay_dir);
+		exit(1);
+	}
+
+  // clear it up if it's meant to be disposable
+	if (!arg_overlay_keep) {
+    if (clear_recursive(cfg.overlay_dir))
       errExit("clear_recursive");
 	}
 
@@ -1116,15 +1109,14 @@ void fs_overlayfs(void) {
 	char *oroot;
 	if(asprintf(&oroot, "%s/oroot", MNT_DIR) == -1)
 		errExit("asprintf");
-  fs_overlayfs_dir(oroot, "/", basedir, oldkernel);
+  fs_overlayfs_dir(oroot, "/", cfg.overlay_dir, oldkernel);
 
   // mount other mount points as overlayfs filesystems
-	mount_automounts_into_overlay(oroot, basedir, oldkernel);
+	mount_automounts_into_overlay(oroot, cfg.overlay_dir, oldkernel);
 
   // but if home ought to be private, then use an empty dir instead
   if (arg_overlay_home == 0)
-    build_private_home_into_overlay(oroot, basedir);
-  free(basedir);
+    build_private_home_into_overlay(oroot, cfg.overlay_dir);
 
   // if /var ought to be read-write, add it to the list of sync'd directories
   if (cfg.var_rw)
