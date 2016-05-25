@@ -120,6 +120,7 @@ static inline int mac_not_zero(const unsigned char mac[6]) {
 }
 
 int join_namespace(pid_t pid, char *type);
+int check_outside_sandbox(void);
 int name2pid(const char *name, pid_t *pid);
 char *pid_proc_comm(const pid_t pid);
 char *pid_proc_cmdline(const pid_t pid);

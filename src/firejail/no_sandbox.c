@@ -26,70 +26,11 @@
 // check process space for kernel processes
 // return 1 if found, 0 if not found
 int check_kernel_procs(void) {
-	char *kern_proc[] = {
-		"kthreadd",
-		"ksoftirqd",
-		"kworker",
-		"rcu_sched",
-		"rcu_bh",
-		NULL	// NULL terminated list
-	};
-	int i;
-
 	if (arg_debug)
 		printf("Looking for kernel processes\n");
 
-	// look at the first 10 processes
-	// if a kernel process is found, return 1
-	for (i = 1; i <= 10; i++) { 
-		struct stat s;
-		char *fname;
-		if (asprintf(&fname, "/proc/%d/comm", i) == -1)
-			errExit("asprintf");
-		if (stat(fname, &s) == -1) {
-			free(fname);
-			continue;
-		}
-		
-		// open file
-		FILE *fp = fopen(fname, "r");
-		if (!fp) {
-			exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot open %s\n", fname);
-			exechelp_logv("firejail", "Warning: cannot open %s\n", fname);
-			free(fname);
-			continue;
-		}
-		
-		// read file
-		char buf[100];
-		if (fgets(buf, 10, fp) == NULL) {
-			exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot read %s\n", fname);
-			exechelp_logv("firejail", "Warning: cannot read %s\n", fname);
-			fclose(fp);
-			free(fname);
-			continue;
-		}
-		// clean /n
-		char *ptr;
-		if ((ptr = strchr(buf, '\n')) != NULL)
-			*ptr = '\0';
-		
-		// check process name against the kernel list
-		int j = 0;
-		while (kern_proc[j] != NULL) {
-			if (strncmp(buf, kern_proc[j], strlen(kern_proc[j])) == 0) {
-				if (arg_debug)
-					printf("Found %s process, we are not running in a sandbox\n", buf);
-				fclose(fp);
-				free(fname);
-				return 1;
-			}
-			j++;
-		}
-		
-		fclose(fp);
-		free(fname);
-	}
+  if (check_outside_sandbox());
+    return 1;
 
 	if (arg_debug)
 		printf("No kernel processes found, we are already running in a sandbox\n");
