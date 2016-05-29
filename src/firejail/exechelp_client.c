@@ -165,7 +165,7 @@ void load_domain_env_from_chroot_proc() {
 }
 
 int firejail_setenv(const char *name, const char *value, int overwrite) {
-  if (!name || !value) {
+  if (!name) {
     errno = EINVAL;
     return -1;
   }
@@ -174,10 +174,10 @@ int firejail_setenv(const char *name, const char *value, int overwrite) {
   int exists = 0;
 
   // set the environment variable first
-  int set = setenv(name, value, overwrite) == 0;
+  int rv = setenv(name, value, overwrite);
 
   // if it worked and we have a file to write to, cache the environment
-  if (set && domain_env) {
+  if (rv == 0 && domain_env) {
     // try and find an identical line if we mustn't overwrite
     if (!overwrite) {
       char *buffer = NULL;
@@ -207,6 +207,8 @@ int firejail_setenv(const char *name, const char *value, int overwrite) {
         free(line);
     }
   }
+
+  return rv;
 }
 
 void firejail_setenv_finalize(void) {
