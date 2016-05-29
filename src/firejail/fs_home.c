@@ -258,8 +258,8 @@ void fs_private(void) {
 		// mask tmp only in root mode; KDE keeps all kind of sockets in /tmp!
 		if (arg_debug)
 			printf("Mounting a new /tmp directory\n");
-		if (mount("tmpfs", "/tmp", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
-			errExit("mounting tmp directory");
+		//FIXME if (mount("tmpfs", "/tmp", "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME | MS_REC,  "mode=777,gid=0") < 0)
+			//FIXME tmp debug errExit("mounting tmp directory");
 	}
 	
 	skel(homedir, u, g);

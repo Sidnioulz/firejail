@@ -298,6 +298,8 @@ int find_child(pid_t parent, pid_t *child) {
 		}
 	}
 
+  printf("DEBUG: now browsing the /proc filesystem looking for a child to %d\n", parent);
+
 	struct dirent *entry;
 	char *end;
 	while (*child == 0 && (entry = readdir(dir))) {
@@ -315,6 +317,11 @@ int find_child(pid_t parent, pid_t *child) {
 		}
 		FILE *fp = fopen(file, "r");
 		if (!fp) {
+      printf("DEBUG: (warning) failed to open /proc/%u/status, its identity follows:\n", pid);
+      char *str;
+      asprintf(&str, "cat /proc/%d/comm && cat /proc/%d/cmdline", pid, pid);
+      system(str);
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open /proc/<pid>/status file for pid %u\n", pid);
 			free(file);
 			continue;
 		}
@@ -328,11 +335,18 @@ int find_child(pid_t parent, pid_t *child) {
 					ptr++;
 				}
 				if (*ptr == '\0') {
-					exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot read /proc file\n");
-					exit(1);
+					exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot read /proc/<pid>/status file for pid %u\n", pid);
+		      fclose(fp);
+		      free(file);
+		      continue;
 				}
+        //printf("DEBUG: %u has parent pid %u\n", pid, atoi(ptr));
 				if (parent == atoi(ptr))
+				{
+          printf("DEBUG: %u is indeed a child of %u\n", pid, parent);
 					*child = pid;
+					printf ("DEBUG: child assigned to %u\n", *child);
+				}
 				break;		  // stop reading the file
 			}
 		}
@@ -340,6 +354,10 @@ int find_child(pid_t parent, pid_t *child) {
 		free(file);
 	}
 	closedir(dir);
+
+	printf ("DEBUG: child currently set to %u\n", *child);
+	if (*child == 0)
+    printf("DEBUG: FATAL ERROR, no child was found for sandbox pid %d\n", parent);
 
 	return (*child)? 0:1;			  // 0 = found, 1 = not found
 }

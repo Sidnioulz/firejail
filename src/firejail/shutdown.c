@@ -42,16 +42,25 @@ void shut(pid_t pid) {
 	pid_t parent = pid;
 	// if the pid is that of a firejail  process, use the pid of a child process inside the sandbox
 	char *comm = pid_proc_comm(pid);
+	printf ("DEBUG: pid of the sandbox to shutdown: %d\nDEBUG: comm: %s\n", pid, comm);
 	if (comm) {
 		// remove \n
 		char *ptr = strchr(comm, '\n');
 		if (ptr)
 			*ptr = '\0';
 		if (strcmp(comm, "firejail") == 0) {
+		  printf ("DEBUG: The process identified by PID is a Firejail sandbox, looking for the child PID\n");
 			pid_t child;
 			if (find_child(pid, &child) == 0) {
+				printf("DEBUG: the first child of pid %d is pid %u\n", pid, child);
 				pid = child;
 				printf("Switching to pid %u, the first child process inside the sandbox\n", (unsigned) pid);
+			} else {
+				printf("DEBUG: FATAL ERROR, the child pid could not be found. This explains why Firejail fails to proceed.\n", pid, child);
+				printf("DEBUG: As further evidence, here are the permissions associated with the ns folder of the parent pid:\n");
+				char *str;
+				asprintf(&str, "ls /proc/%d/ -l | grep ns", pid);
+				system(str);
 			}
 		}
 		free(comm);
