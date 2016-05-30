@@ -1587,8 +1587,10 @@ int main(int argc, char **argv) {
  	notify_other(parent_to_child_fds[1]);
  	close(parent_to_child_fds[1]);
  
-	if (lockfd != -1)
+	if (lockfd != -1) {
 		flock(lockfd, LOCK_UN);
+		close(lockfd);
+	}
 
 	// handle CTRL-C in parent
 	signal (SIGINT, my_handler);
