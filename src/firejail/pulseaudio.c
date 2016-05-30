@@ -61,7 +61,7 @@ void pulseaudio_disable(void) {
 		// sleep 2 seconds and try again
 		sleep(2);
 		if (!(dir = opendir("/tmp"))) {
-			fprintf(stderr, "Warning: cannot open /tmp directory. PulseAudio sockets are not disabled\n");
+			exechelp_logerrv("firejail", FIREJAIL_WARNING, "Warning: cannot open /tmp directory. PulseAudio sockets are not disabled\n");
 			return;
 		}
 	}
@@ -106,7 +106,7 @@ void pulseaudio_init(void) {
 	if (asprintf(&pulsecfg, "%s/client.conf", PULSE_DIR) == -1)
 		errExit("asprintf");
 	if (is_link("/etc/pulse/client.conf")) {
-		fprintf(stderr, "Error: invalid /etc/pulse/client.conf file\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid /etc/pulse/client.conf file\n");
 		exit(1);
 	}
 	if (copy_file("/etc/pulse/client.conf", pulsecfg))

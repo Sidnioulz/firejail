@@ -626,7 +626,7 @@ void seccomp_print_filter(pid_t pid) {
 	if (uid != 0) {
 		uid_t sandbox_uid = pid_get_uid(pid);
 		if (uid != sandbox_uid) {
-			fprintf(stderr, "Error: permission denied.\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: permission denied to print seccomp filters (sandbox belongs to a different user).\n");
 			exit(1);
 		}
 	}
@@ -638,7 +638,7 @@ void seccomp_print_filter(pid_t pid) {
 
 	struct stat s;
 	if (stat(fname, &s) == -1) {
-		printf("Cannot access seccomp filter.\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: Cannot access seccomp filter.\n");
 		exit(1);
 	}
 

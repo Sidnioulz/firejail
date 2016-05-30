@@ -127,7 +127,7 @@ void netfilter(const char *fname) {
 
 		int fd;
 		if((fd = open("/tmp/netfilter", O_RDONLY)) == -1) {
-			fprintf(stderr,"Error: cannot open /tmp/netfilter\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot open /tmp/netfilter\n");
 			exit(1);
 		}
 		dup2(fd,STDIN_FILENO);

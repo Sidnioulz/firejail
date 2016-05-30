@@ -33,8 +33,7 @@ static void check_dir_or_file(const char *name) {
 	if (arg_debug)
 		printf("Checking %s\n", fname);		
 	if (stat(fname, &s) == -1) {
-		fprintf(stderr, "Error: file %s not found.\n", fname);
-		exechelp_logv("firejail", "file %s not found.\n", fname);
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: file %s not found.\n", fname);
 		exit(1);
 	}
 	
@@ -49,15 +48,13 @@ static void check_dir_or_file(const char *name) {
 		return;
 	}
 	
-	fprintf(stderr, "Error: invalid file type, %s.\n", fname);
-	exechelp_logv("firejail", "invalid file type, %s.\n", fname);
+	exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid file type, %s.\n", fname);
 	exit(1);
 }
 
 void fs_check_etc_list(void) {
 	if (strstr(cfg.etc_private_keep, "..")) {
-		fprintf(stderr, "Error: invalid private etc list\n");
-		exechelp_logv("firejail", "invalid private etc list\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: invalid private etc list\n");
 		exit(1);
 	}
 	
@@ -93,8 +90,7 @@ void fs_private_etc_list(void) {
 	
 	struct stat s;
 	if (stat("/etc", &s) == -1) {
-		fprintf(stderr, "Error: cannot find user /etc directory\n");
-		exechelp_logv("firejail", "cannot find user /etc directory\n");
+		exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot find user /etc directory\n");
 		exit(1);
 	}
 

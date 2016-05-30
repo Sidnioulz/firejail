@@ -45,8 +45,7 @@ static void create_char_dev(const char *path, mode_t mode, int major, int minor)
 	return;
 	
 errexit:
-	fprintf(stderr, "Error: cannot create %s device\n", path);
-	exechelp_logv("firejail", "cannot create %s device\n", path);
+	exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create %s device\n", path);
 	exit(1);
 }
 
@@ -58,8 +57,7 @@ static void create_link(const char *oldpath, const char *newpath) {
 	return;
 
 errexit:
-	fprintf(stderr, "Error: cannot create %s device\n", newpath);
-	exechelp_logv("firejail", "cannot create %s device\n", newpath);
+	exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot create %s device\n", newpath);
 	exit(1);
 }
 
@@ -147,8 +145,7 @@ void fs_dev_shm(void) {
 			free(lnk);
 		}
 		else {
-			fprintf(stderr, "Warning: /dev/shm not mounted\n");
-			exechelp_logv("firejail", "Warning: /dev/shm not mounted\n");
+			exechelp_logerrv("firejail", FIREJAIL_WARNING, "Warning: /dev/shm not mounted\n");
 			dbg_test_dir("/dev/shm");
 		}
 			

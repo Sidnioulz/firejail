@@ -221,7 +221,7 @@ void join(pid_t pid, const char *homedir, int argc, char **argv, int index) {
 	if (uid != 0) {
 		uid_t sandbox_uid = pid_get_uid(pid);
 		if (uid != sandbox_uid) {
-			fprintf(stderr, "Error: permission is denied to join a sandbox created by a different user.\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: permission is denied to join a sandbox created by a different user.\n");
 			exit(1);
 		}
 	}

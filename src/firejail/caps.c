@@ -429,7 +429,7 @@ void caps_print_filter(pid_t pid) {
 	if (uid != 0) {
 		uid_t sandbox_uid = pid_get_uid(pid);
 		if (uid != sandbox_uid) {
-			fprintf(stderr, "Error: permission denied.\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: permission denied to check sandbox capabilities (belongs to a different user).\n");
 			exit(1);
 		}
 	}

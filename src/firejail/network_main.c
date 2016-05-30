@@ -151,7 +151,7 @@ void net_nat_parent_finalize(Bridge *br, pid_t child) {
 		  errExit("asprintf");
     fs_helper_write_net_cleanup_file(cmd);
   } else {
-    fprintf(stderr, "Warning: this instance of Firejail is running with --no-helper. Firejail will be unable to forward instructions to Fireexecd to clean-up after the sandbox is shut down. You will have to manually delete firewall rules after the child process is closed, by executing the following command as root:\n#\t%s\n", cmd);
+    exechelp_logerrv("firejail", FIREJAIL_WARNING, "Warning: this instance of Firejail is running with --no-helper. Firejail will be unable to forward instructions to Fireexecd to clean-up after the sandbox is shut down. You will have to manually delete firewall rules after the child process is closed, by executing the following command as root:\n#\t%s\n", cmd);
   }
   free(cmd);
 
