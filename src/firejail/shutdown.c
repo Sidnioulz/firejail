@@ -76,7 +76,7 @@ void shut(pid_t pid) {
 		if (stat(dir, &s) < 0)
 			errExit("stat");
 		if (s.st_uid != uid) {
-			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: permission is denied to shutdown a sandbox created by a different user.\n");
+			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: permission is denied to shutdown a sandbox created by a different user (you are %d, the sandbox belongs to %d).\n", uid, s.st_uid);
 			exit(1);
 		}
 	}
