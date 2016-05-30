@@ -624,18 +624,12 @@ void seccomp_print_filter(pid_t pid) {
 	// check privileges for non-root users
 	uid_t uid = getuid();
 	if (uid != 0) {
-		struct stat s;
-		char *dir;
-		if (asprintf(&dir, "/proc/%u/ns", pid) == -1)
-			errExit("asprintf");
-		if (stat(dir, &s) < 0)
-			errExit("stat");
-		if (s.st_uid != uid) {
-			printf("Error: permission denied.\n");
+		uid_t sandbox_uid = pid_get_uid(pid);
+		if (uid != sandbox_uid) {
+			fprintf(stderr, "Error: permission denied.\n");
 			exit(1);
 		}
 	}
-
 
 	// find the seccomp filter
 	char *fname;

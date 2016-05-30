@@ -18,6 +18,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "firejail.h"
+#include <sys/stat.h>
+
+static void set_privileges(void) {
+	struct stat s;
+	if (stat("/proc/sys/kernel/grsecurity", &s) == 0) {
+
+		// elevate privileges
+		if (setreuid(0, 0))
+			errExit("setreuid");
+		if (setregid(0, 0))
+			errExit("setregid");
+	}
+	else
+		drop_privs(1);
+}
 
 void top(void) {
 	drop_privs(1);
@@ -31,7 +46,7 @@ void top(void) {
 }
 
 void netstats(void) {
-	drop_privs(1);
+	set_privileges();
 	
 	char *arg[4];
 	arg[0] = "bash";

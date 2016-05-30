@@ -21,6 +21,7 @@
 #define FIREJAIL_H
 #include "../include/common.h"
 #include "../include/exechelper-logger.h"
+#include "../include/pid.h"
 
 #define USELOCK
 #define FIREJAIL_DIR	            "/tmp/firejail"

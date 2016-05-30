@@ -118,7 +118,7 @@ static void load_relevant_env_variable(const char *name, const char *value) {
       strcmp(name, "QT_X11_NO_MITSHM") == 0 ||
       strcmp(name, "DBUS_SESSION_BUS_ADDRESS") == 0) {
       
-    if (arg_debug || 1) //FIXME
+    if (arg_debug)
       printf ("Setting environment variable %s to value '%s'\n", name, value);
     if (setenv(name, value, 1))
       errExit("setenv");

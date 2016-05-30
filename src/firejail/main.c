@@ -1595,7 +1595,17 @@ int main(int argc, char **argv) {
 	signal (SIGTERM, my_handler);
 	
 	// wait for the child to finish
-	waitpid(child, NULL, 0);
-	myexit(0);
-	return 0;
+	int status = 0;
+	waitpid(child, &status, 0);
+
+
+	if (WIFEXITED(status)){
+		myexit(WEXITSTATUS(status));
+	} else if (WIFSIGNALED(status)) {
+		myexit(WTERMSIG(status));
+	} else {
+		myexit(0);
+	}
+
+  return 0;
 }
