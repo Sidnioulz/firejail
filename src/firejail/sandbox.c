@@ -27,10 +27,54 @@
 #include <sys/prctl.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <sys/types.h>
+#include <dirent.h>
 #include <sched.h>
 #ifndef CLONE_NEWUSER
 #define CLONE_NEWUSER	0x10000000
 #endif
+
+
+
+static int monitored_pid = 0;
+static void sandbox_handler(int sig){
+	printf("\nChild received signal %d, shutting down the sandbox...\n", sig);
+	fflush(0);
+
+	// broadcast sigterm to all processes in the group
+	kill(-1, SIGTERM);
+	sleep(1);
+
+	if (monitored_pid) {
+		int monsec = 9;
+		char *monfile;
+		if (asprintf(&monfile, "/proc/%d/cmdline", monitored_pid) == -1)
+			errExit("asprintf");
+		while (monsec) {
+			FILE *fp = fopen(monfile, "r");
+			if (!fp)
+				break;
+
+			char c;
+			size_t count = fread(&c, 1, 1, fp);
+			fclose(fp);
+			if (count == 0)
+				break;
+
+			if (arg_debug)
+				printf("Waiting on PID %d to finish\n", monitored_pid);
+			sleep(1);
+			monsec--;
+		}
+		free(monfile);
+
+	}
+
+	// broadcast a SIGKILL
+	kill(-1, SIGKILL);
+	exit(sig);
+}
+
 
 static void set_caps(void) {
 	if (arg_caps_drop_all)
@@ -62,7 +106,7 @@ void save_nogroups(void) {
 		free(fname);
 		exit(1);
 	}
-	
+
 	free(fname);
 }
 
@@ -130,13 +174,177 @@ static void chk_chroot(void) {
 	exit(1);
 }
 
+static int monitor_application(pid_t app_pid) {
+	monitored_pid = app_pid;
+	signal (SIGTERM, sandbox_handler);
+
+	int status = 0;
+	while (monitored_pid) {
+		usleep(20000);
+		char *msg;
+		if (asprintf(&msg, "monitoring pid %d\n", monitored_pid) == -1)
+			errExit("asprintf");
+		logmsg(msg);
+		if (arg_debug)
+			printf("%s\n", msg);
+		free(msg);
+
+		pid_t rv;
+		do {
+			rv = waitpid(-1, &status, 0);
+			if (rv == -1)
+				break;
+		}
+		while(rv != monitored_pid);
+		if (arg_debug)
+			printf("Sandbox monitor: waitpid %u retval %d status %d\n", monitored_pid, rv, status);
+
+		DIR *dir;
+		if (!(dir = opendir("/proc"))) {
+			// sleep 2 seconds and try again
+			sleep(2);
+			if (!(dir = opendir("/proc"))) {
+				exechelp_logerrv("firejail", FIREJAIL_WARNING, "Error: cannot open /proc directory\n");
+				exit(1);
+			}
+		}
+
+		struct dirent *entry;
+		monitored_pid = 0;
+		while ((entry = readdir(dir)) != NULL) {
+			unsigned pid;
+			if (sscanf(entry->d_name, "%u", &pid) != 1)
+				continue;
+			if (pid == 1)
+				continue;
+
+			// todo: make this generic
+			// Dillo browser leaves a dpid process running, we need to shut it down
+			if (strcmp(cfg.command_name, "dillo") == 0) {
+				char *pidname = pid_proc_comm(pid);
+				if (pidname && strcmp(pidname, "dpid") == 0)
+					break;
+				free(pidname);
+			}
+
+			monitored_pid = pid;
+			break;
+		}
+		closedir(dir);
+
+		if (monitored_pid != 0 && arg_debug)
+			printf("Sandbox monitor: monitoring %u\n", monitored_pid);
+	}
+
+	// return the latest exit status.
+	return status;
+}
+
+
+static void start_application(void) {
+	//****************************************
+	// start the program without using a shell
+	//****************************************
+	if (arg_shell_none) {
+		if (arg_debug) {
+			int i;
+			for (i = cfg.original_program_index; i < cfg.original_argc; i++) {
+				if (cfg.original_argv[i] == NULL)
+					break;
+				printf("execvp argument %d: %s\n", i - cfg.original_program_index, cfg.original_argv[i]);
+			}
+		}
+
+		if (!arg_command)
+			printf("Child process initialized\n");
+
+    if (cfg.dbus == 0) {
+	    char **argv = exechelp_malloc0(sizeof(char *) * (cfg.original_argc+3));
+	    argv[0] = DBUS_RUN_SESSION;
+	    argv[1] = "--";
+
+			int i, j;
+			for (i = cfg.original_program_index, j = 2; i < cfg.original_argc; i++, j++) {
+				if (cfg.original_argv[i] == NULL)
+					break;
+				argv[j] = cfg.original_argv[i];
+			}
+
+			execvp(DBUS_RUN_SESSION, argv);
+    } else {
+			execvp(cfg.original_argv[cfg.original_program_index], &cfg.original_argv[cfg.original_program_index]);
+    }
+	}
+	//****************************************
+	// start the program using a shell
+	//****************************************
+	else {
+		// choose the shell requested by the user, or use bash as default
+		char *sh;
+		if (cfg.shell)
+			sh = cfg.shell;
+		else if (arg_zsh)
+			sh = "/usr/bin/zsh";
+		else if (arg_csh)
+			sh = "/bin/csh";
+		else
+			sh = "/bin/bash";
+
+		char *arg[7];
+		int index = 0;
+		if (cfg.dbus == 0) {
+			arg[index++] = DBUS_RUN_SESSION;
+			arg[index++] = "--";
+		}
+		arg[index++] = sh;
+		arg[index++] = "-c";
+		assert(cfg.command_line);
+		if (arg_debug)
+			printf("Starting %s\n", cfg.command_line);
+		exechelp_logv("firejail", "Starting %s\n", cfg.command_line);
+		if (arg_doubledash)
+			arg[index++] = "--";
+		arg[index++] = cfg.command_line;
+		arg[index] = NULL;
+		assert(index < 7);
+
+		if (arg_debug) {
+			char *msg;
+			if (asprintf(&msg, "sandbox %d, execvp into %s", sandbox_pid, cfg.command_line) == -1)
+				errExit("asprintf");
+			logmsg(msg);
+			free(msg);
+		}
+
+		if (arg_debug) {
+			int i;
+			for (i = 0; i < 5; i++) {
+				if (arg[i] == NULL)
+					break;
+				printf("execvp argument %d: %s\n", i, arg[i]);
+			}
+		}
+
+		if (!arg_command)
+			printf("Child process initialized\n");
+
+	  if (cfg.dbus == 0)
+			execvp(DBUS_RUN_SESSION, arg);
+		else
+		  execvp(sh, arg);
+	}
+
+	exechelp_perror("firejail", "execvp");
+	exit(1); // it should never get here!!!
+}
+
 int sandbox(void* sandbox_arg) {
 	// Get rid of unused parameter warning
 	(void)sandbox_arg;
 
 	pid_t child_pid = getpid();
 	if (arg_debug)
-		printf("Initializing child process\n");	
+		printf("Initializing child process\n");
 
  	// close each end of the unused pipes
  	close(parent_to_child_fds[1]);
@@ -476,6 +684,7 @@ int sandbox(void* sandbox_arg) {
 			exechelp_logerrv("firejail", FIREJAIL_ERROR, "Error: cannot mount a new user namespace\n");
 			exechelp_perror("firejail", "unshare");
 			drop_privs(arg_nogroups);
+			arg_noroot = 0;
 		}
 	}
 	else
@@ -498,100 +707,25 @@ int sandbox(void* sandbox_arg) {
 			printf("User namespace (noroot) installed\n");
 	}
 
-
 	//****************************************
-	// start the program without using a shell
+	// fork the application and monitor it
 	//****************************************
-	if (arg_shell_none) {
-		if (arg_debug) {
-			int i;
-			for (i = cfg.original_program_index; i < cfg.original_argc; i++) {
-				if (cfg.original_argv[i] == NULL)
-					break;
-				printf("execvp argument %d: %s\n", i - cfg.original_program_index, cfg.original_argv[i]);
-			}
-		}
+	pid_t app_pid = fork();
+	if (app_pid == -1)
+		errExit("fork");
 
-		if (!arg_command)
-			printf("Child process initialized\n");
-
-    if (cfg.dbus == 0) {
-	    char **argv = exechelp_malloc0(sizeof(char *) * (cfg.original_argc+3));
-	    argv[0] = DBUS_RUN_SESSION;
-	    argv[1] = "--";
-
-			int i, j;
-			for (i = cfg.original_program_index, j = 2; i < cfg.original_argc; i++, j++) {
-				if (cfg.original_argv[i] == NULL)
-					break;
-				argv[j] = cfg.original_argv[i];
-			}
-
-  		execvp(DBUS_RUN_SESSION, argv);
-    } else {
-  		execvp(cfg.original_argv[cfg.original_program_index], &cfg.original_argv[cfg.original_program_index]);
-    }
+	if (app_pid == 0) {
+		prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0); // kill the child in case the parent died
+		start_application();	// start app
 	}
-	//****************************************
-	// start the program using a shell
-	//****************************************
-	else {
-		// choose the shell requested by the user, or use bash as default
-		char *sh;
-		if (cfg.shell)
-	 		sh = cfg.shell;
-		else if (arg_zsh)
-			sh = "/usr/bin/zsh";
-		else if (arg_csh)
-			sh = "/bin/csh";
-		else
-			sh = "/bin/bash";
-			
-		char *arg[7];
-		int index = 0;
-		if (cfg.dbus == 0) {
-			arg[index++] = DBUS_RUN_SESSION;
-			arg[index++] = "--";
-		}
-		arg[index++] = sh;
-		arg[index++] = "-c";
-		assert(cfg.command_line);
-		if (arg_debug)
-			printf("Starting %s\n", cfg.command_line);
-    exechelp_logv("firejail", "Starting %s\n", cfg.command_line);
-		if (arg_doubledash) 
-			arg[index++] = "--";
-		arg[index++] = cfg.command_line;
-		arg[index] = NULL;
-		assert(index < 7);
-		
-		if (arg_debug) {
-			char *msg;
-			if (asprintf(&msg, "sandbox %d, execvp into %s", sandbox_pid, cfg.command_line) == -1)
-				errExit("asprintf");
-			logmsg(msg);
-			free(msg);
-		}
-		
-		if (arg_debug) {
-			int i;
-			for (i = 0; i < 5; i++) {
-				if (arg[i] == NULL)
-					break;
-				printf("execvp argument %d: %s\n", i, arg[i]);
-			}
-		}
 
-		if (!arg_command)
-			printf("Child process initialized\n");
+	int status = monitor_application(app_pid);	// monitor application
 
-	  if (cfg.dbus == 0)
-  		execvp(DBUS_RUN_SESSION, arg);
-    else
-		  execvp(sh, arg);
+	if (WIFEXITED(status)) {
+		// if we had a proper exit, return that exit status
+		return WEXITSTATUS(status);
+	} else {
+		// something else went wrong!
+		return -1;
 	}
-	
-
-	exechelp_perror("firejail", "execvp");
-	return 0;
 }

@@ -106,7 +106,7 @@ pid_t sandbox_pid;
 static void myexit(int rv) {
 	logmsg("exiting...");
 	if (!arg_command)
-		printf("\nparent is shutting down, bye...\n");
+		printf("\nParent is shutting down, bye...\n");
 	
 	// delete sandbox files in shared memory
 	bandwidth_shm_del_file(sandbox_pid);		// bandwidht file
@@ -117,9 +117,9 @@ static void myexit(int rv) {
 }
 
 static void my_handler(int s){
-	printf("\nSignal %d caught, shutting down the child process\n", s);
+	printf("\nParent received signal %d, shutting down the child process...\n", s);
 	logsignal(s);
-	kill(child, SIGKILL);
+	kill(child, SIGTERM);
 	myexit(1);
 }
 
