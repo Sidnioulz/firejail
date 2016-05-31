@@ -480,18 +480,14 @@ int sandbox(void* sandbox_arg) {
     exechelp_propagate_sandbox_info_to_env();
 	}
 
-#if 0
   // block dbus session bus the hard way if necessary
   if (cfg.dbus == 0) {
-    //FIXME DEBUG
     char *dbus_path;
 		if (asprintf(&dbus_path, "/run/user/%d/bus", getuid()) == -1)
 			errExit("asprintf");
     fs_blacklist_file(dbus_path);
     free(dbus_path);
-    //END FIXME
 }
-#endif
 
 
 

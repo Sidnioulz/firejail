@@ -113,13 +113,11 @@ static void load_relevant_env_variable(const char *name, const char *value) {
       strcmp(name, EXECHELP_EXECUTION_POLICY) == 0 ||
       strcmp(name, "container") == 0 ||
       strcmp(name, "LD_PRELOAD") == 0 ||
-      strcmp(name, "LD_PRELOAD") == 0 ||
       strcmp(name, "PULSE_CLIENTCONFIG") == 0 ||
       strcmp(name, "QT_X11_NO_MITSHM") == 0 ||
       strcmp(name, "DBUS_SESSION_BUS_ADDRESS") == 0) {
-      
-    if (arg_debug)
-      printf ("Setting environment variable %s to value '%s'\n", name, value);
+    if (arg_debug || 1)
+      printf ("Setting environment variable %s to value '%s' (previous: %s)\n", name, value, getenv(name));
     if (setenv(name, value, 1))
       errExit("setenv");
   }
@@ -131,8 +129,29 @@ void load_domain_env_from_chroot_proc() {
   proc_t *prt;
   char *name;
   char *value;
+  int dbus_tid = 0;
   int found_real = 0;
 
+
+  // attempt to find the dbus-daemon PID, first
+  if ((pt = openproc(PROC_FILLCOM | PROC_FILLENV | PROC_UID, uids, 1)) == NULL)
+    errExit("openproc");
+
+  while (!dbus_tid) {
+    if ((prt = readproc(pt, NULL)) == NULL)
+      break;
+
+    if (prt->cmdline[0] && strncmp(prt->cmdline[0], "dbus-daemon", 11) == 0) {
+      dbus_tid = prt->tid;
+    }
+
+    freeproc(prt);
+  }
+
+  closeproc(pt);
+
+
+  // now attempt to find a process of higher PID, thus with the environment well set
   if ((pt = openproc(PROC_FILLCOM | PROC_FILLENV | PROC_UID, uids, 1)) == NULL)
     errExit("openproc");
 
@@ -141,8 +160,9 @@ void load_domain_env_from_chroot_proc() {
     if ((prt = readproc(pt, NULL)) == NULL)
       break;
 
-    if (prt->cmdline[0] && strncmp(prt->cmdline[0], "dbus-run-session", 16) && strncmp(prt->cmdline[0], "dbus-daemon", 11)) {
+    if (prt->cmdline[0] && strncmp(prt->cmdline[0], "dbus-run-session", 16) && strncmp(prt->cmdline[0], "dbus-daemon", 11) && prt->tid > dbus_tid) {
       found_real = 1;
+        printf ("FOUND %d\n", prt->tid);
       if (arg_debug)
         printf ("Copying the environment variables of the original firejail client, identified by pid %d inside the sandbox\n", prt->tid);
 
